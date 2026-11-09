@@ -5,6 +5,7 @@ import { GoalList } from "@/features/goals/components/goal-list";
 import { OverBudgetAlert } from "@/features/planning/components/over-budget-alert";
 import { SectionTotal } from "@/features/planning/components/section-total";
 import type { CategoryOption, GoalItem } from "@/features/planning/queries";
+import { SECTION_LABELS, SECTION_TOTAL_LABELS } from "@/lib/planning-labels";
 
 type GoalSectionProps = {
   goals: GoalItem[];
@@ -13,12 +14,12 @@ type GoalSectionProps = {
   revenueCents: number;
 };
 
-/** Seção de metas futuras: valor planejado, cadastro, lista e soma das metas. */
+/** Seção do Momento Futuro: valor planejado, cadastro, lista e soma das metas. */
 export function GoalSection({ goals, categories, goalsTotalCents, revenueCents }: GoalSectionProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Metas futuras</CardTitle>
+        <CardTitle>{SECTION_LABELS.goals}</CardTitle>
         <CardDescription>
           <PlannedAmount section="goals" revenueCents={revenueCents} />
         </CardDescription>
@@ -27,7 +28,7 @@ export function GoalSection({ goals, categories, goalsTotalCents, revenueCents }
         <OverBudgetAlert section="goals" revenueCents={revenueCents} totalCents={goalsTotalCents} />
         <GoalForm mode="create" categories={categories} />
         <GoalList goals={goals} categories={categories} />
-        <SectionTotal label="Total de metas" totalCents={goalsTotalCents} />
+        <SectionTotal label={SECTION_TOTAL_LABELS.goals} totalCents={goalsTotalCents} />
       </CardContent>
     </Card>
   );

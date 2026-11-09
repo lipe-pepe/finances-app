@@ -14,12 +14,12 @@ export function calculatePlannedCents(revenueCents: number, percentage: number):
   return Math.round((revenueCents * percentage) / 100);
 }
 
-/** Porcentagem de metas futuras: complemento até 100%. */
+/** Porcentagem do Momento Futuro: complemento até 100%. */
 export function getGoalsPercentage(essentialPercentage: number): number {
   return 100 - essentialPercentage;
 }
 
-/** Porcentagem da seção a partir da porcentagem de gastos essenciais do slider. */
+/** Porcentagem da seção a partir da porcentagem do Momento Presente no slider. */
 export function getSectionPercentage(section: PlanningSection, essentialPercentage: number): number {
   return section === "expenses" ? essentialPercentage : getGoalsPercentage(essentialPercentage);
 }

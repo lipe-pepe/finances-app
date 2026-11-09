@@ -9,7 +9,7 @@ type ExpenseListProps = {
   categories: CategoryOption[];
 };
 
-/** Lista de gastos essenciais (renderizada no servidor), com editar e apagar por item. */
+/** Lista de gastos do Momento Presente (renderizada no servidor), com editar e apagar por item. */
 export function ExpenseList({ expenses, categories }: ExpenseListProps) {
   if (expenses.length === 0) {
     return <p className="text-sm text-muted-foreground">Nenhum gasto cadastrado.</p>;

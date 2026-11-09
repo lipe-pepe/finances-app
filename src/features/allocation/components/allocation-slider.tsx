@@ -10,6 +10,7 @@ import { saveAllocation } from "@/features/allocation/actions";
 import { useAllocation } from "@/features/allocation/components/allocation-provider";
 import { runAction } from "@/lib/handle-action-result";
 import { getGoalsPercentage } from "@/lib/planning";
+import { SECTION_LABELS } from "@/lib/planning-labels";
 
 export function AllocationSlider() {
   const router = useRouter();
@@ -32,15 +33,19 @@ export function AllocationSlider() {
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between gap-4 text-sm font-medium">
-        <span>Gastos essenciais {essentialPercentage}%</span>
-        <span>Metas futuras {goalsPercentage}%</span>
+        <span>
+          {SECTION_LABELS.expenses} {essentialPercentage}%
+        </span>
+        <span>
+          {SECTION_LABELS.goals} {goalsPercentage}%
+        </span>
       </div>
       <Slider
         min={0}
         max={100}
         step={1}
         value={[essentialPercentage]}
-        aria-label="Divisão entre gastos essenciais e metas futuras"
+        aria-label={`Divisão entre ${SECTION_LABELS.expenses} e ${SECTION_LABELS.goals}`}
         onValueChange={([value]) => setEssentialPercentage(value)}
         onValueCommit={([value]) => void save(value)}
       />

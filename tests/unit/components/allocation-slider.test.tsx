@@ -37,10 +37,34 @@ describe("AllocationSlider + PlannedAmount", () => {
 
   it("exibe as porcentagens e os valores planejados", () => {
     renderSlider(70, 600000);
-    expect(screen.getByText("Gastos essenciais 70%")).toBeInTheDocument();
-    expect(screen.getByText("Metas futuras 30%")).toBeInTheDocument();
+    expect(screen.getByText("Momento Presente 70%")).toBeInTheDocument();
+    expect(screen.getByText("Momento Futuro 30%")).toBeInTheDocument();
     expect(screen.getByTestId("planned-expenses")).toHaveTextContent("R$ 4.200,00");
     expect(screen.getByTestId("planned-goals")).toHaveTextContent("R$ 1.800,00");
+  });
+
+  it("identifica o slider pelo nome dos dois momentos", () => {
+    renderSlider(70);
+    expect(
+      screen.getByRole("slider", { name: "Divisão entre Momento Presente e Momento Futuro" }),
+    ).toBeInTheDocument();
+  });
+
+  it("com showSectionLabel, mostra o nome do momento junto ao valor planejado", () => {
+    render(
+      <AllocationProvider initialEssentialPercentage={70}>
+        <PlannedAmount section="expenses" revenueCents={600000} showSectionLabel />
+        <PlannedAmount section="goals" revenueCents={600000} showSectionLabel />
+        <PlannedAmount section="expenses" revenueCents={600000} />
+      </AllocationProvider>,
+    );
+    const [expenses, goals, plain] = [
+      ...screen.getAllByTestId("planned-expenses"),
+      ...screen.getAllByTestId("planned-goals"),
+    ].sort((a, b) => (a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1));
+    expect(expenses).toHaveTextContent("Momento Presente: R$ 4.200,00 (70% da receita)");
+    expect(goals).toHaveTextContent("Momento Futuro: R$ 1.800,00 (30% da receita)");
+    expect(plain).toHaveTextContent("Planejado (70% da receita): R$ 4.200,00");
   });
 
   it("atualiza em tempo real e salva uma vez ao soltar (teclado = mover + soltar)", async () => {
@@ -50,7 +74,7 @@ describe("AllocationSlider + PlannedAmount", () => {
     await act(async () => {
       fireEvent.keyDown(slider, { key: "ArrowRight" });
     });
-    expect(screen.getByText("Gastos essenciais 71%")).toBeInTheDocument();
+    expect(screen.getByText("Momento Presente 71%")).toBeInTheDocument();
     expect(screen.getByTestId("planned-expenses")).toHaveTextContent("R$ 4.260,00");
     expect(saveAllocation).toHaveBeenCalledTimes(1);
     expect(saveAllocation).toHaveBeenCalledWith({ essentialPercentage: 71 });

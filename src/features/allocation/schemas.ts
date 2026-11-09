@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-// Divisão da receita: porcentagem inteira (0–100) destinada a gastos essenciais
+// Divisão da receita: porcentagem inteira (0–100) destinada ao Momento Presente
 export const allocationSchema = z.object({
   essentialPercentage: z
     .number({ error: "Porcentagem inválida." })

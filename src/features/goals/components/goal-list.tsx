@@ -9,7 +9,7 @@ type GoalListProps = {
   categories: CategoryOption[];
 };
 
-/** Lista de metas futuras (renderizada no servidor), com editar e apagar por item. */
+/** Lista de metas do Momento Futuro (renderizada no servidor), com editar e apagar por item. */
 export function GoalList({ goals, categories }: GoalListProps) {
   if (goals.length === 0) {
     return <p className="text-sm text-muted-foreground">Nenhuma meta cadastrada.</p>;

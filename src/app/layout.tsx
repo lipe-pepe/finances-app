@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Finanças Pessoais",
-  description: "Planejamento financeiro pessoal: receita, gastos essenciais e metas futuras.",
+  description: "Planejamento financeiro pessoal: receita, Momento Presente e Momento Futuro.",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

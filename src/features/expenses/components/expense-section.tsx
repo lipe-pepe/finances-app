@@ -5,6 +5,7 @@ import { ExpenseList } from "@/features/expenses/components/expense-list";
 import { OverBudgetAlert } from "@/features/planning/components/over-budget-alert";
 import { SectionTotal } from "@/features/planning/components/section-total";
 import type { CategoryOption, ExpenseItem } from "@/features/planning/queries";
+import { SECTION_LABELS, SECTION_TOTAL_LABELS } from "@/lib/planning-labels";
 
 type ExpenseSectionProps = {
   expenses: ExpenseItem[];
@@ -13,7 +14,7 @@ type ExpenseSectionProps = {
   revenueCents: number;
 };
 
-/** Seção de gastos essenciais: valor planejado, cadastro, lista e soma dos gastos. */
+/** Seção do Momento Presente: valor planejado, cadastro, lista e soma dos gastos. */
 export function ExpenseSection({
   expenses,
   categories,
@@ -23,7 +24,7 @@ export function ExpenseSection({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Gastos essenciais</CardTitle>
+        <CardTitle>{SECTION_LABELS.expenses}</CardTitle>
         <CardDescription>
           <PlannedAmount section="expenses" revenueCents={revenueCents} />
         </CardDescription>
@@ -32,7 +33,7 @@ export function ExpenseSection({
         <OverBudgetAlert section="expenses" revenueCents={revenueCents} totalCents={expensesTotalCents} />
         <ExpenseForm mode="create" categories={categories} />
         <ExpenseList expenses={expenses} categories={categories} />
-        <SectionTotal label="Total de gastos" totalCents={expensesTotalCents} />
+        <SectionTotal label={SECTION_TOTAL_LABELS.expenses} totalCents={expensesTotalCents} />
       </CardContent>
     </Card>
   );

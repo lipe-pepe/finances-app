@@ -5,18 +5,13 @@
 import { TriangleAlert } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useOverBudget } from "@/features/planning/hooks/use-over-budget";
-import { formatBrl } from "@/lib/money";
 import type { PlanningSection } from "@/lib/planning";
+import { OVER_BUDGET_TITLE, overBudgetMessage } from "@/lib/planning-labels";
 
 type OverBudgetAlertProps = {
   section: PlanningSection;
   revenueCents: number;
   totalCents: number;
-};
-
-const SECTION_SUBJECT: Record<PlanningSection, string> = {
-  expenses: "Os gastos essenciais excedem",
-  goals: "As metas futuras excedem",
 };
 
 /** Alerta exibido quando a soma da seção é estritamente maior que o valor planejado. */
@@ -30,9 +25,9 @@ export function OverBudgetAlert({ section, revenueCents, totalCents }: OverBudge
   return (
     <Alert variant="destructive" className="border-destructive/50 bg-destructive/10">
       <TriangleAlert />
-      <AlertTitle>Planejamento incorreto</AlertTitle>
+      <AlertTitle>{OVER_BUDGET_TITLE}</AlertTitle>
       <AlertDescription>
-        {SECTION_SUBJECT[section]} o planejado em {formatBrl(excessCents)}.
+        {overBudgetMessage(section, excessCents)}.
       </AlertDescription>
     </Alert>
   );

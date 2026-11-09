@@ -23,11 +23,11 @@ function renderAlert(
 }
 
 describe("OverBudgetAlert", () => {
-  it("alerta quando os gastos excedem o planejado, informando o excesso", () => {
+  it("alerta quando o Momento Presente excede o planejado, informando o excesso", () => {
     renderAlert({ section: "expenses", revenueCents: 400000, totalCents: 210000 });
     const alert = screen.getByRole("alert");
     expect(alert).toHaveTextContent("Planejamento incorreto");
-    expect(alert).toHaveTextContent("Os gastos essenciais excedem o planejado em R$ 100,00");
+    expect(alert).toHaveTextContent("O Momento Presente excede o planejado em R$ 100,00");
   });
 
   it("não alerta quando a soma é igual ao planejado", () => {
@@ -38,14 +38,14 @@ describe("OverBudgetAlert", () => {
   it("alerta com receita zero e qualquer valor cadastrado", () => {
     renderAlert({ section: "goals", revenueCents: 0, totalCents: 1 });
     expect(screen.getByRole("alert")).toHaveTextContent(
-      "As metas futuras excedem o planejado em R$ 0,01",
+      "O Momento Futuro excede o planejado em R$ 0,01",
     );
   });
 
   it("usa 100 − porcentagem para metas futuras", () => {
     // 70% para gastos → 30% (R$ 1.200,00) para metas; metas somam R$ 1.300,00
     renderAlert({ section: "goals", revenueCents: 400000, totalCents: 130000 }, 70);
-    expect(screen.getByRole("alert")).toHaveTextContent("excedem o planejado em R$ 100,00");
+    expect(screen.getByRole("alert")).toHaveTextContent("O Momento Futuro excede o planejado em R$ 100,00");
   });
 
   it("aparece e some em tempo real conforme o slider se move", async () => {
