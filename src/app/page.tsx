@@ -4,34 +4,55 @@ import { ExpenseSection } from "@/features/expenses/components/expense-section";
 import { GoalSection } from "@/features/goals/components/goal-section";
 import { IncomeSection } from "@/features/incomes/components/income-section";
 import { AppHeader } from "@/features/planning/components/app-header";
+import { PlanningTabs } from "@/features/planning/components/planning-tabs";
 import { getPlanningData } from "@/features/planning/queries";
 import { requireUserId } from "@/lib/auth";
+import { PLANNING_TAB_PARAM, parsePlanningTab } from "@/lib/planning-tab";
+
+type PlanningPageProps = {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
 
 // Tela única de planejamento (FR-007a), renderizada no servidor a cada requisição.
-// O AllocationProvider (cliente) só guarda a porcentagem do slider; as seções continuam sendo
-// Server Components passados como children.
-export default async function PlanningPage() {
+// A aba inicial vem do endereço (?tab=); as seções são Server Components passados ao
+// PlanningTabs (cliente), que só controla qual delas aparece.
+export default async function PlanningPage({ searchParams }: PlanningPageProps) {
   const userId = await requireUserId();
-  const data = await getPlanningData(userId);
+  const [data, params] = await Promise.all([getPlanningData(userId), searchParams]);
+  const initialTab = parsePlanningTab(params[PLANNING_TAB_PARAM]);
 
   return (
     <>
       <AppHeader />
       <AllocationProvider initialEssentialPercentage={data.essentialPercentage}>
-        <main className="mx-auto grid w-full max-w-6xl gap-6 px-4 py-6 lg:grid-cols-2">
-          <IncomeSection incomes={data.incomes} revenueCents={data.revenueCents} />
-          <AllocationSection revenueCents={data.revenueCents} />
-          <ExpenseSection
-            expenses={data.expenses}
-            categories={data.categories}
+        <main className="mx-auto w-full max-w-4xl px-4 py-6">
+          <PlanningTabs
+            initialTab={initialTab}
+            revenueCents={data.revenueCents}
             expensesTotalCents={data.expensesTotalCents}
-            revenueCents={data.revenueCents}
-          />
-          <GoalSection
-            goals={data.goals}
-            categories={data.categories}
             goalsTotalCents={data.goalsTotalCents}
-            revenueCents={data.revenueCents}
+            income={
+              <>
+                <IncomeSection incomes={data.incomes} revenueCents={data.revenueCents} />
+                <AllocationSection revenueCents={data.revenueCents} />
+              </>
+            }
+            present={
+              <ExpenseSection
+                expenses={data.expenses}
+                categories={data.categories}
+                expensesTotalCents={data.expensesTotalCents}
+                revenueCents={data.revenueCents}
+              />
+            }
+            future={
+              <GoalSection
+                goals={data.goals}
+                categories={data.categories}
+                goalsTotalCents={data.goalsTotalCents}
+                revenueCents={data.revenueCents}
+              />
+            }
           />
         </main>
       </AllocationProvider>
