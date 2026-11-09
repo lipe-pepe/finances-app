@@ -1,4 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
+import { toDbDate } from "@/lib/calendar";
+import { centsToDecimalString } from "@/lib/money";
 import { prisma } from "@/lib/prisma";
 
 // Helpers do banco de teste: usuários A e B no Supabase Auth local e limpeza das tabelas
@@ -45,6 +47,7 @@ export async function createTestUsers(): Promise<TestUsers> {
 /** Limpa os dados de usuário, mantendo as categorias do seed. */
 export async function resetDatabase(): Promise<void> {
   await prisma.$transaction([
+    prisma.actualExpense.deleteMany(),
     prisma.expense.deleteMany(),
     prisma.goal.deleteMany(),
     prisma.income.deleteMany(),
@@ -59,6 +62,23 @@ export async function getAnyCategory(name = "Moradia"): Promise<{ id: string; na
     throw new Error("Categorias não encontradas. Rode `npm run db:seed:test`.");
   }
   return category;
+}
+
+/** Grava um gasto realizado direto no banco (preparação dos testes do Controle). */
+export async function createActualExpenseRow(
+  userId: string,
+  row: { name: string; amountCents: number; categoryId: string; spentOn: string },
+): Promise<{ id: string }> {
+  return prisma.actualExpense.create({
+    data: {
+      userId,
+      name: row.name,
+      amount: centsToDecimalString(row.amountCents),
+      categoryId: row.categoryId,
+      spentOn: toDbDate(row.spentOn),
+    },
+    select: { id: true },
+  });
 }
 
 export { prisma };
