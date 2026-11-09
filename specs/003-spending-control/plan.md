@@ -119,7 +119,7 @@ tests/
 ├── unit/
 │   ├── lib/{calendar,spending}.test.ts                          # NOVOS
 │   ├── lib/{auth-redirect,planning-tab}.test.ts                 # ALTERADOS
-│   ├── schemas/actual-expense.schema.test.ts                    # NOVO
+│   ├── schemas/control.schemas.test.ts                          # NOVO
 │   ├── components/{app-header,actual-expense-form,control-dashboard,spending-chart}.test.tsx  # NOVOS
 │   └── specs/003-spending-control.spec.test.ts                  # NOVO
 └── integration/
