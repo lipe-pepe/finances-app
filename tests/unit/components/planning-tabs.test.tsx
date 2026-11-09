@@ -86,10 +86,10 @@ describe("PlanningTabs", () => {
     renderTabs();
     await userEvent.click(screen.getByRole("tab", { name: "Momento Presente" }));
     expect(screen.getByText("conteúdo presente")).toBeInTheDocument();
-    expect(replaceState).toHaveBeenLastCalledWith(null, "", "/?tab=present");
+    expect(replaceState).toHaveBeenLastCalledWith(null, "", "/planning?tab=present");
 
     await userEvent.click(screen.getByRole("tab", { name: "Receita" }));
-    expect(replaceState).toHaveBeenLastCalledWith(null, "", "/");
+    expect(replaceState).toHaveBeenLastCalledWith(null, "", "/planning");
     expect(pushState).not.toHaveBeenCalled();
   });
 

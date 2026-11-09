@@ -6,7 +6,7 @@ import { HOME_PATH, LOGIN_PATH } from "@/lib/auth-redirect";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { signInSchema, type SignInInput } from "@/features/auth/schemas";
 
-/** Login com email e senha. Em sucesso, grava a sessão nos cookies e redireciona para "/". */
+/** Login com email e senha. Em sucesso, grava a sessão nos cookies e redireciona para o Controle. */
 export async function signIn(input: SignInInput): Promise<ActionResult> {
   const parsed = signInSchema.safeParse(input);
   if (!parsed.success) {

@@ -24,12 +24,12 @@ describe("parsePlanningTab", () => {
 
 describe("buildPlanningTabUrl", () => {
   it("remove o parâmetro para a aba Receita", () => {
-    expect(buildPlanningTabUrl("income")).toBe("/");
+    expect(buildPlanningTabUrl("income")).toBe("/planning");
   });
 
   it("inclui o parâmetro tab para as demais abas", () => {
-    expect(buildPlanningTabUrl("present")).toBe("/?tab=present");
-    expect(buildPlanningTabUrl("future")).toBe("/?tab=future");
+    expect(buildPlanningTabUrl("present")).toBe("/planning?tab=present");
+    expect(buildPlanningTabUrl("future")).toBe("/planning?tab=future");
   });
 });
 

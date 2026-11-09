@@ -1,4 +1,6 @@
-// Aba selecionada da tela de planejamento, registrada no endereço como ?tab=<valor> (FR-006)
+import { PLANNING_PATH } from "@/lib/app-routes";
+
+// Aba selecionada da página Planejamento, registrada no endereço como ?tab=<valor> (FR-006)
 
 export const PLANNING_TABS = ["income", "present", "future"] as const;
 
@@ -24,7 +26,9 @@ export function parsePlanningTab(value: string | string[] | undefined): Planning
   return DEFAULT_PLANNING_TAB;
 }
 
-/** Endereço da tela de planejamento para a aba (a aba Receita usa o endereço limpo "/"). */
+/** Endereço da página Planejamento para a aba (a aba Receita usa o endereço limpo "/planning"). */
 export function buildPlanningTabUrl(tab: PlanningTab): string {
-  return tab === DEFAULT_PLANNING_TAB ? "/" : `/?${PLANNING_TAB_PARAM}=${tab}`;
+  return tab === DEFAULT_PLANNING_TAB
+    ? PLANNING_PATH
+    : `${PLANNING_PATH}?${PLANNING_TAB_PARAM}=${tab}`;
 }

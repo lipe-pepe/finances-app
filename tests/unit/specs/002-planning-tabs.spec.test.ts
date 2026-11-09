@@ -40,9 +40,9 @@ describe("Spec 002 — US1: navegação por abas", () => {
   });
 
   it("FR-006a: o endereço da aba Receita é o endereço limpo", () => {
-    expect(buildPlanningTabUrl("income")).toBe("/");
+    expect(buildPlanningTabUrl("income")).toBe("/planning");
     expect(buildPlanningTabUrl(parsePlanningTab(buildPlanningTabUrl("future").split("=")[1]))).toBe(
-      "/?tab=future",
+      "/planning?tab=future",
     );
   });
 });
