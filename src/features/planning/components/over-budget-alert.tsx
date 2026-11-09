@@ -4,15 +4,9 @@
 
 import { TriangleAlert } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { useAllocation } from "@/features/allocation/components/allocation-provider";
+import { useOverBudget } from "@/features/planning/hooks/use-over-budget";
 import { formatBrl } from "@/lib/money";
-import {
-  calculatePlannedCents,
-  getExcessCents,
-  getSectionPercentage,
-  isOverBudget,
-  type PlanningSection,
-} from "@/lib/planning";
+import type { PlanningSection } from "@/lib/planning";
 
 type OverBudgetAlertProps = {
   section: PlanningSection;
@@ -27,24 +21,18 @@ const SECTION_SUBJECT: Record<PlanningSection, string> = {
 
 /** Alerta exibido quando a soma da seção é estritamente maior que o valor planejado. */
 export function OverBudgetAlert({ section, revenueCents, totalCents }: OverBudgetAlertProps) {
-  const { essentialPercentage } = useAllocation();
-  const plannedCents = calculatePlannedCents(
-    revenueCents,
-    getSectionPercentage(section, essentialPercentage),
-  );
+  const { isOver, excessCents } = useOverBudget(section, revenueCents, totalCents);
 
-  if (!isOverBudget(totalCents, plannedCents)) {
+  if (!isOver) {
     return null;
   }
-
-  const excess = formatBrl(getExcessCents(totalCents, plannedCents));
 
   return (
     <Alert variant="destructive" className="border-destructive/50 bg-destructive/10">
       <TriangleAlert />
       <AlertTitle>Planejamento incorreto</AlertTitle>
       <AlertDescription>
-        {SECTION_SUBJECT[section]} o planejado em {excess}.
+        {SECTION_SUBJECT[section]} o planejado em {formatBrl(excessCents)}.
       </AlertDescription>
     </Alert>
   );
