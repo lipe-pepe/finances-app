@@ -157,9 +157,10 @@ alerta; voltar o slider e verificar que o indicador some.
   seu comportamento atual.
 - **FR-005**: Apenas o conteúdo da aba selecionada MUST ser exibido; as seções de Momento Presente
   e Momento Futuro MUST NOT aparecer fora de suas abas.
-- **FR-006**: A aba selecionada MUST ficar registrada no endereço da página, com os valores
-  `receita`, `momento-presente` e `momento-futuro`; ao abrir ou recarregar a tela, a aba indicada
-  no endereço MUST estar selecionada, e sem indicação (ou com valor inválido) MUST ser "Receita".
+- **FR-006**: A aba selecionada MUST ficar registrada no endereço da página, com um
+  identificador por aba (definido no plano, em inglês conforme o Princípio I da constituição); ao
+  abrir ou recarregar a tela, a aba indicada no endereço MUST estar selecionada, e sem indicação
+  (ou com valor inválido) MUST ser "Receita".
 - **FR-006a**: Trocar de aba MUST atualizar o endereço sem recarregar a página e sem criar uma
   nova entrada no histórico do navegador para cada troca (Voltar sai da tela de planejamento em
   vez de percorrer as abas).
