@@ -33,6 +33,9 @@ Planejamento)
   orçamento mensal e o disponível recomeça a cada mês.
 - Q: Gastos do Controle podem ser editados e apagados? → A: Sim; criar, editar e apagar, como no
   planejamento.
+- Q: Como corrigir um gasto com data fora do mês atual, se o dashboard só lista o mês corrente? →
+  A: Não é possível ter esse caso: a data do gasto (na criação e na edição) MUST estar dentro do
+  mês atual.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -78,7 +81,8 @@ gastou.
 **Why this priority**: sem registrar gastos realizados não há o que controlar; o dashboard depende
 desses dados.
 
-**Independent Test**: registrar um gasto mantendo a data padrão e outro com uma data passada,
+**Independent Test**: registrar um gasto mantendo a data padrão e outro com uma data anterior do
+mesmo mês,
 recarregar a página e confirmar que os dois continuam lá, sem alterar nenhum gasto do
 planejamento.
 
@@ -89,8 +93,8 @@ planejamento.
 2. **Given** o formulário preenchido com nome "Mercado", valor R$ 230,50, categoria
    "Alimentação" e a data de hoje, **When** o usuário salva, **Then** o gasto é registrado, aparece
    no dashboard e o formulário volta ao estado inicial (data de hoje).
-3. **Given** o formulário, **When** o usuário tenta salvar sem nome, valor, categoria ou data, ou
-   com valor zero ou negativo, **Then** vê qual campo está com problema e nada é salvo.
+3. **Given** o formulário, **When** o usuário tenta salvar sem nome, valor, categoria ou data, com
+   valor zero ou negativo, ou com uma data fora do mês atual, **Then** vê qual campo está com problema e nada é salvo.
 4. **Given** gastos registrados no Controle, **When** o usuário abre o Momento Presente no
    Planejamento, **Then** a lista, a soma e o alerta do planejamento não mudam.
 5. **Given** um gasto registrado, **When** o usuário recarrega a página ou sai e entra de novo,
@@ -107,7 +111,8 @@ planejamento.
 
 ### User Story 3 - Acompanhar planejado × gasto por categoria (Priority: P2)
 
-Na página Controle há um pequeno dashboard do mês atual. O usuário escolhe em uma seleção a categoria que quer
+Na página Controle há um pequeno dashboard do mês atual. O usuário escolhe em uma seleção a
+categoria que quer
 acompanhar; a opção padrão é "Todos", que considera todas as categorias juntas. Para a seleção
 atual, o dashboard mostra: o total planejado, a lista dos gastos realizados, o valor disponível
 (planejado menos gasto) e um gráfico do gasto ao longo do tempo com uma linha de limite no valor
@@ -128,8 +133,8 @@ planejado.
    meta de R$ 300,00 com categoria "Moradia", **When** a seleção é "Todos", **Then** o total
    planejado é R$ 2.300,00 (a meta não entra).
 3. **Given** a categoria "Moradia" selecionada, **When** o dashboard é atualizado, **Then** a
-   lista mostra apenas os gastos realizados de "Moradia" no mês atual, do mais recente para o mais antigo, com
-   nome, valor e data, e nenhum gasto do planejamento.
+   lista mostra apenas os gastos realizados de "Moradia" no mês atual, do mais recente para o mais
+   antigo, com nome, valor e data, e nenhum gasto do planejamento.
 4. **Given** planejado de R$ 1.500,00 e gastos realizados de R$ 400,00 e R$ 350,00 na categoria,
    **When** o dashboard é exibido, **Then** o disponível mostrado é R$ 750,00.
 5. **Given** gastos realizados que somam mais que o planejado, **When** o dashboard é exibido,
@@ -154,9 +159,14 @@ planejado.
   disponível negativo e acima do limite.
 - Nenhum gasto realizado em nenhuma categoria: "Todos" mostra o planejado total, disponível igual
   ao planejado, lista vazia e gráfico apenas com a linha de limite.
-- Gasto registrado com data futura: é aceito; se a data for no mês atual, entra no dashboard
-  agora; se for em outro mês, só aparece quando esse mês for o atual.
-- Gasto editado para uma data fora do mês atual: sai do dashboard do mês atual.
+- Data fora do mês atual (anterior ou posterior), na criação ou na edição: é recusada com a
+  mensagem "A data deve estar dentro do mês atual" e nada é salvo.
+- Data futura dentro do mês atual (ex.: dia 28 quando hoje é dia 10): é aceita e entra no
+  dashboard.
+- Gasto do mês anterior aberto para edição após a virada do mês: não acontece nesta versão, pois o
+  dashboard só lista o mês atual.
+- Formulário aberto antes da meia-noite do último dia do mês e salvo depois: a data é validada
+  contra o mês atual no momento de salvar; se ficou fora, o usuário vê o erro e ajusta a data.
 - Virada do mês: no dia 1, o dashboard começa vazio (disponível igual ao planejado); os gastos dos
   meses anteriores continuam guardados.
 - Gasto registrado em uma categoria diferente da selecionada no dashboard: é salvo normalmente e
@@ -198,13 +208,16 @@ planejado.
   regras de valor dos gastos do planejamento.
 - **FR-008**: A categoria MUST ser escolhida da mesma lista de categorias do planejamento.
 - **FR-009**: A data MUST vir preenchida com o dia atual (no fuso do usuário) e MUST poder ser
-  alterada para qualquer outra data.
+  alterada apenas para outro dia do mês atual; datas fora do mês atual MUST ser recusadas na
+  criação e na edição, com validação também no servidor. A seleção de data SHOULD oferecer apenas
+  os dias do mês atual.
 - **FR-010**: Gastos realizados MUST ser independentes dos gastos do Momento Presente: registrá-los
   MUST NOT alterar listas, somas ou alertas do Planejamento.
 - **FR-011**: Gastos realizados MUST persistir e MUST ser visíveis apenas para o usuário que os
   registrou.
-- **FR-012**: O usuário MUST poder editar (nome, valor, categoria e data) e apagar seus gastos
-  realizados, com as mesmas validações da criação; apagar MUST pedir confirmação.
+- **FR-012**: O usuário MUST poder editar (nome, valor, categoria e data, esta dentro do mês
+  atual) e apagar seus gastos realizados, com as mesmas validações da criação; apagar MUST pedir
+  confirmação.
 - **FR-013**: Erros de validação MUST indicar o campo com problema, e nada MUST ser salvo enquanto
   houver erro.
 
