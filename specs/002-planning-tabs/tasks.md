@@ -132,7 +132,7 @@ vê-los falhar.
 - [X] T024 [P] Auditar `src/`: `grep -rni "gastos essenciais\|metas futuras" src --exclude-dir=generated` sem resultados em textos de interface; todo `"use client"` com comentário de justificativa; nenhum identificador novo em português
 - [X] T025 [P] Atualizar a descrição do produto no `README.md` para os novos nomes ("divide a receita entre **Momento Presente** e **Momento Futuro**, organizados em abas")
 - [X] T026 Rodar `npm run test:unit`, `npx tsc --noEmit`, `npm run lint` e `npx next build` (com variáveis fictícias) e garantir sucesso
-- [ ] T027 Executar a validação manual de `specs/002-planning-tabs/quickstart.md` (passos 1–8) e registrar o resultado
+- [X] T027 Executar a validação manual de `specs/002-planning-tabs/quickstart.md` (passos 1–8) e registrar o resultado — validado pelo usuário em 2026-11-09: todos os passos ok
 
 ---
 
