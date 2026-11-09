@@ -103,6 +103,20 @@ describe("PlanningTabs", () => {
     );
   });
 
+  it("sinaliza no nome da aba a seção que excede o planejado, de qualquer aba", () => {
+    // 50% de R$ 4.000,00 = R$ 2.000,00 planejado para cada momento
+    renderTabs({ expensesTotalCents: 210000, goalsTotalCents: 100000 });
+    expect(screen.getByRole("tab", { name: "Receita" })).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByRole("tab", { name: "Momento Presente, com alerta" })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "Momento Futuro" })).toBeInTheDocument();
+  });
+
+  it("não sinaliza a aba quando a soma é igual ao planejado", () => {
+    renderTabs({ expensesTotalCents: 200000, goalsTotalCents: 200000 });
+    expect(screen.getByRole("tab", { name: "Momento Presente" })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "Momento Futuro" })).toBeInTheDocument();
+  });
+
   it("mantém a aba escolhida quando o servidor renderiza a página de novo", async () => {
     const { rerenderTabs } = renderTabs();
     await userEvent.click(screen.getByRole("tab", { name: "Momento Futuro" }));

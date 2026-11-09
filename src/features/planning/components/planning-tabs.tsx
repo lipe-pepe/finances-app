@@ -4,6 +4,7 @@
 
 import { useState, type ReactNode } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { TabAlertIndicator } from "@/features/planning/components/tab-alert-indicator";
 import { TAB_LABELS } from "@/lib/planning-labels";
 import {
   PLANNING_TABS,
@@ -24,7 +25,15 @@ type PlanningTabsProps = {
   future: ReactNode;
 };
 
-export function PlanningTabs({ initialTab, income, present, future }: PlanningTabsProps) {
+export function PlanningTabs({
+  initialTab,
+  revenueCents,
+  expensesTotalCents,
+  goalsTotalCents,
+  income,
+  present,
+  future,
+}: PlanningTabsProps) {
   // O valor do servidor só é usado na montagem: após uma Server Action a página é renderizada
   // de novo, mas a aba escolhida pelo usuário prevalece (FR-007)
   const [tab, setTab] = useState<PlanningTab>(initialTab);
@@ -37,6 +46,20 @@ export function PlanningTabs({ initialTab, income, present, future }: PlanningTa
   }
 
   const contents: Record<PlanningTab, ReactNode> = { income, present, future };
+  // Indicadores de alerta nos nomes das abas (FR-014): visíveis de qualquer aba
+  const indicators: Record<PlanningTab, ReactNode> = {
+    income: null,
+    present: (
+      <TabAlertIndicator
+        section="expenses"
+        revenueCents={revenueCents}
+        totalCents={expensesTotalCents}
+      />
+    ),
+    future: (
+      <TabAlertIndicator section="goals" revenueCents={revenueCents} totalCents={goalsTotalCents} />
+    ),
+  };
 
   return (
     <Tabs value={tab} onValueChange={handleTabChange} className="gap-4">
@@ -44,6 +67,7 @@ export function PlanningTabs({ initialTab, income, present, future }: PlanningTa
         {PLANNING_TABS.map((value) => (
           <TabsTrigger key={value} value={value} className="flex-1">
             {TAB_LABELS[value]}
+            {indicators[value]}
           </TabsTrigger>
         ))}
       </TabsList>
