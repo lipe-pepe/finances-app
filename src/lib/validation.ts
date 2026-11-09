@@ -40,5 +40,11 @@ export const amountSchema = z
     return cents;
   });
 
+/** Categoria obrigatória escolhida da lista (uuid). */
+export const categoryIdSchema = z
+  .string({ error: "Selecione uma categoria." })
+  .min(1, "Selecione uma categoria.")
+  .pipe(z.uuid("Selecione uma categoria."));
+
 /** Identificador (uuid) obrigatório. */
 export const idSchema = z.uuid("Identificador inválido.");
