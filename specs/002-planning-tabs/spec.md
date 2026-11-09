@@ -23,6 +23,9 @@ regras de cálculo, persistência e privacidade permanecem as mesmas)
   itens continuam "gasto" e "meta".
 - Q: O alerta de uma seção deve ser sinalizado fora da aba dela? → A: Sim, com um indicador de
   alerta no nome da aba com problema, visível de qualquer aba.
+- Q: A aba selecionada deve ficar registrada no endereço da página, para que recarregar, usar
+  Voltar/Avançar ou abrir um link mantenha a mesma aba? → A: Sim; sem aba no endereço, a tela
+  abre em "Receita".
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -43,6 +46,10 @@ apenas o conteúdo esperado; cadastrar um item em uma aba e confirmar que a tela
 
 1. **Given** um usuário logado, **When** ele abre a tela de planejamento, **Then** vê três abas na
    ordem "Receita", "Momento Presente" e "Momento Futuro", com a aba "Receita" selecionada.
+7. **Given** o usuário na aba "Momento Futuro", **When** ele recarrega a página, **Then** a tela
+   volta já na aba "Momento Futuro".
+8. **Given** um link da tela de planejamento que indica a aba "Momento Presente", **When** o
+   usuário logado o abre, **Then** a tela abre diretamente nessa aba.
 2. **Given** a aba "Receita" selecionada, **When** o usuário olha o conteúdo, **Then** vê a lista
    de ganhos, a receita total e o slider de divisão da receita, e não vê as listas de gastos nem
    de metas.
@@ -120,7 +127,10 @@ alerta; voltar o slider e verificar que o indicador some.
 
 ### Edge Cases
 
-- Recarregar a página ou entrar novamente: a tela abre na aba "Receita".
+- Recarregar a página: a tela abre na aba indicada no endereço; sem indicação, em "Receita".
+- Endereço com aba inexistente ou inválida: a tela abre em "Receita", sem erro.
+- Usuário deslogado que abre um link com aba: vai para o login e, após entrar, cai na tela de
+  planejamento em "Receita" (preservar a aba após o login não faz parte desta feature).
 - Salvar, editar ou apagar um item em uma aba: a aba selecionada não muda.
 - Mover o slider na aba "Receita" e depois abrir outra aba: os valores planejados e alertas dessa
   aba já refletem a nova divisão, mesmo antes de o salvamento terminar.
@@ -147,7 +157,12 @@ alerta; voltar o slider e verificar que o indicador some.
   seu comportamento atual.
 - **FR-005**: Apenas o conteúdo da aba selecionada MUST ser exibido; as seções de Momento Presente
   e Momento Futuro MUST NOT aparecer fora de suas abas.
-- **FR-006**: A aba "Receita" MUST estar selecionada ao abrir ou recarregar a tela.
+- **FR-006**: A aba selecionada MUST ficar registrada no endereço da página, com os valores
+  `receita`, `momento-presente` e `momento-futuro`; ao abrir ou recarregar a tela, a aba indicada
+  no endereço MUST estar selecionada, e sem indicação (ou com valor inválido) MUST ser "Receita".
+- **FR-006a**: Trocar de aba MUST atualizar o endereço sem recarregar a página e sem criar uma
+  nova entrada no histórico do navegador para cada troca (Voltar sai da tela de planejamento em
+  vez de percorrer as abas).
 - **FR-007**: Criar, editar ou apagar itens, ou mover o slider, MUST NOT mudar a aba selecionada.
 - **FR-008**: As abas MUST ser operáveis por teclado e identificadas como abas para tecnologias
   assistivas.
@@ -206,6 +221,7 @@ alerta; voltar o slider e verificar que o indicador some.
   continuam os mesmos e não precisam de migração.
 - "Receita" é o nome da aba que reúne ganhos e divisão; o título interno da seção de ganhos
   continua "Ganhos" e o total continua "Receita total".
-- A aba selecionada não é lembrada entre visitas: a tela sempre abre em "Receita".
+- A aba fica apenas no endereço da página: não é lembrada entre visitas que abrem a tela sem
+  indicação de aba (nesse caso, abre em "Receita").
 - O cabeçalho com o título e o botão "Sair" permanece fora das abas, sempre visível.
 - Categorias, valores e regras de alerta (estritamente maior que o planejado) não mudam.
