@@ -1,13 +1,15 @@
 # Finanças Pessoais
 
 Plataforma de planejamento financeiro pessoal: o usuário cadastra seus ganhos (receita total),
-divide a receita entre **gastos essenciais** e **metas futuras** com um slider e acompanha alertas
-quando o planejamento é excedido.
+divide a receita entre **Momento Presente** (gastos) e **Momento Futuro** (metas) com um slider e
+acompanha alertas quando o planejamento é excedido. A tela é organizada em três abas: Receita,
+Momento Presente e Momento Futuro.
 
 Stack: Next.js 16 (App Router) · Supabase (PostgreSQL + Auth) · Prisma 7 · React Hook Form + Zod ·
 Tailwind CSS 4 + shadcn/ui · Vitest.
 
-Especificação, plano e tarefas: [`specs/001-financial-planning/`](specs/001-financial-planning/).
+Especificações, planos e tarefas: [`specs/`](specs/) (001: planejamento financeiro; 002: abas e
+novos nomes).
 Regras do projeto: [`.specify/memory/constitution.md`](.specify/memory/constitution.md).
 
 ## Pré-requisitos
