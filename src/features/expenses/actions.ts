@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { CONTROL_PATH, PLANNING_PATH } from "@/lib/app-routes";
 import { fail, fieldError, ok, validationError, type ActionResult } from "@/lib/action-result";
 import { MISSING_CATEGORY_MESSAGE, categoryExists } from "@/lib/category";
 import { centsToDecimalString } from "@/lib/money";
@@ -25,7 +26,9 @@ export async function createExpense(input: ExpenseInput): Promise<ActionResult<{
       },
       select: { id: true },
     });
-    revalidatePath("/");
+    // O planejado por categoria também aparece no Controle
+    revalidatePath(PLANNING_PATH);
+    revalidatePath(CONTROL_PATH);
     return ok({ id: expense.id });
   });
 }
@@ -53,7 +56,9 @@ export async function updateExpense(
     });
     if (count === 0) return fail({ code: "NOT_FOUND" });
 
-    revalidatePath("/");
+    // O planejado por categoria também aparece no Controle
+    revalidatePath(PLANNING_PATH);
+    revalidatePath(CONTROL_PATH);
     return ok({ id });
   });
 }
@@ -65,7 +70,9 @@ export async function deleteExpense(id: string): Promise<ActionResult> {
     const { count } = await prisma.expense.deleteMany({ where: { id, userId } });
     if (count === 0) return fail({ code: "NOT_FOUND" });
 
-    revalidatePath("/");
+    // O planejado por categoria também aparece no Controle
+    revalidatePath(PLANNING_PATH);
+    revalidatePath(CONTROL_PATH);
     return ok();
   });
 }

@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { PLANNING_PATH } from "@/lib/app-routes";
 import { fail, fieldError, ok, validationError, type ActionResult } from "@/lib/action-result";
 import { MISSING_CATEGORY_MESSAGE, categoryExists } from "@/lib/category";
 import { centsToDecimalString } from "@/lib/money";
@@ -27,7 +28,7 @@ export async function createGoal(input: GoalInput): Promise<ActionResult<{ id: s
       },
       select: { id: true },
     });
-    revalidatePath("/");
+    revalidatePath(PLANNING_PATH);
     return ok({ id: goal.id });
   });
 }
@@ -53,7 +54,7 @@ export async function updateGoal(id: string, input: GoalInput): Promise<ActionRe
     });
     if (count === 0) return fail({ code: "NOT_FOUND" });
 
-    revalidatePath("/");
+    revalidatePath(PLANNING_PATH);
     return ok({ id });
   });
 }
@@ -65,7 +66,7 @@ export async function deleteGoal(id: string): Promise<ActionResult> {
     const { count } = await prisma.goal.deleteMany({ where: { id, userId } });
     if (count === 0) return fail({ code: "NOT_FOUND" });
 
-    revalidatePath("/");
+    revalidatePath(PLANNING_PATH);
     return ok();
   });
 }

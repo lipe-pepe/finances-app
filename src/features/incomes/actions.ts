@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { PLANNING_PATH } from "@/lib/app-routes";
 import { fail, ok, validationError, type ActionResult } from "@/lib/action-result";
 import { centsToDecimalString } from "@/lib/money";
 import { prisma } from "@/lib/prisma";
@@ -16,7 +17,7 @@ export async function createIncome(input: IncomeInput): Promise<ActionResult<{ i
       data: { userId, name: parsed.data.name, amount: centsToDecimalString(parsed.data.amount) },
       select: { id: true },
     });
-    revalidatePath("/");
+    revalidatePath(PLANNING_PATH);
     return ok({ id: income.id });
   });
 }
@@ -37,7 +38,7 @@ export async function updateIncome(
     });
     if (count === 0) return fail({ code: "NOT_FOUND" });
 
-    revalidatePath("/");
+    revalidatePath(PLANNING_PATH);
     return ok({ id });
   });
 }
@@ -49,7 +50,7 @@ export async function deleteIncome(id: string): Promise<ActionResult> {
     const { count } = await prisma.income.deleteMany({ where: { id, userId } });
     if (count === 0) return fail({ code: "NOT_FOUND" });
 
-    revalidatePath("/");
+    revalidatePath(PLANNING_PATH);
     return ok();
   });
 }

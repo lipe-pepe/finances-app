@@ -28,7 +28,7 @@ describe("Server Actions de ganhos", () => {
       expect(rows).toHaveLength(1);
       expect(rows[0].userId).toBe(users.userA);
       expect(rows[0].amount.toString()).toBe("1250.5");
-      expect(revalidatePath).toHaveBeenCalledWith("/");
+      expect(revalidatePath).toHaveBeenCalledWith("/planning");
     });
 
     it("retorna VALIDATION e não persiste com entrada inválida", async () => {

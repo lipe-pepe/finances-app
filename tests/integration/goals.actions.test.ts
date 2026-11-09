@@ -31,7 +31,7 @@ describe("Server Actions de metas futuras", () => {
     expect(rows).toEqual([
       expect.objectContaining({ userId: users.userA, name: "Viagem", categoryId: null }),
     ]);
-    expect(revalidatePath).toHaveBeenCalledWith("/");
+    expect(revalidatePath).toHaveBeenCalledWith("/planning");
   });
 
   it("cria uma meta com categoria", async () => {

@@ -21,9 +21,9 @@ describe("signIn / signOut", () => {
     resetCookies();
   });
 
-  it("entra com credenciais corretas, grava a sessão e redireciona para /", async () => {
+  it("entra com credenciais corretas, grava a sessão e redireciona para /control", async () => {
     await expect(signIn({ email: TEST_USERS.a, password: TEST_PASSWORD })).rejects.toEqual(
-      new RedirectError("/"),
+      new RedirectError("/control"),
     );
     expect(getStoredCookies().length).toBeGreaterThan(0);
     await expect(getCurrentUserId()).resolves.toBe(users.userA);

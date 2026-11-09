@@ -32,7 +32,8 @@ describe("Server Actions de gastos essenciais", () => {
       expect.objectContaining({ userId: users.userA, name: "Aluguel", categoryId }),
     ]);
     expect(rows[0].amount.toString()).toBe("1500");
-    expect(revalidatePath).toHaveBeenCalledWith("/");
+    expect(revalidatePath).toHaveBeenCalledWith("/planning");
+    expect(revalidatePath).toHaveBeenCalledWith("/control");
   });
 
   it("retorna VALIDATION em categoryId quando a categoria não existe", async () => {
