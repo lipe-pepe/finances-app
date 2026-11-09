@@ -149,7 +149,8 @@ alerta; voltar o slider e verificar que o indicador some.
 - **FR-001**: A tela de planejamento MUST organizar o conteúdo em três abas, nesta ordem:
   "Receita", "Momento Presente" e "Momento Futuro".
 - **FR-002**: A aba "Receita" MUST conter a seção de ganhos (cadastro, lista e receita total) e a
-  divisão da receita (slider com os valores planejados de cada momento).
+  divisão da receita (slider com os valores planejados de cada momento, cada valor identificado
+  pelo nome do momento).
 - **FR-003**: A aba "Momento Presente" MUST conter a seção antes chamada "Gastos essenciais", com
   todo o seu comportamento atual (valor planejado, cadastro, edição, exclusão, lista, soma e
   alerta).

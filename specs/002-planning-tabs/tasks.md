@@ -68,7 +68,7 @@ vê-los falhar.
 
 ### Tests for User Story 1 ⚠️
 
-- [ ] T007 [US1] Escrever testes unitários em `tests/unit/components/planning-tabs.test.tsx` renderizando `PlanningTabs` dentro de `AllocationProvider` (com `saveAllocation` e `next/navigation` mockados como em `allocation-slider.test.tsx`) e conteúdos de teste simples (`<p>conteúdo receita</p>` etc.): (a) `getAllByRole("tab")` na ordem "Receita", "Momento Presente", "Momento Futuro"; (b) com `initialTab="income"`, só "conteúdo receita" visível; (c) com `initialTab="future"`, a aba "Momento Futuro" tem `aria-selected="true"` e só o conteúdo dela aparece; (d) clicar em "Momento Presente" mostra o conteúdo dela e chama `window.history.replaceState(null, "", "/?tab=present")` (espiar com `vi.spyOn(window.history, "replaceState")`); clicar em "Receita" chama com `"/"`; `pushState` nunca é chamado; (e) com foco na aba "Receita", `ArrowRight` seleciona "Momento Presente" (usar `userEvent.keyboard`)
+- [ ] T007 [US1] Escrever testes unitários em `tests/unit/components/planning-tabs.test.tsx` renderizando `PlanningTabs` dentro de `AllocationProvider` (com `saveAllocation` e `next/navigation` mockados como em `allocation-slider.test.tsx`) e conteúdos de teste simples (`<p>conteúdo receita</p>` etc.): (a) `getAllByRole("tab")` na ordem "Receita", "Momento Presente", "Momento Futuro"; (b) com `initialTab="income"`, só "conteúdo receita" visível; (c) com `initialTab="future"`, a aba "Momento Futuro" tem `aria-selected="true"` e só o conteúdo dela aparece; (d) clicar em "Momento Presente" mostra o conteúdo dela e chama `window.history.replaceState(null, "", "/?tab=present")` (espiar com `vi.spyOn(window.history, "replaceState")`); clicar em "Receita" chama com `"/"`; `pushState` nunca é chamado; (e) com foco na aba "Receita", `ArrowRight` seleciona "Momento Presente" (usar `userEvent.keyboard`); (f) após clicar em "Momento Futuro", chamar `rerender` com o mesmo `PlanningTabs` mas conteúdos novos (`<p>futuro atualizado</p>`) e `initialTab="income"` (simula a re-renderização do servidor após uma Server Action) → "Momento Futuro" continua com `aria-selected="true"` e mostra "futuro atualizado" (FR-007, SC-004)
 
 ### Implementation for User Story 1
 
@@ -87,17 +87,18 @@ vê-los falhar.
 
 ### Tests for User Story 2 ⚠️
 
-- [ ] T010 [P] [US2] Atualizar `tests/unit/components/allocation-slider.test.tsx` para os novos rótulos: "Momento Presente 70%", "Momento Futuro 30%", "Momento Presente 71%" (substituir todas as ocorrências de "Gastos essenciais"/"Metas futuras"), e adicionar asserção de que o slider tem o nome acessível "Divisão entre Momento Presente e Momento Futuro"
+- [ ] T010 [P] [US2] Atualizar `tests/unit/components/allocation-slider.test.tsx` para os novos rótulos: "Momento Presente 70%", "Momento Futuro 30%", "Momento Presente 71%" (substituir todas as ocorrências de "Gastos essenciais"/"Metas futuras"), e adicionar asserção de que o slider tem o nome acessível "Divisão entre Momento Presente e Momento Futuro"; e um caso com `PlannedAmount` usando `showSectionLabel`: receita 600000 e 70% → "Momento Presente: R$ 4.200,00 (70% da receita)" e "Momento Futuro: R$ 1.800,00 (30% da receita)"; sem a prop, o texto continua "Planejado (70% da receita): R$ 4.200,00"
 - [ ] T011 [P] [US2] Atualizar `tests/unit/components/over-budget-alert.test.tsx` para os novos textos: "O Momento Presente excede o planejado em R$ 100,00", "O Momento Futuro excede o planejado em R$ 0,01" e "O Momento Futuro excede o planejado em R$ 100,00", mantendo "Planejamento incorreto" como título
 
 ### Implementation for User Story 2
 
 - [ ] T012 [P] [US2] Atualizar `src/features/allocation/components/allocation-slider.tsx`: rótulos `${SECTION_LABELS.expenses} ${essentialPercentage}%` e `${SECTION_LABELS.goals} ${goalsPercentage}%` e `aria-label` "Divisão entre Momento Presente e Momento Futuro" (de `planning-labels`), até T010 passar
-- [ ] T013 [P] [US2] Atualizar `src/features/planning/components/over-budget-alert.tsx` para usar `overBudgetMessage(section, excessCents)` de `planning-labels` (remover o mapa `SECTION_SUBJECT`), até T011 passar
-- [ ] T014 [P] [US2] Atualizar `src/features/allocation/components/allocation-section.tsx`: descrição "Arraste para definir quanto da receita vai para o Momento Presente e para o Momento Futuro. A divisão é salva automaticamente." e comentário do componente com os novos nomes
-- [ ] T015 [P] [US2] Atualizar `src/features/expenses/components/expense-section.tsx` (título `SECTION_LABELS.expenses`, total `SECTION_TOTAL_LABELS.expenses`, comentário) e `src/features/expenses/components/expense-list.tsx` (comentário), mantendo os textos dos itens ("Nome do gasto", "Adicionar gasto", "Nenhum gasto cadastrado")
-- [ ] T016 [P] [US2] Atualizar `src/features/goals/components/goal-section.tsx` (título `SECTION_LABELS.goals`, total `SECTION_TOTAL_LABELS.goals`, comentário) e `src/features/goals/components/goal-list.tsx` (comentário), mantendo os textos dos itens ("Nome da meta", "Adicionar meta", "Nenhuma meta cadastrada")
-- [ ] T017 [P] [US2] Atualizar a descrição em `src/app/layout.tsx` para "Planejamento financeiro pessoal: receita, Momento Presente e Momento Futuro." e os comentários de `src/lib/planning.ts` e `src/features/allocation/schemas.ts` que citam "gastos essenciais"/"metas futuras"
+- [ ] T013 [P] [US2] Adicionar a prop opcional `showSectionLabel?: boolean` em `src/features/allocation/components/planned-amount.tsx`: quando verdadeira, exibe "`SECTION_LABELS[section]`: R$ X (Y% da receita)"; quando ausente, mantém "Planejado (Y% da receita): R$ X" (usado dentro das seções, onde o título já diz o momento); até o caso novo da T010 passar
+- [ ] T014 [P] [US2] Atualizar `src/features/planning/components/over-budget-alert.tsx` para usar `overBudgetMessage(section, excessCents)` de `planning-labels` (remover o mapa `SECTION_SUBJECT`), até T011 passar
+- [ ] T015 [P] [US2] Atualizar `src/features/allocation/components/allocation-section.tsx`: descrição "Arraste para definir quanto da receita vai para o Momento Presente e para o Momento Futuro. A divisão é salva automaticamente." e comentário do componente com os novos nomes, e passar `showSectionLabel` aos dois `PlannedAmount`
+- [ ] T016 [P] [US2] Atualizar `src/features/expenses/components/expense-section.tsx` (título `SECTION_LABELS.expenses`, total `SECTION_TOTAL_LABELS.expenses`, comentário) e `src/features/expenses/components/expense-list.tsx` (comentário), mantendo os textos dos itens ("Nome do gasto", "Adicionar gasto", "Nenhum gasto cadastrado")
+- [ ] T017 [P] [US2] Atualizar `src/features/goals/components/goal-section.tsx` (título `SECTION_LABELS.goals`, total `SECTION_TOTAL_LABELS.goals`, comentário) e `src/features/goals/components/goal-list.tsx` (comentário), mantendo os textos dos itens ("Nome da meta", "Adicionar meta", "Nenhuma meta cadastrada")
+- [ ] T018 [P] [US2] Atualizar a descrição em `src/app/layout.tsx` para "Planejamento financeiro pessoal: receita, Momento Presente e Momento Futuro." e os comentários de `src/lib/planning.ts` e `src/features/allocation/schemas.ts` que citam "gastos essenciais"/"metas futuras"
 
 **Checkpoint**: User Stories 1 e 2 funcionando; nenhum texto antigo na interface.
 
@@ -111,13 +112,13 @@ vê-los falhar.
 
 ### Tests for User Story 3 ⚠️
 
-- [ ] T018 [P] [US3] Escrever testes unitários em `tests/unit/components/tab-alert-indicator.test.tsx` (dentro de `AllocationProvider` + `AllocationSlider`, mocks como em `over-budget-alert.test.tsx`): receita 400000, 50%, total 210000 → renderiza texto acessível ", com alerta" e um ícone com `aria-hidden="true"`; total 200000 → nada renderizado; mover o slider com `ArrowRight` até 55% (total 210000 → planejado 220000) faz sumir e `ArrowLeft` de volta faz aparecer; `section="goals"` usa 100 − porcentagem
-- [ ] T019 [US3] Adicionar a `tests/unit/components/planning-tabs.test.tsx` um caso em que `expensesTotalCents` excede o planejado: a aba tem nome acessível "Momento Presente, com alerta" (`getByRole("tab", { name: "Momento Presente, com alerta" })`) mesmo com a aba "Receita" selecionada, e a aba "Momento Futuro" não tem indicador; e um caso com soma igual ao planejado sem indicador
+- [ ] T019 [P] [US3] Escrever testes unitários em `tests/unit/components/tab-alert-indicator.test.tsx` (dentro de `AllocationProvider` + `AllocationSlider`, mocks como em `over-budget-alert.test.tsx`): receita 400000, 50%, total 210000 → renderiza texto acessível ", com alerta" e um ícone com `aria-hidden="true"`; total 200000 → nada renderizado; mover o slider com `ArrowRight` até 55% (total 210000 → planejado 220000) faz sumir e `ArrowLeft` de volta faz aparecer; `section="goals"` usa 100 − porcentagem
+- [ ] T020 [US3] Adicionar a `tests/unit/components/planning-tabs.test.tsx` um caso em que `expensesTotalCents` excede o planejado: a aba tem nome acessível "Momento Presente, com alerta" (`getByRole("tab", { name: "Momento Presente, com alerta" })`) mesmo com a aba "Receita" selecionada, e a aba "Momento Futuro" não tem indicador; e um caso com soma igual ao planejado sem indicador
 
 ### Implementation for User Story 3
 
-- [ ] T020 [US3] Criar `src/features/planning/components/tab-alert-indicator.tsx` (`"use client"` com comentário: depende da porcentagem do slider em tempo real) com props `{ section: PlanningSection; revenueCents: number; totalCents: number }`, usando `useOverBudget`; quando `isOver`, renderiza `<TriangleAlert aria-hidden="true" className="size-4 text-destructive" />` e `<span className="sr-only">{TAB_ALERT_SR_TEXT}</span>`; caso contrário `null`; até T018 passar
-- [ ] T021 [US3] Incluir `TabAlertIndicator` nos gatilhos "Momento Presente" (`section="expenses"`, `totalCents={expensesTotalCents}`) e "Momento Futuro" (`section="goals"`, `totalCents={goalsTotalCents}`) em `src/features/planning/components/planning-tabs.tsx`, após o rótulo, até T019 passar
+- [ ] T021 [US3] Criar `src/features/planning/components/tab-alert-indicator.tsx` (`"use client"` com comentário: depende da porcentagem do slider em tempo real) com props `{ section: PlanningSection; revenueCents: number; totalCents: number }`, usando `useOverBudget`; quando `isOver`, renderiza `<TriangleAlert aria-hidden="true" className="size-4 text-destructive" />` e `<span className="sr-only">{TAB_ALERT_SR_TEXT}</span>`; caso contrário `null`; até T019 passar
+- [ ] T022 [US3] Incluir `TabAlertIndicator` nos gatilhos "Momento Presente" (`section="expenses"`, `totalCents={expensesTotalCents}`) e "Momento Futuro" (`section="goals"`, `totalCents={goalsTotalCents}`) em `src/features/planning/components/planning-tabs.tsx`, após o rótulo, até T020 passar
 
 **Checkpoint**: todas as histórias funcionando de forma independente.
 
@@ -127,11 +128,11 @@ vê-los falhar.
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T022 Escrever o teste unitário rastreável à spec em `tests/unit/specs/002-planning-tabs.spec.test.ts` (Princípio II), com um `describe` por cenário: US1 (ordem das abas em `PLANNING_TABS`/`TAB_LABELS`; aba padrão "Receita"; `/?tab=future` → Momento Futuro; valor inválido → Receita; endereço da aba Receita é `/`), US2 (rótulos do slider "Momento Presente 70%"/"Momento Futuro 30%" a partir de `SECTION_LABELS` e `getGoalsPercentage(70)`; totais; mensagens de alerta com R$ 100,00) e US3 (receita R$ 4.000,00, 50%, Momento Presente R$ 2.100,00 → alerta; R$ 2.000,00 → sem alerta; 55% → sem alerta), usando `src/lib/planning-tab.ts`, `src/lib/planning-labels.ts`, `src/lib/planning.ts` e `src/lib/money.ts`
-- [ ] T023 [P] Auditar `src/`: `grep -rni "gastos essenciais\|metas futuras" src --exclude-dir=generated` sem resultados em textos de interface; todo `"use client"` com comentário de justificativa; nenhum identificador novo em português
-- [ ] T024 [P] Atualizar a descrição do produto no `README.md` para os novos nomes ("divide a receita entre **Momento Presente** e **Momento Futuro**, organizados em abas")
-- [ ] T025 Rodar `npm run test:unit`, `npx tsc --noEmit`, `npm run lint` e `npx next build` (com variáveis fictícias) e garantir sucesso
-- [ ] T026 Executar a validação manual de `specs/002-planning-tabs/quickstart.md` (passos 1–8) e registrar o resultado
+- [ ] T023 Escrever o teste unitário rastreável à spec em `tests/unit/specs/002-planning-tabs.spec.test.ts` (Princípio II), com um `describe` por cenário: US1 (ordem das abas em `PLANNING_TABS`/`TAB_LABELS`; aba padrão "Receita"; `/?tab=future` → Momento Futuro; valor inválido → Receita; endereço da aba Receita é `/`), US2 (rótulos do slider "Momento Presente 70%"/"Momento Futuro 30%" a partir de `SECTION_LABELS` e `getGoalsPercentage(70)`; totais; mensagens de alerta com R$ 100,00) e US3 (receita R$ 4.000,00, 50%, Momento Presente R$ 2.100,00 → alerta; R$ 2.000,00 → sem alerta; 55% → sem alerta), usando `src/lib/planning-tab.ts`, `src/lib/planning-labels.ts`, `src/lib/planning.ts` e `src/lib/money.ts`
+- [ ] T024 [P] Auditar `src/`: `grep -rni "gastos essenciais\|metas futuras" src --exclude-dir=generated` sem resultados em textos de interface; todo `"use client"` com comentário de justificativa; nenhum identificador novo em português
+- [ ] T025 [P] Atualizar a descrição do produto no `README.md` para os novos nomes ("divide a receita entre **Momento Presente** e **Momento Futuro**, organizados em abas")
+- [ ] T026 Rodar `npm run test:unit`, `npx tsc --noEmit`, `npm run lint` e `npx next build` (com variáveis fictícias) e garantir sucesso
+- [ ] T027 Executar a validação manual de `specs/002-planning-tabs/quickstart.md` (passos 1–8) e registrar o resultado
 
 ---
 
@@ -149,16 +150,16 @@ vê-los falhar.
 ### Within Each User Story
 
 - Testes escritos e falhando antes da implementação.
-- `src/features/planning/components/planning-tabs.tsx` é editado por T008 e T021; o teste
-  `planning-tabs.test.tsx` por T007 e T019 — essas tarefas são sequenciais.
-- `over-budget-alert.tsx` é editado por T006 e T013 — sequenciais.
+- `src/features/planning/components/planning-tabs.tsx` é editado por T008 e T022; o teste
+  `planning-tabs.test.tsx` por T007 e T020 — essas tarefas são sequenciais.
+- `over-budget-alert.tsx` é editado por T006 e T014 — sequenciais.
 
 ### Parallel Opportunities
 
 - Foundational: T002/T003 e T004/T005 em paralelo entre si.
-- US2: T010–T017 em paralelo (arquivos diferentes; T013 após T006).
+- US2: T010–T018 em paralelo (arquivos diferentes; T014 após T006).
 - US1 e US2 podem ser feitas em paralelo após a Foundational.
-- T018 (teste do indicador) pode ser escrito em paralelo com a US1.
+- T019 (teste do indicador) pode ser escrito em paralelo com a US1.
 
 ---
 
