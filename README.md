@@ -13,11 +13,26 @@ Plataforma de finanças pessoais com duas partes, acessadas pelos botões no top
 
 O "hoje" e o "mês atual" usam o fuso `America/Sao_Paulo`, igual no navegador e no servidor.
 
+## Visual
+
+- Referência aprovada: [`docs/design/redesign/`](docs/design/redesign/) (README com cores, fonte,
+  ícones e layout; telas do protótipo).
+- Todos os valores visuais são **tokens** em [`src/app/globals.css`](src/app/globals.css); os
+  componentes usam só utilitários de token (`bg-primary`, `text-muted-foreground`,
+  `bg-present`…), nunca cores escritas à mão.
+- Tema claro ou escuro conforme a preferência de aparência do dispositivo.
+- Cores fixas: rosa = marca e Controle; verde = Receita; laranja = Momento Presente; azul =
+  Momento Futuro; vermelho = alertas.
+- Fonte DM Sans (via `next/font`); telas a partir de 360 px, com alvos de toque de 44 px. No
+  Controle, abaixo de 720 px, o registro de gasto abre por um botão fixo no rodapé.
+- Testes de design em `tests/unit/design/`: contraste AA de todos os pares de tokens nos dois
+  temas e varredura contra cores escritas à mão.
+
 Stack: Next.js 16 (App Router) · Supabase (PostgreSQL + Auth) · Prisma 7 · React Hook Form + Zod ·
 Tailwind CSS 4 + shadcn/ui · Recharts (gráfico) · Vitest.
 
 Especificações, planos e tarefas: [`specs/`](specs/) (001: planejamento financeiro; 002: abas e
-novos nomes; 003: Planejamento e Controle de gastos).
+novos nomes; 003: Planejamento e Controle de gastos; 004: redesign visual).
 Regras do projeto: [`.specify/memory/constitution.md`](.specify/memory/constitution.md).
 
 ## Pré-requisitos
