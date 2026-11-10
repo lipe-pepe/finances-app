@@ -24,6 +24,18 @@ telas responsivas. Sem mudanças em regras de cálculo, dados ou validações."
 Divergências intencionais em relação a essa referência são registradas nesta spec (Princípio VI
 da constituição).
 
+## Clarifications
+
+### Session 2026-11-09
+
+- Q: Quando o usuário clica em "Editar" num gasto, ganho ou meta da lista, onde o formulário de
+  edição deve aparecer? → A: Na própria linha da lista em telas de 720 px ou mais; abaixo de
+  720 px, no Controle, o mesmo painel que sobe de baixo, já preenchido (no Planejamento a
+  edição continua na linha em qualquer largura).
+- Q: No Planejamento pelo celular, o formulário de adicionar continua em linha acima da lista
+  ou usa um botão fixo com painel, como no Controle? → A: Continua em linha acima da lista; o
+  botão fixo com painel é exclusivo do registro de gastos no Controle.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Identidade visual em todas as telas (Priority: P1)
@@ -161,6 +173,11 @@ abas do Planejamento sem rolagem horizontal; no Controle, rolar até o fim, toca
 5. **Given** o painel aberto com dados válidos, **When** o usuário toca em "Adicionar gasto",
    **Then** o gasto é registrado, o painel fecha e o dashboard mostra o novo gasto; com erro de
    validação, o painel continua aberto mostrando os erros por campo.
+5a. **Given** o Controle numa tela abaixo de 720 px, **When** o usuário toca em "Editar" num
+   gasto, **Then** abre o mesmo painel com o título "Editar gasto", os campos preenchidos com os
+   dados do gasto e o botão "Salvar"; salvar com sucesso fecha o painel e atualiza o dashboard.
+5b. **Given** o Planejamento no celular, **When** o usuário toca em "Editar" num ganho, gasto ou
+   meta, **Then** a edição abre na própria linha da lista, como no computador.
 6. **Given** o Planejamento no celular, **When** ele é exibido, **Then** os três cards ficam
    empilhados, com os alertas visíveis, e os formulários se ajustam em uma ou duas colunas.
 7. **Given** qualquer tela no celular, **When** o usuário toca em botões, campos e cards,
@@ -234,6 +251,10 @@ abas do Planejamento sem rolagem horizontal; no Controle, rolar até o fim, toca
   registro bem-sucedido e permanece aberto com erros de validação.
 - **FR-015**: O conteúdo do Controle MUST deixar espaço no fim para que o botão fixo não cubra o
   último item da lista.
+- **FR-015a**: A edição de itens das listas MUST abrir na própria linha em telas de 720 px ou
+  mais; no Controle, abaixo de 720 px, "Editar" MUST abrir o mesmo painel do registro, com o
+  título "Editar gasto", os dados do gasto preenchidos, o botão "Salvar" e o comportamento de
+  diálogo de FR-014. No Planejamento, a edição MUST abrir na linha em qualquer largura.
 
 **Planejamento**
 
@@ -262,7 +283,9 @@ abas do Planejamento sem rolagem horizontal; no Controle, rolar até o fim, toca
 - **FR-023**: Todas as telas MUST funcionar a partir de 360 px de largura sem rolagem horizontal
   da página, com alvos de toque de no mínimo 44 × 44 px.
 - **FR-024**: No celular, o cabeçalho MUST quebrar em linhas, os cards de resumo MUST ficar
-  empilhados e os formulários MUST se ajustar à largura.
+  empilhados e os formulários MUST se ajustar à largura. No Planejamento, os formulários de
+  adicionar MUST continuar em linha acima da lista em qualquer largura; o botão fixo com painel
+  (FR-013) MUST existir apenas no Controle.
 
 **Comportamento preservado**
 
