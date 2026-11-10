@@ -4,6 +4,8 @@ import {
   SECTION_TOTAL_LABELS,
   TAB_ALERT_SR_TEXT,
   TAB_LABELS,
+  PLANNING_SUBTITLE,
+  incomeCountLabel,
   overBudgetMessage,
 } from "@/lib/planning-labels";
 
@@ -44,5 +46,17 @@ describe("planning-labels", () => {
       overBudgetMessage("goals", 1),
     ].join(" ");
     expect(texts).not.toMatch(/gastos essenciais|metas futuras/i);
+  });
+
+  it("conta os ganhos cadastrados no singular e no plural", () => {
+    expect(incomeCountLabel(0)).toBe("Nenhum ganho cadastrado");
+    expect(incomeCountLabel(1)).toBe("1 ganho cadastrado");
+    expect(incomeCountLabel(2)).toBe("2 ganhos cadastrados");
+  });
+
+  it("define a frase de apoio do Planejamento", () => {
+    expect(PLANNING_SUBTITLE).toBe(
+      "Defina sua receita e divida entre o Momento Presente e o Momento Futuro.",
+    );
   });
 });

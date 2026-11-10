@@ -17,7 +17,22 @@ export const SUMMARY_LABELS = {
   planned: "Planejado",
   spent: "Gasto",
   available: "Disponível",
+  used: "Usado",
 } as const;
+
+export const REGISTER_BUTTON_LABEL = "Registrar gasto";
+export const REGISTER_SHEET_TITLE = "Registrar gasto";
+export const EDIT_SHEET_TITLE = "Editar gasto";
+
+/** Percentual usado; "—" quando indefinido (planejado zero com gasto). */
+export function usedLabel(usedPercentage: number | null): string {
+  return usedPercentage === null ? "—" : `${usedPercentage}%`;
+}
+
+/** Dica do campo de data. Ex.: "Somente dias de novembro de 2026." */
+export function dateHint(monthLabel: string): string {
+  return `Somente dias de ${monthLabel.charAt(0).toLowerCase()}${monthLabel.slice(1)}.`;
+}
 
 /** Ex.: "Controle de Novembro de 2026". */
 export function controlTitle(monthLabel: string): string {

@@ -5,6 +5,8 @@ import {
   filterActualExpenses,
   getAvailableCents,
   getPlannedCents,
+  getUsageBarPercentage,
+  getUsedPercentage,
   isOverLimit,
   sumActualCents,
 } from "@/lib/spending";
@@ -68,5 +70,19 @@ describe("spending", () => {
     const series = buildCumulativeSeries([], "2026-11-09");
     expect(series.slice(0, 9).every((p) => p.spentCents === 0)).toBe(true);
     expect(series.slice(9).every((p) => p.spentCents === null)).toBe(true);
+  });
+
+  it("calcula o percentual usado do planejado", () => {
+    expect(getUsedPercentage(75000, 150000)).toBe(50);
+    expect(getUsedPercentage(160500, 150000)).toBe(107);
+    expect(getUsedPercentage(0, 0)).toBe(0);
+    expect(getUsedPercentage(100, 0)).toBeNull();
+    expect(getUsedPercentage(1, 3)).toBe(33);
+  });
+
+  it("limita a barra de uso a 100% e enche quando o percentual é indefinido", () => {
+    expect(getUsageBarPercentage(50)).toBe(50);
+    expect(getUsageBarPercentage(107)).toBe(100);
+    expect(getUsageBarPercentage(null)).toBe(100);
   });
 });

@@ -30,3 +30,13 @@ export const OVER_BUDGET_TITLE = "Planejamento incorreto";
 export function overBudgetMessage(section: PlanningSection, excessCents: number): string {
   return `O ${SECTION_LABELS[section]} excede o planejado em ${formatBrl(excessCents)}`;
 }
+
+/** Frase de apoio abaixo do título da página Planejamento. */
+export const PLANNING_SUBTITLE =
+  "Defina sua receita e divida entre o Momento Presente e o Momento Futuro.";
+
+/** Ex.: "Nenhum ganho cadastrado", "1 ganho cadastrado", "2 ganhos cadastrados". */
+export function incomeCountLabel(count: number): string {
+  if (count === 0) return "Nenhum ganho cadastrado";
+  return count === 1 ? "1 ganho cadastrado" : `${count} ganhos cadastrados`;
+}

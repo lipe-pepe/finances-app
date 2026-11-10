@@ -74,3 +74,17 @@ export function buildCumulativeSeries(items: SpendingEntry[], today: string): Se
   }
   return series;
 }
+
+/**
+ * Percentual do planejado já usado, arredondado (FR-008). Planejado zero: 0% sem gasto e
+ * indefinido (`null`) com gasto, pois não há base para a divisão.
+ */
+export function getUsedPercentage(spentCents: number, plannedCents: number): number | null {
+  if (plannedCents <= 0) return spentCents > 0 ? null : 0;
+  return Math.round((spentCents / plannedCents) * 100);
+}
+
+/** Preenchimento da barra de uso: limitado a 100%; indefinido = barra cheia. */
+export function getUsageBarPercentage(usedPercentage: number | null): number {
+  return usedPercentage === null ? 100 : Math.min(100, usedPercentage);
+}
