@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Login — Rosa</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="min-height: 100vh; box-sizing: border-box; padding: 48px 16px; background: {{t.bg}}; color: {{t.text}}; font-family: 'DM Sans', system-ui, sans-serif; font-size: 16px; line-height: 1.5; display: flex; align-items: center; justify-content: center">
+  <main style="width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 28px">
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center">
+      <span aria-hidden="true" style="width: 48px; height: 48px; border-radius: 14px; background: {{t.accent}}; color: {{t.onAccent}}; display: flex; align-items: center; justify-content: center">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 9 9"></path><path d="M12 3v9h9"></path></svg>
+      </span>
+      <div style="display: flex; flex-direction: column; gap: 4px">
+        <h1 style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.02em">Finanças Pessoais</h1>
+        <p style="margin: 0; color: {{t.muted}}">Entre com seu email e senha para acessar seu planejamento.</p>
+      </div>
+    </div>
+    <form style="border: 1px solid {{t.border}}; border-radius: 12px; background: {{t.surface}}; padding: 24px; display: flex; flex-direction: column; gap: 16px">
+      <label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 500">Email
+        <input type="email" autocomplete="email" placeholder="voce@exemplo.com" style="font: inherit; min-height: 44px; padding: 0 12px; border-radius: 8px; border: 1px solid {{t.border}}; background: {{t.field}}; color: {{t.text}}; font: inherit; font-weight: 400">
+      </label>
+      <label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 500">Senha
+        <input type="password" autocomplete="current-password" style="font: inherit; min-height: 44px; padding: 0 12px; border-radius: 8px; border: 1px solid {{t.border}}; background: {{t.field}}; color: {{t.text}}; font: inherit; font-weight: 400">
+      </label>
+      <sc-if value="{{showError}}" hint-placeholder-val="{{ false }}">
+        <p role="alert" style="margin: 0; padding: 10px 12px; border-radius: 8px; background: {{t.dangerSoft}}; color: {{t.danger}}; font-size: 14px; font-weight: 500">Email ou senha inválidos.</p>
+      </sc-if>
+      <button type="button" style="font: inherit; min-height: 44px; border-radius: 8px; border: none; background: {{t.accent}}; color: {{t.onAccent}}; font: inherit; font-weight: 600; cursor: pointer">Entrar</button>
+    </form>
+    <p style="margin: 0; text-align: center; font-size: 14px; color: {{t.muted}}">O acesso é criado pelo administrador da plataforma.</p>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"showError":{"editor":"boolean","default":false},"$preview":{"width":1280,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const dark = this.props.dark ?? false;
+    const t = dark
+      ? { bg: '#131315', surface: '#1B1B1F', field: '#131315', border: '#2E2E34', text: '#ECEBE7', muted: '#A7A49C', accent: '#F472B6', onAccent: '#2A0B19', danger: '#F97066', dangerSoft: '#3A1D1B' }
+      : { bg: '#FAFAF8', surface: '#FFFFFF', field: '#FFFFFF', border: '#E4E2DC', text: '#1C1B19', muted: '#5F5C55', accent: '#DB2777', onAccent: '#FFFFFF', danger: '#B42318', dangerSoft: '#FDECEA' };
+    return { t, showError: this.props.showError ?? false };
+  }
+}
+</script>
+</body>
+</html>

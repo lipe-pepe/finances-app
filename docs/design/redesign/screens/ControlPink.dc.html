@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Controle — Rosa</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="min-height: 100vh; background: {{t.bg}}; color: {{t.text}}; font-family: 'DM Sans', system-ui, sans-serif; font-size: 16px; line-height: 1.5">
+
+  <header style="border-bottom: 1px solid {{t.border}}">
+    <div style="max-width: 1120px; margin: 0 auto; padding: 16px 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px">
+      <span style="display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 700; letter-spacing: -0.01em">
+        <span aria-hidden="true" style="width: 28px; height: 28px; border-radius: 8px; background: {{t.accent}}; color: {{t.onAccent}}; display: flex; align-items: center; justify-content: center">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 9 9"></path><path d="M12 3v9h9"></path></svg>
+        </span>
+        Finanças Pessoais
+      </span>
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 20px">
+        <nav aria-label="Seções" style="display: flex; gap: 20px">
+          <a href="#" style="text-decoration: none; padding: 10px 0; font-size: 15px; font-weight: 500; color: {{t.muted}}; border-bottom: 2px solid transparent">Planejamento</a>
+          <a href="#" aria-current="page" style="text-decoration: none; padding: 10px 0; font-size: 15px; font-weight: 600; color: {{t.text}}; border-bottom: 2px solid {{t.accent}}">Controle</a>
+        </nav>
+        <button type="button" style="font: inherit; min-height: 40px; padding: 0 12px; border-radius: 8px; border: 1px solid {{t.border}}; background: transparent; color: {{t.muted}}; font-size: 14px; font-weight: 500; cursor: pointer">Sair</button>
+      </div>
+    </div>
+  </header>
+
+  <main style="max-width: 1120px; margin: 0 auto; padding: 40px 24px {{mainBottom}}; display: flex; flex-wrap: wrap; gap: 40px; align-items: flex-start">
+
+    <div style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 36px">
+      <section aria-labelledby="k-hero" style="display: flex; flex-direction: column; gap: 20px">
+        <div style="display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 16px">
+          <h1 id="k-hero" style="margin: 0; font-size: 15px; font-weight: 500; color: {{t.muted}}">Novembro de 2026</h1>
+          <label style="display: flex; align-items: center; gap: 10px; font-size: 14px; color: {{t.muted}}">Categoria
+            <select value="{{sel}}" onChange="{{onSel}}" style="font: inherit; min-height: 44px; min-width: 190px; padding: 0 10px; border-radius: 8px; border: 1px solid {{t.border}}; background: {{t.surface}}; color: {{t.text}}; font-weight: 500">
+              <sc-for list="{{cats}}" as="c" hint-placeholder-count="6">
+                <option value="{{c.id}}">{{c.name}}</option>
+              </sc-for>
+            </select>
+          </label>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 4px">
+          <span style="font-size: 15px; color: {{availMuted}}">Disponível</span>
+          <span style="font-size: clamp(40px, 11vw, 64px); line-height: 1.05; font-weight: 600; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; color: {{availColor}}">{{availLabel}}</span>
+          <sc-if value="{{over}}" hint-placeholder-val="{{ false }}">
+            <span style="display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; color: {{t.danger}}">
+              <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"></path></svg>
+              {{overLabel}}
+            </span>
+          </sc-if>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <div aria-hidden="true" style="height: 8px; border-radius: 4px; background: {{t.track}}; overflow: hidden"><div style="height: 8px; border-radius: 4px; width: {{usedPct}}; background: {{barColor}}"></div></div>
+          <dl style="margin: 0; display: flex; flex-wrap: wrap; gap: 8px 32px; font-size: 15px">
+            <div style="display: flex; gap: 8px"><dt style="color: {{t.muted}}">Gasto</dt><dd style="margin: 0; font-weight: 600; font-variant-numeric: tabular-nums">{{spentLabel}}</dd></div>
+            <div style="display: flex; gap: 8px"><dt style="color: {{t.muted}}">Planejado</dt><dd style="margin: 0; font-weight: 600; font-variant-numeric: tabular-nums">{{plannedLabel}}</dd></div>
+            <div style="display: flex; gap: 8px"><dt style="color: {{t.muted}}">Usado</dt><dd style="margin: 0; font-weight: 600; font-variant-numeric: tabular-nums">{{usedLabel}}</dd></div>
+          </dl>
+        </div>
+
+        <figure style="margin: 0; display: flex; flex-direction: column; gap: 8px">
+          <svg role="img" aria-label="{{chartLabel}}" viewBox="0 0 600 200" preserveAspectRatio="none" style="width: 100%; height: 190px; display: block">
+            <line x1="0" y1="200" x2="600" y2="200" stroke="{{t.border}}" stroke-width="1" vector-effect="non-scaling-stroke"></line>
+            <path d="{{areaPath}}" fill="{{t.accentSoft}}" stroke="none"></path>
+            <path d="{{linePath}}" fill="none" stroke="{{t.accent}}" stroke-width="2.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"></path>
+            <line x1="0" y1="{{limitY}}" x2="600" y2="{{limitY}}" stroke="{{t.limit}}" stroke-width="2" stroke-dasharray="6 5" vector-effect="non-scaling-stroke"></line>
+          </svg>
+          <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font-size: 13px; color: {{t.muted}}">
+            <span aria-hidden="true">1 nov</span>
+            <span style="display: flex; align-items: center; gap: 6px"><span aria-hidden="true" style="width: 16px; border-top: 2px dashed {{t.limit}}"></span>Limite {{plannedLabel}}</span>
+            <span aria-hidden="true">30 nov</span>
+          </div>
+          <figcaption style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">{{chartLabel}}</figcaption>
+        </figure>
+      </section>
+
+      <section aria-labelledby="k-list-title" style="display: flex; flex-direction: column; gap: 8px; padding-top: 28px; border-top: 1px solid {{t.border}}">
+        <h2 id="k-list-title" style="margin: 0; font-size: 17px; font-weight: 600">Gastos do mês</h2>
+        <sc-if value="{{isEmpty}}" hint-placeholder-val="{{ false }}">
+          <p style="margin: 0; padding: 20px 0; color: {{t.muted}}">Nenhum gasto registrado</p>
+        </sc-if>
+        <sc-if value="{{hasItems}}" hint-placeholder-val="{{ true }}">
+          <ul style="list-style: none; margin: 0; padding: 0">
+            <sc-for list="{{rows}}" as="r" hint-placeholder-count="5">
+              <li style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 12px 0; border-bottom: 1px solid {{t.border}}">
+                <span aria-hidden="true" style="width: 40px; height: 40px; flex: none; border-radius: 12px; background: {{r.iconBg}}; color: {{r.iconFg}}; display: flex; align-items: center; justify-content: center">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{r.icon}}"></path></svg>
+                </span>
+                <div style="flex: 1 1 160px; min-width: 0; display: flex; flex-direction: column">
+                  <span style="font-weight: 600">{{r.name}}</span>
+                  <span style="font-size: 14px; color: {{t.muted}}">{{r.meta}}</span>
+                </div>
+                <span style="font-weight: 600; font-variant-numeric: tabular-nums">{{r.amount}}</span>
+                <div style="display: flex">
+                  <button type="button" aria-label="Editar {{r.name}}" style="font: inherit; width: 44px; height: 44px; border: none; border-radius: 8px; background: transparent; color: {{t.muted}}; cursor: pointer">
+                    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>
+                  </button>
+                  <button type="button" aria-label="Apagar {{r.name}}" style="font: inherit; width: 44px; height: 44px; border: none; border-radius: 8px; background: transparent; color: {{t.muted}}; cursor: pointer">
+                    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path></svg>
+                  </button>
+                </div>
+              </li>
+            </sc-for>
+          </ul>
+        </sc-if>
+      </section>
+    </div>
+
+    <sc-if value="{{wide}}" hint-placeholder-val="{{ true }}">
+    <aside aria-labelledby="k-form-title" style="flex: 1 1 300px; min-width: 0; border: 1px solid {{t.border}}; border-radius: 12px; background: {{t.surface}}; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+      <h2 id="k-form-title" style="margin: 0; font-size: 16px; font-weight: 600">Registrar gasto</h2>
+      <form style="display: flex; flex-direction: column; gap: 14px">
+        <label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 500">Nome do gasto
+          <input type="text" placeholder="Ex.: Mercado" style="font: inherit; min-height: 44px; padding: 0 12px; border-radius: 8px; border: 1px solid {{t.border}}; background: {{t.field}}; color: {{t.text}}">
+        </label>
+        <label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 500">Valor (R$)
+          <input type="text" inputmode="decimal" placeholder="0,00" style="font: inherit; min-height: 44px; padding: 0 12px; border-radius: 8px; border: 1px solid {{t.border}}; background: {{t.field}}; color: {{t.text}}">
+        </label>
+        <label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 500">Categoria
+          <select style="font: inherit; min-height: 44px; padding: 0 10px; border-radius: 8px; border: 1px solid {{t.border}}; background: {{t.field}}; color: {{t.text}}">
+            <option>Selecione</option>
+            <option>Alimentação</option>
+            <option>Lazer</option>
+            <option>Moradia</option>
+            <option>Saúde</option>
+            <option>Transporte</option>
+          </select>
+        </label>
+        <label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 500">Data
+          <input type="date" value="2026-11-09" min="2026-11-01" max="2026-11-30" style="font: inherit; min-height: 44px; padding: 0 10px; border-radius: 8px; border: 1px solid {{t.border}}; background: {{t.field}}; color: {{t.text}}">
+          <span style="font-size: 12px; font-weight: 400; color: {{t.muted}}">Somente dias de novembro de 2026.</span>
+        </label>
+        <button type="button" style="font: inherit; min-height: 44px; border-radius: 8px; border: none; background: {{t.accent}}; color: {{t.onAccent}}; font-weight: 600; cursor: pointer">Adicionar gasto</button>
+      </form>
+    </aside>
+    </sc-if>
+  </main>
+
+  <sc-if value="{{narrow}}" hint-placeholder-val="{{ false }}">
+    <div style="position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); background: {{t.bg}}; border-top: 1px solid {{t.border}}">
+      <button type="button" onClick="{{openSheet}}" aria-haspopup="dialog" style="font: inherit; width: 100%; min-height: 52px; border-radius: 12px; border: none; background: {{t.accent}}; color: {{t.onAccent}}; font-size: 16px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 6px 20px rgba(219,39,119,0.25)">
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"></path></svg>
+        Registrar gasto
+      </button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{sheetVisible}}" hint-placeholder-val="{{ false }}">
+    <div style="position: fixed; inset: 0; z-index: 20; display: flex; flex-direction: column; justify-content: flex-end">
+      <button type="button" aria-label="Fechar formulário" onClick="{{closeSheet}}" style="font: inherit; position: absolute; inset: 0; border: none; padding: 0; background: rgba(12,10,12,0.45); cursor: pointer"></button>
+      <section role="dialog" aria-modal="true" aria-labelledby="k-sheet-title" style="position: relative; max-height: 90vh; overflow-y: auto; border-radius: 20px 20px 0 0; background: {{t.surface}}; padding: 8px 20px calc(20px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 14px; box-shadow: 0 -8px 30px rgba(0,0,0,0.18)">
+        <span aria-hidden="true" style="align-self: center; width: 40px; height: 4px; border-radius: 2px; background: {{t.border}}; margin-bottom: 4px"></span>
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
+          <h2 id="k-sheet-title" style="margin: 0; font-size: 18px; font-weight: 600">Registrar gasto</h2>
+          <button type="button" aria-label="Fechar" onClick="{{closeSheet}}" style="font: inherit; width: 44px; height: 44px; border: none; border-radius: 10px; background: transparent; color: {{t.muted}}; cursor: pointer; display: flex; align-items: center; justify-content: center">
+            <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"></path></svg>
+          </button>
+        </div>
+      <form style="display: flex; flex-direction: column; gap: 14px">
+        <label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 500">Nome do gasto
+          <input type="text" placeholder="Ex.: Mercado" style="font: inherit; min-height: 44px; padding: 0 12px; border-radius: 8px; border: 1px solid {{t.border}}; background: {{t.field}}; color: {{t.text}}">
+        </label>
+        <label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 500">Valor (R$)
+          <input type="text" inputmode="decimal" placeholder="0,00" style="font: inherit; min-height: 44px; padding: 0 12px; border-radius: 8px; border: 1px solid {{t.border}}; background: {{t.field}}; color: {{t.text}}">
+        </label>
+        <label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 500">Categoria
+          <select style="font: inherit; min-height: 44px; padding: 0 10px; border-radius: 8px; border: 1px solid {{t.border}}; background: {{t.field}}; color: {{t.text}}">
+            <option>Selecione</option>
+            <option>Alimentação</option>
+            <option>Lazer</option>
+            <option>Moradia</option>
+            <option>Saúde</option>
+            <option>Transporte</option>
+          </select>
+        </label>
+        <label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 500">Data
+          <input type="date" value="2026-11-09" min="2026-11-01" max="2026-11-30" style="font: inherit; min-height: 44px; padding: 0 10px; border-radius: 8px; border: 1px solid {{t.border}}; background: {{t.field}}; color: {{t.text}}">
+          <span style="font-size: 12px; font-weight: 400; color: {{t.muted}}">Somente dias de novembro de 2026.</span>
+        </label>
+        <button type="button" style="font: inherit; min-height: 44px; border-radius: 8px; border: none; background: {{t.accent}}; color: {{t.onAccent}}; font-weight: 600; cursor: pointer">Adicionar gasto</button>
+      </form>
+      </section>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;dark&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false},&quot;iconStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;cinza&quot;,&quot;categoria&quot;,&quot;cor principal&quot;],&quot;default&quot;:&quot;categoria&quot;},&quot;sheetOpen&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false},&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:1500}}">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { sel: 'all', open: null, narrow: false };
+  }
+  componentDidMount() {
+    // Abaixo de 720 px o formulário sai da coluna e vira um painel aberto pelo botão fixo no rodapé
+    this.handleResize = () => this.setState({ narrow: window.innerWidth < 720 });
+    this.handleResize();
+    window.addEventListener('resize', this.handleResize);
+  }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize);
+  }
+  renderVals() {
+    const dark = this.props.dark ?? false;
+    const iconStyle = this.props.iconStyle ?? 'categoria';
+    const t = dark
+      ? { bg: '#131315', surface: '#1B1B1F', field: '#131315', border: '#2E2E34', track: '#2E2E34', text: '#ECEBE7', muted: '#A7A49C', accent: '#F472B6', onAccent: '#2A0B19', accentSoft: '#3B1A2C', danger: '#F97066', limit: '#A5B4FC', iconBg: '#26262B' }
+      : { bg: '#FAFAF8', surface: '#FFFFFF', field: '#FFFFFF', border: '#E4E2DC', track: '#EEECE6', text: '#1C1B19', muted: '#5F5C55', accent: '#DB2777', onAccent: '#FFFFFF', accentSoft: '#FDE8F1', danger: '#B42318', limit: '#4338CA', iconBg: '#F0EEE9' };
+    const TINTS = dark
+      ? { ali: ['#3A2412', '#FDBA74'], laz: ['#3B1A2C', '#F9A8D4'], mor: ['#2A2145', '#C4B5FD'], sau: ['#14301F', '#86EFAC'], tra: ['#172544', '#93C5FD'] }
+      : { ali: ['#FFEDD5', '#C2410C'], laz: ['#FCE7F3', '#BE185D'], mor: ['#EDE9FE', '#6D28D9'], sau: ['#DCFCE7', '#15803D'], tra: ['#DBEAFE', '#1D4ED8'] };
+    const ICONS = {
+      ali: 'M4 3v7a3 3 0 0 0 6 0V3M7 3v18M17 3c-2 0-3 2-3 6s1 4 3 4v8',
+      laz: 'M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.8 6.6 19.5l1.2-6L3.3 9.3l6.1-.7Z',
+      mor: 'M3 11l9-7 9 7M5 10v10h14V10M10 20v-6h4v6',
+      sau: 'M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10Z',
+      tra: 'M5 17h14v-5l-2-5H7l-2 5ZM5 12h14M7.5 17v2M16.5 17v2'
+    };
+    const CATS = [
+      { id: 'all', name: 'Todos' },
+      { id: 'ali', name: 'Alimentação' },
+      { id: 'laz', name: 'Lazer' },
+      { id: 'mor', name: 'Moradia' },
+      { id: 'sau', name: 'Saúde' },
+      { id: 'tra', name: 'Transporte' }
+    ];
+    const NAMES = { ali: 'Alimentação', laz: 'Lazer', mor: 'Moradia', sau: 'Saúde', tra: 'Transporte' };
+    const PLANNED = { ali: 80000, mor: 150000, sau: 20000, tra: 25000 };
+    const ITEMS = [
+      { id: 1, name: 'Aluguel', cents: 120000, cat: 'mor', day: 9 },
+      { id: 2, name: 'Mercado', cents: 23050, cat: 'ali', day: 8 },
+      { id: 3, name: 'Farmácia', cents: 6490, cat: 'sau', day: 6 },
+      { id: 4, name: 'Padaria', cents: 1890, cat: 'ali', day: 5 },
+      { id: 5, name: 'Conta de luz', cents: 40000, cat: 'mor', day: 2 }
+    ];
+    const fmt = (c) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(c / 100).replace(/ /g, ' ');
+    const sel = this.state.sel;
+    const items = sel === 'all' ? ITEMS : ITEMS.filter((i) => i.cat === sel);
+    const planned = sel === 'all' ? Object.values(PLANNED).reduce((s, v) => s + v, 0) : (PLANNED[sel] || 0);
+    const spent = items.reduce((s, i) => s + i.cents, 0);
+    const avail = planned - spent;
+    const over = avail < 0;
+    const used = planned > 0 ? Math.round((spent / planned) * 100) : (spent > 0 ? 100 : 0);
+
+    const W = 600, H = 200;
+    const lastDay = Math.max(9, ...items.map((i) => i.day));
+    const max = Math.max(planned, spent, 1) * 1.15;
+    const y = (v) => (H - (v / max) * (H - 10)).toFixed(1);
+    const x = (d) => (((d - 1) / 29) * W).toFixed(1);
+    let acc = 0;
+    let line = '';
+    for (let day = 1; day <= lastDay; day++) {
+      items.forEach((i) => { if (i.day === day) acc += i.cents; });
+      line += day === 1 ? 'M0 ' + y(acc) : ' H' + x(day) + ' V' + y(acc);
+    }
+    const area = line + ' V' + H + ' H0 Z';
+
+    const narrow = this.state.narrow;
+    const open = this.state.open ?? this.props.sheetOpen ?? false;
+    return {
+      t,
+      sel,
+      narrow,
+      wide: !narrow,
+      mainBottom: narrow ? '120px' : '72px',
+      sheetVisible: narrow && open,
+      openSheet: () => this.setState({ open: true }),
+      closeSheet: () => this.setState({ open: false }),
+      cats: CATS,
+      onSel: (e) => this.setState({ sel: e.target.value }),
+      plannedLabel: fmt(planned),
+      spentLabel: fmt(spent),
+      availLabel: fmt(avail),
+      usedLabel: used + '%',
+      usedPct: Math.min(100, used) + '%',
+      barColor: over ? t.danger : t.accent,
+      over,
+      overLabel: 'Acima do limite em ' + fmt(-avail),
+      availColor: over ? t.danger : t.text,
+      availMuted: over ? t.danger : t.muted,
+      linePath: line,
+      areaPath: area,
+      limitY: y(planned),
+      chartLabel: 'Gasto acumulado de ' + fmt(spent) + ' de um limite de ' + fmt(planned) + ' em Novembro de 2026',
+      isEmpty: items.length === 0,
+      hasItems: items.length > 0,
+      rows: items.map((i) => ({
+        name: i.name,
+        icon: ICONS[i.cat],
+        iconBg: iconStyle === 'categoria' ? TINTS[i.cat][0] : iconStyle === 'cor principal' ? t.accentSoft : t.iconBg,
+        iconFg: iconStyle === 'categoria' ? TINTS[i.cat][1] : iconStyle === 'cor principal' ? t.accent : t.muted,
+        meta: String(i.day).padStart(2, '0') + '/11' + (sel === 'all' ? ' · ' + NAMES[i.cat] : ''),
+        amount: fmt(i.cents)
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

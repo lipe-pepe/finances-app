@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Planejamento — Rosa</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="min-height: 100vh; background: {{t.bg}}; color: {{t.text}}; font-family: 'DM Sans', system-ui, sans-serif; font-size: 16px; line-height: 1.5">
+
+  <header style="border-bottom: 1px solid {{t.border}}; background: {{t.band}}">
+    <div style="max-width: 1120px; margin: 0 auto; padding: 16px 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px">
+      <span style="display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 700; letter-spacing: -0.01em">
+        <span aria-hidden="true" style="width: 28px; height: 28px; border-radius: 8px; background: {{t.brand}}; color: {{t.onBrand}}; display: flex; align-items: center; justify-content: center">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 9 9"></path><path d="M12 3v9h9"></path></svg>
+        </span>
+        Finanças Pessoais
+      </span>
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 20px">
+        <nav aria-label="Seções" style="display: flex; gap: 20px">
+          <a href="#" aria-current="page" style="text-decoration: none; padding: 10px 0; font-size: 15px; font-weight: 600; color: {{t.text}}; border-bottom: 2px solid {{t.accent}}">Planejamento</a>
+          <a href="#" style="text-decoration: none; padding: 10px 0; font-size: 15px; font-weight: 500; color: {{t.muted}}; border-bottom: 2px solid transparent">Controle</a>
+        </nav>
+        <button type="button" style="min-height: 40px; padding: 0 12px; border-radius: 8px; border: 1px solid {{t.border}}; background: transparent; color: {{t.muted}}; font: inherit; font-size: 14px; font-weight: 500; cursor: pointer">Sair</button>
+      </div>
+    </div>
+  </header>
+
+  <section aria-labelledby="pl-title" style="background: {{t.band}}; border-bottom: 1px solid {{t.border}}">
+    <div style="max-width: 1120px; margin: 0 auto; padding: 32px 24px 36px; display: flex; flex-direction: column; gap: 24px">
+      <div style="display: flex; flex-direction: column; gap: 4px">
+        <h1 id="pl-title" style="margin: 0; font-size: 36px; line-height: 1.15; font-weight: 700; letter-spacing: -0.03em">Planejamento</h1>
+        <p style="margin: 0; color: {{t.muted}}">Defina sua receita e divida entre o Momento Presente e o Momento Futuro.</p>
+      </div>
+      <div role="tablist" aria-label="Partes do planejamento" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px">
+        <sc-for list="{{tabs}}" as="tb" hint-placeholder-count="3">
+          <button type="button" role="tab" aria-selected="{{tb.ariaSelected}}" onClick="{{tb.pick}}" style="text-align: left; min-height: 132px; padding: 18px 20px; border-radius: 16px; border: 2px solid {{tb.borderColor}}; background: {{t.surface}}; color: {{t.text}}; box-shadow: {{tb.shadow}}; font: inherit; cursor: pointer; display: flex; flex-direction: column; gap: 10px">
+            <span style="display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%">
+              <span style="display: flex; align-items: center; gap: 10px">
+                <span aria-hidden="true" style="width: 32px; height: 32px; border-radius: 10px; background: {{tb.iconBg}}; color: {{tb.iconFg}}; display: flex; align-items: center; justify-content: center">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{tb.icon}}"></path></svg>
+                </span>
+                <span style="font-size: 15px; font-weight: 600">{{tb.label}}</span>
+              </span>
+              <sc-if value="{{tb.alert}}" hint-placeholder-val="{{ false }}">
+                <span style="display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; color: {{t.danger}}">
+                  <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"></path></svg>
+                  <span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">, com alerta</span>
+                </span>
+              </sc-if>
+            </span>
+            <span style="font-size: 28px; line-height: 1.1; font-weight: 600; letter-spacing: -0.02em; font-variant-numeric: tabular-nums">{{tb.value}}</span>
+            <sc-if value="{{tb.hasBar}}" hint-placeholder-val="{{ true }}">
+              <span aria-hidden="true" style="display: block; width: 100%; height: 6px; border-radius: 3px; background: {{t.track}}; overflow: hidden"><span style="display: block; height: 6px; border-radius: 3px; width: {{tb.usedPct}}; background: {{tb.barColor}}"></span></span>
+            </sc-if>
+            <span style="font-size: 13px; color: {{tb.subColor}}">{{tb.sub}}</span>
+          </button>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <main style="max-width: 880px; margin: 0 auto; padding: 36px 24px 72px; display: flex; flex-direction: column; gap: 36px">
+
+    <sc-if value="{{isIncome}}" hint-placeholder-val="{{ true }}">
+      <div role="tabpanel" aria-label="Receita" style="display: flex; flex-direction: column; gap: 36px">
+        <section aria-labelledby="pl-split" style="display: flex; flex-direction: column; gap: 16px">
+          <div style="display: flex; flex-direction: column; gap: 2px">
+            <h2 id="pl-split" style="margin: 0; font-size: 20px; font-weight: 600">Divisão da receita</h2>
+            <p style="margin: 0; font-size: 14px; color: {{t.muted}}">Arraste para dividir a receita entre os dois momentos. A divisão é salva ao soltar.</p>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 12px; font-size: 15px; font-weight: 600">
+            <span style="display: flex; align-items: center; gap: 8px"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 50%; background: {{presentColor}}"></span>Momento Presente {{pct}}% · {{presentPlannedLabel}}</span>
+            <span style="display: flex; align-items: center; gap: 8px"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 50%; background: {{futureColor}}"></span>Momento Futuro {{futurePct}}% · {{futurePlannedLabel}}</span>
+          </div>
+          <div aria-hidden="true" style="display: flex; height: 12px; border-radius: 6px; overflow: hidden; background: {{t.track}}">
+            <div style="width: {{pctWidth}}; background: {{presentColor}}"></div>
+            <div style="flex: 1 1 auto; background: {{futureColor}}"></div>
+          </div>
+          <input type="range" min="0" max="100" step="1" value="{{pct}}" onChange="{{onPct}}" aria-label="Divisão entre Momento Presente e Momento Futuro" aria-valuetext="Momento Presente {{pct}}%, Momento Futuro {{futurePct}}%" style="width: 100%; height: 28px; margin: 0; accent-color: {{t.accent}}; cursor: pointer">
+        </section>
+
+        <section aria-labelledby="pl-inc" style="display: flex; flex-direction: column; gap: 12px">
+          <h2 id="pl-inc" style="margin: 0; font-size: 20px; font-weight: 600">Ganhos</h2>
+          <form style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; align-items: end; padding: 16px; border-radius: 14px; border: 1px solid {{t.border}}; background: {{t.surface}}">
+            <label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 500">Nome do ganho
+              <input type="text" placeholder="Ex.: Salário" style="min-height: 44px; padding: 0 12px; border-radius: 8px; border: 1px solid {{t.border}}; background: {{t.field}}; color: {{t.text}}; font: inherit; font-weight: 400">
+            </label>
+            <label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 500">Valor (R$)
+              <input type="text" inputmode="decimal" placeholder="0,00" style="min-height: 44px; padding: 0 12px; border-radius: 8px; border: 1px solid {{t.border}}; background: {{t.field}}; color: {{t.text}}; font: inherit; font-weight: 400">
+            </label>
+            <button type="button" style="min-height: 44px; padding: 0 18px; border-radius: 8px; border: none; background: {{t.accent}}; color: {{t.onAccent}}; font: inherit; font-weight: 600; cursor: pointer">Adicionar ganho</button>
+          </form>
+          <ul style="list-style: none; margin: 0; padding: 0">
+            <sc-for list="{{incomes}}" as="r" hint-placeholder-count="2">
+              <li style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 12px 0; border-bottom: 1px solid {{t.border}}">
+                <span aria-hidden="true" style="width: 40px; height: 40px; flex: none; border-radius: 12px; background: {{t.accentSoft}}; color: {{t.accentInk}}; display: flex; align-items: center; justify-content: center">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h13v4M3 7v11a2 2 0 0 0 2 2h15V9H5a2 2 0 0 1-2-2ZM16 14h.01"></path></svg>
+                </span>
+                <span style="flex: 1 1 160px; min-width: 0; font-weight: 600">{{r.name}}</span>
+                <span style="font-weight: 600; font-variant-numeric: tabular-nums">{{r.amount}}</span>
+                <div style="display: flex">
+                  <button type="button" aria-label="Editar {{r.name}}" style="width: 44px; height: 44px; border: none; border-radius: 8px; background: transparent; color: {{t.muted}}; cursor: pointer">
+                    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>
+                  </button>
+                  <button type="button" aria-label="Apagar {{r.name}}" style="width: 44px; height: 44px; border: none; border-radius: 8px; background: transparent; color: {{t.muted}}; cursor: pointer">
+                    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path></svg>
+                  </button>
+                </div>
+              </li>
+            </sc-for>
+          </ul>
+          <div style="display: flex; justify-content: space-between; gap: 12px; padding-top: 4px; font-weight: 600">
+            <span>Receita total</span>
+            <span style="font-variant-numeric: tabular-nums">{{revenueLabel}}</span>
+          </div>
+        </section>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isMoment}}" hint-placeholder-val="{{ false }}">
+      <div role="tabpanel" aria-label="{{m.title}}" style="display: flex; flex-direction: column; gap: 20px">
+        <div style="display: flex; flex-direction: column; gap: 2px">
+          <h2 style="margin: 0; font-size: 20px; font-weight: 600">{{m.title}}</h2>
+          <p style="margin: 0; font-size: 14px; color: {{t.muted}}">Planejado: {{m.plannedLabel}} ({{m.pct}}% da receita)</p>
+        </div>
+        <sc-if value="{{m.over}}" hint-placeholder-val="{{ false }}">
+          <div role="alert" style="display: flex; gap: 12px; padding: 14px 16px; border-radius: 12px; background: {{t.dangerSoft}}; color: {{t.danger}}">
+            <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex: none; margin-top: 2px"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"></path></svg>
+            <div style="display: flex; flex-direction: column">
+              <strong style="font-weight: 700">Planejamento incorreto</strong>
+              <span>{{m.overMessage}}</span>
+            </div>
+          </div>
+        </sc-if>
+        <form style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; align-items: end; padding: 16px; border-radius: 14px; border: 1px solid {{t.border}}; background: {{t.surface}}">
+          <label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 500">{{m.nameLabel}}
+            <input type="text" placeholder="{{m.namePlaceholder}}" style="min-height: 44px; padding: 0 12px; border-radius: 8px; border: 1px solid {{t.border}}; background: {{t.field}}; color: {{t.text}}; font: inherit; font-weight: 400">
+          </label>
+          <label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 500">Valor (R$)
+            <input type="text" inputmode="decimal" placeholder="0,00" style="min-height: 44px; padding: 0 12px; border-radius: 8px; border: 1px solid {{t.border}}; background: {{t.field}}; color: {{t.text}}; font: inherit; font-weight: 400">
+          </label>
+          <label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 500">{{m.categoryLabel}}
+            <select style="min-height: 44px; padding: 0 10px; border-radius: 8px; border: 1px solid {{t.border}}; background: {{t.field}}; color: {{t.text}}; font: inherit; font-weight: 400">
+              <sc-for list="{{m.categoryOptions}}" as="o" hint-placeholder-count="6">
+                <option>{{o.name}}</option>
+              </sc-for>
+            </select>
+          </label>
+          <button type="button" style="min-height: 44px; padding: 0 18px; border-radius: 8px; border: none; background: {{t.accent}}; color: {{t.onAccent}}; font: inherit; font-weight: 600; cursor: pointer">{{m.formTitle}}</button>
+        </form>
+        <ul style="list-style: none; margin: 0; padding: 0">
+          <sc-for list="{{m.rows}}" as="r" hint-placeholder-count="4">
+            <li style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 12px 0; border-bottom: 1px solid {{t.border}}">
+              <span aria-hidden="true" style="width: 40px; height: 40px; flex: none; border-radius: 12px; background: {{r.iconBg}}; color: {{r.iconFg}}; display: flex; align-items: center; justify-content: center">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{r.icon}}"></path></svg>
+              </span>
+              <div style="flex: 1 1 160px; min-width: 0; display: flex; flex-direction: column">
+                <span style="font-weight: 600">{{r.name}}</span>
+                <span style="font-size: 14px; color: {{t.muted}}">{{r.cat}}</span>
+              </div>
+              <span style="font-weight: 600; font-variant-numeric: tabular-nums">{{r.amount}}</span>
+              <div style="display: flex">
+                <button type="button" aria-label="Editar {{r.name}}" style="width: 44px; height: 44px; border: none; border-radius: 8px; background: transparent; color: {{t.muted}}; cursor: pointer">
+                  <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>
+                </button>
+                <button type="button" aria-label="Apagar {{r.name}}" style="width: 44px; height: 44px; border: none; border-radius: 8px; background: transparent; color: {{t.muted}}; cursor: pointer">
+                  <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path></svg>
+                </button>
+              </div>
+            </li>
+          </sc-for>
+        </ul>
+        <div style="display: flex; justify-content: space-between; gap: 12px; padding-top: 4px; font-weight: 600">
+          <span>{{m.totalLabel}}</span>
+          <span style="font-variant-numeric: tabular-nums">{{m.totalValue}}</span>
+        </div>
+      </div>
+    </sc-if>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"tab":{"editor":"enum","options":["receita","presente","futuro"],"default":"receita"},"dark":{"editor":"boolean","default":false},"accent":{"editor":"enum","options":["por seção","secundária","por página","rosa"],"default":"por seção"},"$preview":{"width":1280,"height":1500}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { tab: null, pct: 50 };
+  }
+  renderVals() {
+    const dark = this.props.dark ?? false;
+    const base = dark
+      ? { bg: '#131315', band: '#1F1419', surface: '#1B1B1F', field: '#131315', border: '#2E2E34', track: '#2E2E34', text: '#ECEBE7', muted: '#A7A49C', accent: '#F472B6', onAccent: '#2A0B19', accentSoft: '#3B1A2C', accentInk: '#F9A8D4', danger: '#F97066', dangerSoft: '#3A1D1B', neutralBg: '#26262B' }
+      : { bg: '#FAFAF8', band: '#FDF2F7', surface: '#FFFFFF', field: '#FFFFFF', border: '#EBE3E6', track: '#EEECE6', text: '#1C1B19', muted: '#5F5C55', accent: '#DB2777', onAccent: '#FFFFFF', accentSoft: '#FDE8F1', accentInk: '#BE185D', danger: '#B42318', dangerSoft: '#FDECEA', neutralBg: '#F0EEE9' };
+    // Rosa = cor das ações; violeta = cor secundária (estrutura) ou cor da página (modo "por página")
+    const mode = this.props.accent ?? 'por seção';
+    const activeTab = this.state.tab ?? this.props.tab ?? 'receita';
+    // Uma cor por parte do planejamento: Receita verde, Momento Presente laranja, Momento Futuro azul.
+    // O laranja vivo leva texto escuro nos botões (contraste AA); o fundo da página fica neutro.
+    const SECTIONS = dark
+      ? {
+          receita: { accent: '#4ADE80', onAccent: '#052E16', accentSoft: '#14301F', accentInk: '#86EFAC', band: base.bg, shadow: 'rgba(0,0,0,0.3)' },
+          presente: { accent: '#FB923C', onAccent: '#2A1205', accentSoft: '#3A2412', accentInk: '#FDBA74', band: base.bg, shadow: 'rgba(0,0,0,0.3)' },
+          futuro: { accent: '#60A5FA', onAccent: '#0B1B33', accentSoft: '#172544', accentInk: '#93C5FD', band: base.bg, shadow: 'rgba(0,0,0,0.3)' }
+        }
+      : {
+          receita: { accent: '#15803D', onAccent: '#FFFFFF', accentSoft: '#DCFCE7', accentInk: '#166534', band: base.bg, shadow: 'rgba(21,128,61,0.14)' },
+          presente: { accent: '#F97316', onAccent: '#1C1B19', accentSoft: '#FFEDD5', accentInk: '#C2410C', band: base.bg, shadow: 'rgba(249,115,22,0.18)' },
+          futuro: { accent: '#1D4ED8', onAccent: '#FFFFFF', accentSoft: '#DBEAFE', accentInk: '#1E40AF', band: base.bg, shadow: 'rgba(29,78,216,0.14)' }
+        };
+    const bySection = mode === 'por seção';
+    const PINK = { accent: base.accent, onAccent: base.onAccent, accentSoft: base.accentSoft, accentInk: base.accentInk, band: base.band, shadow: 'rgba(219,39,119,0.14)' };
+    const VIOLET = dark
+      ? { accent: '#A78BFA', onAccent: '#1A1033', accentSoft: '#2A2045', accentInk: '#C4B5FD', band: '#17141F', shadow: 'rgba(0,0,0,0.3)' }
+      : { accent: '#6D28D9', onAccent: '#FFFFFF', accentSoft: '#F1EBFE', accentInk: '#5B21B6', band: '#F5F1FE', shadow: 'rgba(109,40,217,0.14)' };
+    const sel = bySection ? SECTIONS[activeTab] : mode === 'rosa' ? PINK : VIOLET;
+    const act = bySection ? SECTIONS[activeTab] : mode === 'por página' ? VIOLET : PINK;
+    const t = Object.assign({}, base, {
+      band: sel.band,
+      accent: act.accent, onAccent: act.onAccent, accentSoft: act.accentSoft, accentInk: act.accentInk,
+      brand: base.accent, onBrand: base.onAccent,
+      sel: sel.accent, onSel: sel.onAccent, selSoft: sel.accentSoft, selInk: sel.accentInk, selShadow: sel.shadow
+    });
+    const TINTS = dark
+      ? { ali: ['#3A2412', '#FDBA74'], mor: ['#2A2145', '#C4B5FD'], sau: ['#14301F', '#86EFAC'], tra: ['#172544', '#93C5FD'], res: ['#0F302C', '#5EEAD4'], via: ['#0C2A3D', '#7DD3FC'], edu: ['#3A2A0A', '#FCD34D'] }
+      : { ali: ['#FFEDD5', '#C2410C'], mor: ['#EDE9FE', '#6D28D9'], sau: ['#DCFCE7', '#15803D'], tra: ['#DBEAFE', '#1D4ED8'], res: ['#CCFBF1', '#0F766E'], via: ['#E0F2FE', '#0369A1'], edu: ['#FEF3C7', '#B45309'] };
+    const ICONS = {
+      ali: 'M4 3v7a3 3 0 0 0 6 0V3M7 3v18M17 3c-2 0-3 2-3 6s1 4 3 4v8',
+      mor: 'M3 11l9-7 9 7M5 10v10h14V10M10 20v-6h4v6',
+      sau: 'M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10Z',
+      tra: 'M5 17h14v-5l-2-5H7l-2 5ZM5 12h14M7.5 17v2M16.5 17v2',
+      res: 'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6Z',
+      via: 'M22 2 11 13M22 2l-7 20-4-9-9-4Z',
+      edu: 'M4 19V5a2 2 0 0 1 2-2h14v16H6a2 2 0 0 0-2 2ZM20 19v2H6',
+      none: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10ZM12 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z',
+      wallet: 'M3 7a2 2 0 0 1 2-2h13v4M3 7v11a2 2 0 0 0 2 2h15V9H5a2 2 0 0 1-2-2ZM16 14h.01',
+      present: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM12 7v5l3 2',
+      future: 'M3 17l6-6 4 4 8-8M15 7h6v6'
+    };
+    const NAMES = { ali: 'Alimentação', mor: 'Moradia', sau: 'Saúde', tra: 'Transporte', res: 'Reserva de Emergência', via: 'Viagem', edu: 'Educação' };
+    const ALL_CATEGORIES = ['Alimentação', 'Contas e Serviços', 'Educação', 'Investimentos', 'Lazer', 'Moradia', 'Outros', 'Reserva de Emergência', 'Saúde', 'Transporte', 'Viagem'];
+    const INCOMES = [
+      { name: 'Salário', cents: 500000 },
+      { name: 'Freelance', cents: 125050 }
+    ];
+    const EXPENSES = [
+      { name: 'Aluguel', cents: 120000, cat: 'mor' },
+      { name: 'Condomínio', cents: 30000, cat: 'mor' },
+      { name: 'Mercado', cents: 80000, cat: 'ali' },
+      { name: 'Plano de saúde', cents: 20000, cat: 'sau' },
+      { name: 'Transporte público', cents: 25000, cat: 'tra' }
+    ];
+    const GOALS = [
+      { name: 'Reserva de emergência', cents: 150000, cat: 'res' },
+      { name: 'Viagem de férias', cents: 80000, cat: 'via' },
+      { name: 'Curso de inglês', cents: 40000, cat: 'edu' },
+      { name: 'Presente de aniversário', cents: 15000, cat: null }
+    ];
+    const fmt = (c) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(c / 100).replace(/ /g, ' ');
+    const sum = (xs) => xs.reduce((s, x) => s + x.cents, 0);
+    const usedOf = (total, planned) => (planned > 0 ? Math.round((total / planned) * 100) : (total > 0 ? 100 : 0));
+
+    const tab = activeTab;
+    const pct = this.state.pct;
+    const futurePct = 100 - pct;
+    const revenue = sum(INCOMES);
+    const presentPlanned = Math.round((revenue * pct) / 100);
+    const futurePlanned = revenue - presentPlanned;
+    const expensesTotal = sum(EXPENSES);
+    const goalsTotal = sum(GOALS);
+    const presentOver = expensesTotal > presentPlanned;
+    const futureOver = goalsTotal > futurePlanned;
+    const presentUsed = usedOf(expensesTotal, presentPlanned);
+    const futureUsed = usedOf(goalsTotal, futurePlanned);
+
+    const CARDS = [
+      { id: 'receita', label: 'Receita', value: fmt(revenue), sub: INCOMES.length + ' ganhos cadastrados', hasBar: false, used: 0, over: false, icon: ICONS.wallet },
+      { id: 'presente', label: 'Momento Presente', value: fmt(presentPlanned), sub: pct + '% da receita · gastos ' + fmt(expensesTotal) + ' (' + presentUsed + '%)', hasBar: true, used: presentUsed, over: presentOver, icon: ICONS.present },
+      { id: 'futuro', label: 'Momento Futuro', value: fmt(futurePlanned), sub: futurePct + '% da receita · metas ' + fmt(goalsTotal) + ' (' + futureUsed + '%)', hasBar: true, used: futureUsed, over: futureOver, icon: ICONS.future }
+    ];
+    const tabs = CARDS.map((c) => {
+      const selected = c.id === tab;
+      const cs = bySection ? SECTIONS[c.id] : { accent: t.sel, onAccent: t.onSel, accentSoft: t.selSoft, accentInk: t.selInk, shadow: t.selShadow };
+      return {
+        label: c.label,
+        value: c.value,
+        sub: c.sub,
+        subColor: c.over ? t.danger : t.muted,
+        hasBar: c.hasBar,
+        usedPct: Math.min(100, c.used) + '%',
+        barColor: c.over ? t.danger : (bySection ? cs.accent : t.accent),
+        alert: c.over,
+        icon: c.icon,
+        iconBg: selected ? cs.accent : cs.accentSoft,
+        iconFg: selected ? cs.onAccent : cs.accentInk,
+        ariaSelected: selected ? 'true' : 'false',
+        borderColor: selected ? cs.accent : t.border,
+        shadow: selected ? '0 6px 20px ' + cs.shadow : 'none',
+        pick: () => this.setState({ tab: c.id })
+      };
+    });
+
+    const row = (x) => ({
+      name: x.name,
+      cat: x.cat ? NAMES[x.cat] : 'Sem categoria',
+      amount: fmt(x.cents),
+      icon: ICONS[x.cat || 'none'],
+      iconBg: x.cat ? TINTS[x.cat][0] : t.neutralBg,
+      iconFg: x.cat ? TINTS[x.cat][1] : t.muted
+    });
+    const moment = (title, planned, mPct, total, over, rows, extra) => Object.assign({
+      title,
+      plannedLabel: fmt(planned),
+      pct: mPct,
+      totalValue: fmt(total),
+      over,
+      overMessage: 'O ' + title + ' excede o planejado em ' + fmt(total - planned) + '.',
+      rows
+    }, extra);
+    const m = tab === 'futuro'
+      ? moment('Momento Futuro', futurePlanned, futurePct, goalsTotal, futureOver, GOALS.map(row), {
+          totalLabel: 'Total do Momento Futuro', formTitle: 'Adicionar meta',
+          nameLabel: 'Nome da meta', namePlaceholder: 'Ex.: Viagem', categoryLabel: 'Categoria (opcional)',
+          categoryOptions: [{ name: 'Sem categoria' }].concat(ALL_CATEGORIES.map((name) => ({ name })))
+        })
+      : moment('Momento Presente', presentPlanned, pct, expensesTotal, presentOver, EXPENSES.map(row), {
+          totalLabel: 'Total do Momento Presente', formTitle: 'Adicionar gasto',
+          nameLabel: 'Nome do gasto', namePlaceholder: 'Ex.: Aluguel', categoryLabel: 'Categoria',
+          categoryOptions: [{ name: 'Selecione' }].concat(ALL_CATEGORIES.map((name) => ({ name })))
+        });
+
+    return {
+      t,
+      tabs,
+      isIncome: tab === 'receita',
+      isMoment: tab !== 'receita',
+      pct,
+      futurePct,
+      onPct: (e) => this.setState({ pct: Number(e.target.value) }),
+      revenueLabel: fmt(revenue),
+      presentPlannedLabel: fmt(presentPlanned),
+      futurePlannedLabel: fmt(futurePlanned),
+      pctWidth: pct + '%',
+      presentColor: bySection ? SECTIONS.presente.accent : t.accent,
+      futureColor: bySection ? SECTIONS.futuro.accent : t.selSoft,
+      incomes: INCOMES.map((i) => ({ name: i.name, amount: fmt(i.cents) })),
+      m
+    };
+  }
+}
+</script>
+</body>
+</html>
