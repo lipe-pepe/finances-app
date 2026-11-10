@@ -1,3 +1,4 @@
+import { Wallet } from "lucide-react";
 import { deleteIncome } from "@/features/incomes/actions";
 import { IncomeForm } from "@/features/incomes/components/income-form";
 import { DeleteConfirmDialog } from "@/features/planning/components/delete-confirm-dialog";
@@ -11,12 +12,18 @@ export function IncomeList({ incomes }: { incomes: IncomeItem[] }) {
   }
 
   return (
-    <ul className="divide-y">
+    <ul className="divide-y border-b">
       {incomes.map((income) => (
-        <li key={income.id} className="flex flex-wrap items-center gap-2 py-2">
-          <span className="min-w-0 flex-1 truncate">{income.name}</span>
-          <span className="tabular-nums">{formatBrl(income.amountCents)}</span>
-          <div className="flex w-full flex-wrap items-center justify-end gap-1 sm:w-auto">
+        <li key={income.id} className="flex flex-wrap items-center gap-x-3.5 gap-y-2 py-3">
+          <span
+            aria-hidden="true"
+            className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-soft text-brand-ink"
+          >
+            <Wallet className="size-5" />
+          </span>
+          <span className="min-w-0 flex-1 basis-40 truncate font-semibold">{income.name}</span>
+          <span className="font-semibold tabular-nums">{formatBrl(income.amountCents)}</span>
+          <div className="flex flex-wrap items-center justify-end gap-1 has-[form]:w-full">
             <IncomeForm mode="edit" income={income} />
             <DeleteConfirmDialog
               itemName={income.name}

@@ -142,7 +142,7 @@ function ExpenseFormFields(props: ExpenseFormProps & { onDone: () => void }) {
         </p>
       )}
       <div className="flex gap-2">
-        <Button type="submit" disabled={isSubmitting || !hasCategories}>
+        <Button type="submit" variant="section" disabled={isSubmitting || !hasCategories}>
           {isSubmitting ? "Salvando…" : isEdit ? "Salvar" : "Adicionar gasto"}
         </Button>
         {isEdit && (

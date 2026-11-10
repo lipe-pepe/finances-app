@@ -20,6 +20,7 @@ function tabsProps(overrides: Partial<TabsProps> = {}): TabsProps {
     revenueCents: 400000,
     expensesTotalCents: 0,
     goalsTotalCents: 0,
+    incomeCount: 2,
     income: <p>conteúdo receita</p>,
     present: <p>conteúdo presente</p>,
     future: <p>conteúdo futuro</p>,
@@ -57,11 +58,11 @@ describe("PlanningTabs", () => {
 
   it("exibe as três abas na ordem Receita, Momento Presente, Momento Futuro", () => {
     renderTabs();
-    expect(screen.getAllByRole("tab").map((tab) => tab.textContent)).toEqual([
-      "Receita",
-      "Momento Presente",
-      "Momento Futuro",
-    ]);
+    const tabs = screen.getAllByRole("tab");
+    expect(tabs).toHaveLength(3);
+    expect(tabs[0]).toHaveAccessibleName("Receita");
+    expect(tabs[1]).toHaveAccessibleName("Momento Presente");
+    expect(tabs[2]).toHaveAccessibleName("Momento Futuro");
   });
 
   it("abre na aba Receita mostrando só o conteúdo dela", () => {
@@ -127,5 +128,26 @@ describe("PlanningTabs", () => {
       "true",
     );
     expect(screen.getByText("futuro atualizado")).toBeInTheDocument();
+  });
+
+  it("marca a parte ativa para a cor da aba", async () => {
+    const { container } = renderTabs();
+    const root = container.querySelector("[data-section]");
+    expect(root).toHaveAttribute("data-section", "income");
+    await userEvent.click(screen.getByRole("tab", { name: "Momento Presente" }));
+    expect(root).toHaveAttribute("data-section", "present");
+  });
+
+  it("mostra o resumo de cada parte nos cards", () => {
+    renderTabs({ revenueCents: 625050, expensesTotalCents: 275000 });
+    expect(screen.getByRole("tab", { name: "Receita" })).toHaveAccessibleDescription(
+      "R$ 6.250,50 2 ganhos cadastrados",
+    );
+    expect(screen.getByRole("tab", { name: "Momento Presente" })).toHaveAccessibleDescription(
+      "R$ 3.125,25 50% da receita · gastos R$ 2.750,00 (88%)",
+    );
+    expect(screen.getByRole("tab", { name: "Momento Futuro" })).toHaveAccessibleDescription(
+      "R$ 3.125,25 50% da receita · metas R$ 0,00 (0%)",
+    );
   });
 });

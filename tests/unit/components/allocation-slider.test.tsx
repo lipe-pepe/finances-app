@@ -43,6 +43,12 @@ describe("AllocationSlider + PlannedAmount", () => {
     expect(screen.getByTestId("planned-goals")).toHaveTextContent("R$ 1.800,00");
   });
 
+  it("marca os rótulos com a cor de cada momento", () => {
+    renderSlider(70);
+    expect(screen.getByText("Momento Presente 70%").querySelector(".bg-present")).not.toBeNull();
+    expect(screen.getByText("Momento Futuro 30%").querySelector(".bg-future")).not.toBeNull();
+  });
+
   it("identifica o slider pelo nome dos dois momentos", () => {
     renderSlider(70);
     expect(

@@ -112,7 +112,7 @@ function IncomeFormFields(props: IncomeFormProps & { onDone: () => void }) {
         </p>
       )}
       <div className="flex gap-2">
-        <Button type="submit" disabled={isSubmitting}>
+        <Button type="submit" variant="section" disabled={isSubmitting}>
           {isSubmitting ? "Salvando…" : isEdit ? "Salvar" : "Adicionar ganho"}
         </Button>
         {isEdit && (

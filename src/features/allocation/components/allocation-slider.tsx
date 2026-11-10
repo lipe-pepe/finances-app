@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { saveAllocation } from "@/features/allocation/actions";
 import { useAllocation } from "@/features/allocation/components/allocation-provider";
+import { SplitBar } from "@/features/allocation/components/split-bar";
 import { runAction } from "@/lib/handle-action-result";
 import { getGoalsPercentage } from "@/lib/planning";
 import { SECTION_LABELS } from "@/lib/planning-labels";
@@ -31,15 +32,18 @@ export function AllocationSlider() {
   const goalsPercentage = getGoalsPercentage(essentialPercentage);
 
   return (
-    <div className="flex flex-col gap-3">
-      <div className="flex items-center justify-between gap-4 text-sm font-medium">
-        <span>
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 text-sm font-semibold">
+        <span className="flex items-center gap-2">
+          <span aria-hidden="true" className="size-2.5 rounded-full bg-present" />
           {SECTION_LABELS.expenses} {essentialPercentage}%
         </span>
-        <span>
+        <span className="flex items-center gap-2">
+          <span aria-hidden="true" className="size-2.5 rounded-full bg-future" />
           {SECTION_LABELS.goals} {goalsPercentage}%
         </span>
       </div>
+      <SplitBar />
       <Slider
         min={0}
         max={100}

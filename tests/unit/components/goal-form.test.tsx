@@ -91,4 +91,9 @@ describe("GoalForm", () => {
     await userEvent.click(screen.getByRole("button", { name: "Adicionar meta" }));
     expect(push).toHaveBeenCalledWith("/login");
   });
+
+  it("usa no botão de envio a cor da parte ativa do Planejamento", () => {
+    render(<GoalForm mode="create" categories={CATEGORIES} />);
+    expect(screen.getByRole("button", { name: "Adicionar meta" })).toHaveClass("bg-section");
+  });
 });

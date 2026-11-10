@@ -1,4 +1,3 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { PlannedAmount } from "@/features/allocation/components/planned-amount";
 import { ExpenseForm } from "@/features/expenses/components/expense-form";
 import { ExpenseList } from "@/features/expenses/components/expense-list";
@@ -14,7 +13,7 @@ type ExpenseSectionProps = {
   revenueCents: number;
 };
 
-/** Seção do Momento Presente: valor planejado, cadastro, lista e soma dos gastos. */
+/** Seção do Momento Presente: planejado, alerta, formulário em linha, lista e soma dos gastos. */
 export function ExpenseSection({
   expenses,
   categories,
@@ -22,19 +21,19 @@ export function ExpenseSection({
   revenueCents,
 }: ExpenseSectionProps) {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{SECTION_LABELS.expenses}</CardTitle>
-        <CardDescription>
-          <PlannedAmount section="expenses" revenueCents={revenueCents} />
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-4">
-        <OverBudgetAlert section="expenses" revenueCents={revenueCents} totalCents={expensesTotalCents} />
+    <section aria-labelledby="expenses-title" className="flex flex-col gap-4">
+      <div className="flex flex-col gap-1">
+        <h2 id="expenses-title" className="text-xl font-semibold">
+          {SECTION_LABELS.expenses}
+        </h2>
+        <PlannedAmount section="expenses" revenueCents={revenueCents} />
+      </div>
+      <OverBudgetAlert section="expenses" revenueCents={revenueCents} totalCents={expensesTotalCents} />
+      <div className="rounded-2xl border bg-card p-4">
         <ExpenseForm mode="create" categories={categories} />
-        <ExpenseList expenses={expenses} categories={categories} />
-        <SectionTotal label={SECTION_TOTAL_LABELS.expenses} totalCents={expensesTotalCents} />
-      </CardContent>
-    </Card>
+      </div>
+      <ExpenseList expenses={expenses} categories={categories} />
+      <SectionTotal label={SECTION_TOTAL_LABELS.expenses} totalCents={expensesTotalCents} />
+    </section>
   );
 }

@@ -1,3 +1,4 @@
+import { usedLabel } from "@/lib/control-labels";
 import { formatBrl } from "@/lib/money";
 import type { PlanningSection } from "@/lib/planning";
 import type { PlanningTab } from "@/lib/planning-tab";
@@ -39,4 +40,15 @@ export const PLANNING_SUBTITLE =
 export function incomeCountLabel(count: number): string {
   if (count === 0) return "Nenhum ganho cadastrado";
   return count === 1 ? "1 ganho cadastrado" : `${count} ganhos cadastrados`;
+}
+
+/** Resumo do card de um momento. Ex.: "50% da receita · gastos R$ 2.750,00 (88%)". */
+export function momentSummary(
+  section: PlanningSection,
+  percentage: number,
+  totalCents: number,
+  usedPercentage: number | null,
+): string {
+  const items = section === "expenses" ? "gastos" : "metas";
+  return `${percentage}% da receita · ${items} ${formatBrl(totalCents)} (${usedLabel(usedPercentage)})`;
 }

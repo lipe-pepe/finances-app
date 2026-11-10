@@ -7,13 +7,15 @@ import { AppHeader } from "@/features/planning/components/app-header";
 import { PlanningTabs } from "@/features/planning/components/planning-tabs";
 import { getPlanningData } from "@/features/planning/queries";
 import { requireUserId } from "@/lib/auth";
+import { PLANNING_SUBTITLE } from "@/lib/planning-labels";
 import { PLANNING_TAB_PARAM, parsePlanningTab } from "@/lib/planning-tab";
 
 type PlanningPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
-// Página Planejamento (feature 003), renderizada no servidor a cada requisição.
+// Página Planejamento, renderizada no servidor a cada requisição. Na aba Receita, a divisão da
+// receita vem antes dos ganhos (feature 004).
 // A aba inicial vem do endereço (?tab=); as seções são Server Components passados ao
 // PlanningTabs (cliente), que só controla qual delas aparece.
 export default async function PlanningPage({ searchParams }: PlanningPageProps) {
@@ -25,16 +27,21 @@ export default async function PlanningPage({ searchParams }: PlanningPageProps) 
     <>
       <AppHeader current="planning" />
       <AllocationProvider initialEssentialPercentage={data.essentialPercentage}>
-        <main className="mx-auto w-full max-w-4xl px-4 py-6">
+        <main className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-8 tablet:px-6 tablet:py-10">
+          <div className="flex flex-col gap-1">
+            <h2 className="text-4xl font-bold tracking-tight">Planejamento</h2>
+            <p className="text-muted-foreground">{PLANNING_SUBTITLE}</p>
+          </div>
           <PlanningTabs
             initialTab={initialTab}
             revenueCents={data.revenueCents}
+            incomeCount={data.incomes.length}
             expensesTotalCents={data.expensesTotalCents}
             goalsTotalCents={data.goalsTotalCents}
             income={
               <>
-                <IncomeSection incomes={data.incomes} revenueCents={data.revenueCents} />
                 <AllocationSection revenueCents={data.revenueCents} />
+                <IncomeSection incomes={data.incomes} revenueCents={data.revenueCents} />
               </>
             }
             present={

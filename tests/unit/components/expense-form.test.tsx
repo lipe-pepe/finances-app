@@ -108,4 +108,9 @@ describe("ExpenseForm", () => {
     await userEvent.click(screen.getByRole("button", { name: "Adicionar gasto" }));
     expect(push).toHaveBeenCalledWith("/login");
   });
+
+  it("usa no botão de envio a cor da parte ativa do Planejamento", () => {
+    render(<ExpenseForm mode="create" categories={CATEGORIES} />);
+    expect(screen.getByRole("button", { name: "Adicionar gasto" })).toHaveClass("bg-section");
+  });
 });

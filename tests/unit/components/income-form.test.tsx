@@ -80,4 +80,9 @@ describe("IncomeForm", () => {
     await fillAndSubmit("Salário", "10");
     expect(push).toHaveBeenCalledWith("/login");
   });
+
+  it("usa no botão de envio a cor da parte ativa do Planejamento", () => {
+    render(<IncomeForm mode="create" />);
+    expect(screen.getByRole("button", { name: "Adicionar ganho" })).toHaveClass("bg-section");
+  });
 });

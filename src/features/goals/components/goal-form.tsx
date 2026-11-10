@@ -139,7 +139,7 @@ function GoalFormFields(props: GoalFormProps & { onDone: () => void }) {
         </p>
       )}
       <div className="flex gap-2">
-        <Button type="submit" disabled={isSubmitting}>
+        <Button type="submit" variant="section" disabled={isSubmitting}>
           {isSubmitting ? "Salvando…" : isEdit ? "Salvar" : "Adicionar meta"}
         </Button>
         {isEdit && (
