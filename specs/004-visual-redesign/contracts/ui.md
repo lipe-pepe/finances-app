@@ -2,8 +2,8 @@
 
 **Feature**: `004-visual-redesign`
 
-Rotas, Server Actions e consultas: **sem alterações** (contratos das features 001–003). Exceção:
-`getPlanningData` passa a expor `incomeCount` (derivado de `incomes.length`).
+Rotas, Server Actions e consultas: **sem alterações** (contratos das features 001–003). A
+quantidade de ganhos do card Receita vem de `incomes.length`, já retornado por `getPlanningData`.
 
 ## Cabeçalho (`AppHeader`, Server)
 

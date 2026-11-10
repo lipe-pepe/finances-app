@@ -57,7 +57,7 @@ tokens
 | II. Testes (não negociável) | Unitários para cada funcionalidade nova (`category-style`, `getUsedPercentage`, `incomeCountLabel`, `contrastRatio`, `CategoryIcon`, `UsageBar`, `SplitBar`, cards de resumo, painel de registro/edição) + testes de design (contraste e tokens) + teste da spec 004; testes existentes ajustados. Nenhum endpoint novo/alterado: integração das features 001–003 segue válida | ✅ Pass |
 | III. SSR primeiro | Páginas, cabeçalho, listas, `CategoryIcon` e `UsageBar` no servidor. Client Components novos justificados: `ActualExpenseSheetProvider`/`ui/sheet` (diálogo), `SplitBar` (acompanha o slider), `useIsNarrow` (comportamento por largura). Layout por largura resolvido em CSS | ✅ Pass |
 | IV. React Hook Form | Formulários reaproveitados; o painel usa o mesmo `ActualExpenseForm` com validação no servidor | ✅ Pass |
-| V. Supabase, Prisma e Auth | Sem mudanças de schema, consultas (exceto `incomeCount` derivado) ou autenticação | ✅ Pass |
+| V. Supabase, Prisma e Auth | Sem mudanças de schema, consultas ou autenticação (a contagem de ganhos usa `incomes.length`) | ✅ Pass |
 | VI. Design system, temas e acessibilidade | Tokens únicos em `globals.css`; claro/escuro por `prefers-color-scheme`; pares AA verificados por teste; cores fixas (rosa marca/Controle, verde, laranja, azul, vermelho); 360 px e alvos de 44 px; teste que proíbe cores escritas à mão | ✅ Pass (ver divergência abaixo) |
 | Commits | Commits por tarefa no padrão `tipo(escopo): descrição [T###]` na branch `004-visual-redesign` | ✅ Pass |
 
@@ -96,7 +96,7 @@ src/
 │   ├── layout.tsx                          # ALTERADO: DM Sans
 │   ├── login/page.tsx                      # ALTERADO: novo layout
 │   ├── control/page.tsx                    # ALTERADO: duas colunas, provider do painel
-│   └── planning/page.tsx                   # ALTERADO: título, ordem Divisão → Ganhos, incomeCount
+│   └── planning/page.tsx                   # ALTERADO: título, ordem Divisão → Ganhos, contagem de ganhos
 ├── components/
 │   ├── ui/sheet.tsx                        # NOVO (shadcn/ui)
 │   ├── ui/button.tsx                       # ALTERADO: variante `section`
