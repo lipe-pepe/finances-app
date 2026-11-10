@@ -76,6 +76,39 @@ mensagens de erro e melhora o desempenho por evitar re-renderizações desnecess
 Prisma oferece tipagem forte e um único fluxo de migrations versionado; o RLS somado à
 filtragem explícita por usuário garante o isolamento dos dados financeiros de cada usuário.
 
+### VI. Design System, Temas e Acessibilidade
+
+- Toda cor, família e tamanho de fonte, espaçamento, raio de borda e sombra usados na interface
+  MUST vir de tokens do tema, definidos em um único lugar (o arquivo de tema global da
+  aplicação). Componentes MUST NOT conter valores visuais escritos à mão (ex.: `#DB2777`,
+  `rgb(...)`, classes arbitrárias como `bg-[#...]` ou `text-[13px]`, ou cores da paleta bruta
+  como `bg-pink-600`); MUST usar tokens semânticos (ex.: marca, superfície, texto secundário,
+  alerta, Receita). Escalas padrão de espaçamento e tamanho do framework de estilos contam como
+  tokens.
+- Toda tela MUST funcionar nos temas claro e escuro; todo token de cor MUST ter valor para os
+  dois temas.
+- Toda tela MUST atender ao contraste WCAG 2.1 nível AA: texto com no mínimo 4,5:1 (3:1 para
+  texto grande, ≥ 24 px ou ≥ 18,66 px em negrito) e componentes de interface e elementos
+  gráficos com no mínimo 3:1, em ambos os temas. Informação MUST NOT ser transmitida apenas por
+  cor (usar também texto, ícone ou forma).
+- As cores com significado são fixas e MUST ser usadas para identificar o que representam:
+  - **Rosa**: cor da marca (logo, navegação principal e a parte Controle).
+  - **Verde**: Receita.
+  - **Laranja**: Momento Presente.
+  - **Azul**: Momento Futuro.
+  - **Vermelho**: alertas e erros (planejamento excedido, acima do limite, validação).
+  Trocar o significado dessas cores ou atribuí-las a outras partes MUST passar por emenda a
+  esta constituição. Ícones de categoria MAY reutilizar esses matizes.
+- Toda tela MUST funcionar em larguras a partir de 360 px (celular) sem rolagem horizontal da
+  página, com alvos de toque de no mínimo 44 × 44 px.
+- A referência visual aprovada fica em `docs/design/`; divergências intencionais em relação a
+  ela MUST ser registradas na spec ou no plano da feature.
+
+**Rationale**: tokens centralizados mantêm o visual consistente e permitem trocar temas sem
+caçar valores no código; contraste AA, temas claro/escuro e telas responsivas garantem que
+todos consigam usar a plataforma em qualquer ambiente e dispositivo; cores fixas por parte do
+planejamento tornam imediato saber onde se está.
+
 ## Stack Tecnológica e Restrições
 
 - **Front-end**: Next.js (App Router) com React e TypeScript.
@@ -83,6 +116,7 @@ filtragem explícita por usuário garante o isolamento dos dados financeiros de 
 - **ORM e migrations**: Prisma (Prisma Client + Prisma Migrate).
 - **Autenticação**: Supabase Auth.
 - **Formulários**: React Hook Form.
+- **Interface**: Tailwind CSS e shadcn/ui, com os tokens do tema no arquivo de estilos global.
 - **Testes**: Vitest para testes unitários e de integração.
 - A adoção de qualquer nova dependência de infraestrutura (outro banco, outro provedor de auth,
   outro ORM, outro framework de testes) MUST ser justificada e aprovada via emenda a esta constituição.
@@ -91,7 +125,7 @@ filtragem explícita por usuário garante o isolamento dos dados financeiros de 
 
 - Toda feature MUST seguir o fluxo Spec Kit: spec → plan → tasks → implement.
 - O `plan.md` de cada feature MUST conter uma verificação de conformidade (Constitution Check)
-  com os cinco princípios acima.
+  com os seis princípios acima.
 - Antes de mesclar qualquer alteração, os seguintes gates MUST passar:
   1. Todos os testes Vitest executam com sucesso.
   2. Existem os testes exigidos pelo Princípio II (unitário por funcionalidade e por spec,
@@ -101,7 +135,9 @@ filtragem explícita por usuário garante o isolamento dos dados financeiros de 
   5. Formulários usam React Hook Form (Princípio IV).
   6. Alterações de schema possuem migration do Prisma Migrate, novas tabelas possuem RLS e
      consultas via Prisma filtram pelo usuário autenticado (Princípio V).
-  7. As mensagens de commit seguem o padrão da seção "Commits e Controle de Versão".
+  7. Componentes usam apenas tokens do tema, toda tela funciona nos temas claro e escuro com
+     contraste AA e funciona a partir de 360 px de largura (Princípio VI).
+  8. As mensagens de commit seguem o padrão da seção "Commits e Controle de Versão".
 - Revisões de código MUST verificar esses gates explicitamente.
 
 ## Commits e Controle de Versão
@@ -120,8 +156,9 @@ filtragem explícita por usuário garante o isolamento dos dados financeiros de 
     (desempenho), `build` (dependências e build), `ci` (integração contínua), `chore`
     (manutenção e configuração).
   - **escopo** (MUST): a área afetada, em inglês e minúsculas, preferencialmente o domínio em
-    `src/features/` (`auth`, `incomes`, `allocation`, `expenses`, `goals`, `planning`) ou uma
-    área transversal (`db`, `ui`, `lib`, `tests`, `config`, `specs`, `constitution`).
+    `src/features/` (`auth`, `incomes`, `allocation`, `expenses`, `goals`, `planning`,
+    `control`) ou uma área transversal (`db`, `ui`, `lib`, `tests`, `config`, `specs`,
+    `constitution`, `navigation`, `design`).
   - **descrição** (MUST): em português, no imperativo ou presente, com no máximo 72 caracteres
     na primeira linha incluindo tipo e escopo, sem ponto final.
   - **referência à tarefa** (MUST quando o trabalho vem de um `tasks.md`): o id da tarefa entre
@@ -170,4 +207,4 @@ mão do controle humano sobre o que é publicado ou reescrito.
 - A conformidade MUST ser reavaliada a cada nova feature durante o `/speckit-plan` e o
   `/speckit-analyze`.
 
-**Version**: 1.2.0 | **Ratified**: 2026-11-08 | **Last Amended**: 2026-11-09
+**Version**: 1.3.0 | **Ratified**: 2026-11-08 | **Last Amended**: 2026-11-09
