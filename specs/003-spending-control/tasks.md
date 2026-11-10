@@ -158,7 +158,7 @@ Supabase local (Docker); sem ele, registrar isso no corpo do commit e no relató
 - [X] T042 Atualizar a descrição em `src/app/layout.tsx` para "Planejamento financeiro pessoal: planeje a receita e controle seus gastos do mês." e conferir que nenhum `href="/"`, `redirect("/")` ou `revalidatePath("/")` sobrou em `src/` (`grep -rn '"/"' src --include=*.ts*` só deve achar `src/app/page.tsx`/`auth-redirect.ts` se aplicável)
 - [X] T043 Auditoria final: todo `"use client"` em `src/` com comentário de justificativa; nenhum texto do Controle escrito à mão fora de `control-labels.ts` (exceto rótulos de campos do formulário, como nos demais formulários); rodar `npm run test:unit`, `npx tsc --noEmit`, `npm run lint` e `npm run build` sem erros
 - [X] T044 Rodar `npm run test:integration` se houver Supabase local; caso contrário, registrar no relatório e no corpo do commit que os testes de integração de T013, T021 e T022 não foram executados — executado em 2026-11-09: sem Docker/Supabase local, os testes de integração não rodaram (registrado nos commits)
-- [ ] T045 (Usuário) Aplicar a migração no Supabase remoto com `npm run db:deploy` e executar a validação manual de `specs/003-spending-control/quickstart.md` (passos 1–10)
+- [X] T045 (Usuário) Aplicar a migração no Supabase remoto com `npm run db:deploy` e executar a validação manual de `specs/003-spending-control/quickstart.md` (passos 1–10) — validado pelo usuário em 2026-11-09: migração aplicada e todos os passos ok
 
 ---
 
