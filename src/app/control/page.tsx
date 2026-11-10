@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ActualExpenseForm } from "@/features/control/components/actual-expense-form";
-import { ActualExpenseList } from "@/features/control/components/actual-expense-list";
+import { ControlDashboard } from "@/features/control/components/control-dashboard";
 import { getControlData } from "@/features/control/queries";
 import { AppHeader } from "@/features/planning/components/app-header";
 import { requireUserId } from "@/lib/auth";
@@ -31,10 +31,11 @@ export default async function ControlPage() {
             <CardTitle>Gastos do mês</CardTitle>
           </CardHeader>
           <CardContent>
-            <ActualExpenseList
-              actualExpenses={data.actualExpenses}
+            <ControlDashboard
+              today={data.today}
               categories={data.categories}
-              showCategory
+              plannedCentsByCategory={data.plannedCentsByCategory}
+              actualExpenses={data.actualExpenses}
             />
           </CardContent>
         </Card>
