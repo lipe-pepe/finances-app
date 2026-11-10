@@ -1,15 +1,23 @@
 # Finanças Pessoais
 
-Plataforma de planejamento financeiro pessoal: o usuário cadastra seus ganhos (receita total),
-divide a receita entre **Momento Presente** (gastos) e **Momento Futuro** (metas) com um slider e
-acompanha alertas quando o planejamento é excedido. A tela é organizada em três abas: Receita,
-Momento Presente e Momento Futuro.
+Plataforma de finanças pessoais com duas partes, acessadas pelos botões no topo:
+
+- **Planejamento** (`/planning`): o usuário cadastra seus ganhos (receita total), divide a receita
+  entre **Momento Presente** (gastos planejados) e **Momento Futuro** (metas) com um slider e
+  acompanha alertas quando o planejamento é excedido. Três abas: Receita, Momento Presente e
+  Momento Futuro (`?tab=present|future`).
+- **Controle** (`/control`, página inicial): o usuário registra os gastos que de fato fez (nome,
+  valor, categoria e data dentro do mês atual) e acompanha um dashboard do mês por categoria:
+  planejado (soma dos gastos do Momento Presente), gasto, disponível, lista e gráfico do gasto
+  acumulado com a linha de limite.
+
+O "hoje" e o "mês atual" usam o fuso `America/Sao_Paulo`, igual no navegador e no servidor.
 
 Stack: Next.js 16 (App Router) · Supabase (PostgreSQL + Auth) · Prisma 7 · React Hook Form + Zod ·
-Tailwind CSS 4 + shadcn/ui · Vitest.
+Tailwind CSS 4 + shadcn/ui · Recharts (gráfico) · Vitest.
 
 Especificações, planos e tarefas: [`specs/`](specs/) (001: planejamento financeiro; 002: abas e
-novos nomes).
+novos nomes; 003: Planejamento e Controle de gastos).
 Regras do projeto: [`.specify/memory/constitution.md`](.specify/memory/constitution.md).
 
 ## Pré-requisitos
@@ -38,7 +46,8 @@ Regras do projeto: [`.specify/memory/constitution.md`](.specify/memory/constitut
    > A conexão direta (`db.<ref>.supabase.co`) só funciona com IPv6. Em redes ou no WSL sem
    > IPv6 ela falha com `P1001: Can't reach database server`; use o Session pooler.
 
-3. Aplique o schema (tabelas, constraints e RLS) e as categorias iniciais:
+3. Aplique o schema (tabelas, constraints e RLS) e as categorias iniciais. Rode `db:deploy` de
+   novo sempre que atualizar o projeto, para aplicar migrations novas (ex.: `actual_expenses`):
 
    ```bash
    npm run db:deploy
@@ -94,9 +103,11 @@ do Supabase CLI no ambiente local.
 
 ```text
 prisma/                 schema, migrations (Prisma Migrate) e seed das categorias
-src/app/                rotas: / (tela de planejamento) e /login
-src/features/<domínio>/ actions (Server Actions), schemas (Zod) e componentes
-src/lib/                dinheiro em centavos, regras de planejamento, auth, Prisma, Supabase
+src/app/                rotas: / (redireciona), /control, /planning e /login
+src/features/<domínio>/ actions (Server Actions), schemas (Zod), consultas e componentes
+                        (incomes, allocation, expenses, goals, planning, control, auth)
+src/lib/                dinheiro em centavos, datas (fuso da aplicação), regras de planejamento
+                        e do Controle, rotas, auth, Prisma, Supabase
 src/proxy.ts            renovação da sessão e redirecionamentos de autenticação
 tests/unit/             testes unitários (Vitest + Testing Library)
 tests/integration/      testes de integração das Server Actions
