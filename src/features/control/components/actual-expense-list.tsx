@@ -1,3 +1,4 @@
+import { CategoryIcon } from "@/components/category-icon";
 import { deleteActualExpense } from "@/features/control/actions";
 import { ActualExpenseForm } from "@/features/control/components/actual-expense-form";
 import type { ActualExpenseItem } from "@/features/control/queries";
@@ -25,12 +26,13 @@ export function ActualExpenseList({
   }
 
   return (
-    <ul className="divide-y">
+    <ul className="divide-y border-b">
       {actualExpenses.map((item) => (
-        <li key={item.id} className="flex flex-wrap items-center gap-2 py-2">
-          <div className="flex min-w-0 flex-1 flex-col">
-            <span className="truncate">{item.name}</span>
-            <span className="text-xs text-muted-foreground">
+        <li key={item.id} className="flex flex-wrap items-center gap-x-3.5 gap-y-2 py-3">
+          <CategoryIcon categoryName={item.categoryName} />
+          <div className="flex min-w-0 flex-1 basis-40 flex-col">
+            <span className="truncate font-semibold">{item.name}</span>
+            <span className="text-sm text-muted-foreground">
               <time dateTime={item.spentOn}>{formatDateBr(item.spentOn)}</time>
               {showCategory && (
                 <>
@@ -40,8 +42,8 @@ export function ActualExpenseList({
               )}
             </span>
           </div>
-          <span className="tabular-nums">{formatBrl(item.amountCents)}</span>
-          <div className="flex w-full flex-wrap items-center justify-end gap-1 sm:w-auto">
+          <span className="font-semibold tabular-nums">{formatBrl(item.amountCents)}</span>
+          <div className="flex flex-wrap items-center justify-end gap-1 has-[form]:w-full">
             <ActualExpenseForm mode="edit" actualExpense={item} categories={categories} />
             <DeleteConfirmDialog
               itemName={item.name}

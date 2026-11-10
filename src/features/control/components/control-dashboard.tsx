@@ -11,7 +11,7 @@ import type { ActualExpenseItem } from "@/features/control/queries";
 import { CategorySelect } from "@/features/planning/components/category-select";
 import type { CategoryOption } from "@/features/planning/queries";
 import { formatMonthLabel } from "@/lib/calendar";
-import { ALL_CATEGORIES_LABEL } from "@/lib/control-labels";
+import { ALL_CATEGORIES_LABEL, MONTH_EXPENSES_TITLE } from "@/lib/control-labels";
 import {
   ALL_CATEGORIES,
   buildCumulativeSeries,
@@ -36,6 +36,8 @@ export function ControlDashboard({
   actualExpenses,
 }: ControlDashboardProps) {
   const selectId = useId();
+  const headingId = useId();
+  const listHeadingId = useId();
   const [selected, setSelected] = useState<CategorySelection>(ALL_CATEGORIES);
 
   // Se a categoria selecionada deixar de existir, volta para "Todos"
@@ -55,29 +57,41 @@ export function ControlDashboard({
   }, [actualExpenses, plannedCentsByCategory, selection, today]);
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-1.5 sm:max-w-xs">
-        <Label htmlFor={selectId}>Categoria</Label>
-        <CategorySelect
-          id={selectId}
-          value={selection}
-          onChange={setSelected}
-          categories={categories}
-          emptyOption={{ value: ALL_CATEGORIES, label: ALL_CATEGORIES_LABEL }}
+    <div className="flex flex-col gap-9">
+      <section aria-labelledby={headingId} className="flex flex-col gap-5">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <h2 id={headingId} className="text-sm font-medium text-muted-foreground">
+            {formatMonthLabel(today)}
+          </h2>
+          <div className="flex w-full flex-col gap-1.5 sm:w-56">
+            <Label htmlFor={selectId}>Categoria</Label>
+            <CategorySelect
+              id={selectId}
+              value={selection}
+              onChange={setSelected}
+              categories={categories}
+              emptyOption={{ value: ALL_CATEGORIES, label: ALL_CATEGORIES_LABEL }}
+            />
+          </div>
+        </div>
+        <SpendingSummary plannedCents={view.plannedCents} spentCents={view.spentCents} />
+        <SpendingChart
+          series={view.series}
+          plannedCents={view.plannedCents}
+          spentCents={view.spentCents}
+          monthLabel={formatMonthLabel(today)}
         />
-      </div>
-      <SpendingSummary plannedCents={view.plannedCents} spentCents={view.spentCents} />
-      <SpendingChart
-        series={view.series}
-        plannedCents={view.plannedCents}
-        spentCents={view.spentCents}
-        monthLabel={formatMonthLabel(today)}
-      />
-      <ActualExpenseList
-        actualExpenses={view.items}
-        categories={categories}
-        showCategory={selection === ALL_CATEGORIES}
-      />
+      </section>
+      <section aria-labelledby={listHeadingId} className="flex flex-col gap-2 border-t pt-7">
+        <h2 id={listHeadingId} className="text-lg font-semibold">
+          {MONTH_EXPENSES_TITLE}
+        </h2>
+        <ActualExpenseList
+          actualExpenses={view.items}
+          categories={categories}
+          showCategory={selection === ALL_CATEGORIES}
+        />
+      </section>
     </div>
   );
 }

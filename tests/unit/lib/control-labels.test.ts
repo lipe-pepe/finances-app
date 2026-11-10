@@ -7,7 +7,6 @@ import {
   SECTION_NAV_LABELS,
   SUMMARY_LABELS,
   chartSummary,
-  controlTitle,
   EDIT_SHEET_TITLE,
   REGISTER_BUTTON_LABEL,
   dateHint,
@@ -35,7 +34,6 @@ describe("control-labels", () => {
     expect(
       chartSummary({ spentCents: 23050, plannedCents: 230000, monthLabel: "Novembro de 2026" }),
     ).toBe("Gasto acumulado de R$ 230,50 de um limite de R$ 2.300,00 em Novembro de 2026");
-    expect(controlTitle("Novembro de 2026")).toBe("Controle de Novembro de 2026");
   });
 
   it("define os textos novos do Controle", () => {

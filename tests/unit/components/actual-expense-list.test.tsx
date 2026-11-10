@@ -44,4 +44,15 @@ describe("ActualExpenseList", () => {
     );
     expect(screen.queryByText("Alimentação")).not.toBeInTheDocument();
   });
+
+  it("mostra o ícone da categoria em cada gasto, com ou sem o nome da categoria", () => {
+    const { container, rerender } = render(
+      <ActualExpenseList actualExpenses={ITEMS} categories={CATEGORIES} showCategory />,
+    );
+    expect(container.querySelector(".bg-category-food-soft")).not.toBeNull();
+    rerender(
+      <ActualExpenseList actualExpenses={ITEMS} categories={CATEGORIES} showCategory={false} />,
+    );
+    expect(container.querySelector(".bg-category-food-soft")).not.toBeNull();
+  });
 });

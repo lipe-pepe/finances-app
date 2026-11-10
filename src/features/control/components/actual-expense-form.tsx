@@ -16,7 +16,8 @@ import type { ActualExpenseItem } from "@/features/control/queries";
 import { createActualExpenseSchema, type ActualExpenseInput } from "@/features/control/schemas";
 import { CategorySelect } from "@/features/planning/components/category-select";
 import type { CategoryOption } from "@/features/planning/queries";
-import { getMonthRange, getToday } from "@/lib/calendar";
+import { formatMonthLabel, getMonthRange, getToday } from "@/lib/calendar";
+import { dateHint } from "@/lib/control-labels";
 import { applyFieldErrors, runAction } from "@/lib/handle-action-result";
 import { centsToInputString } from "@/lib/money";
 
@@ -102,7 +103,7 @@ function ActualExpenseFormFields(props: ActualExpenseFormProps & { onDone: () =>
 
   return (
     <form onSubmit={onSubmit} noValidate className="flex w-full flex-col gap-3">
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-[1fr_8rem_11rem_10rem]">
+      <div className="grid gap-3.5">
         <div className="flex flex-col gap-1.5">
           <Label htmlFor={nameId}>Nome do gasto</Label>
           <Input
@@ -154,9 +155,14 @@ function ActualExpenseFormFields(props: ActualExpenseFormProps & { onDone: () =>
             min={first}
             max={last}
             aria-invalid={Boolean(errors.spentOn)}
-            aria-describedby={errors.spentOn ? `${dateId}-error` : undefined}
+            aria-describedby={
+              errors.spentOn ? `${dateId}-hint ${dateId}-error` : `${dateId}-hint`
+            }
             {...register("spentOn")}
           />
+          <p id={`${dateId}-hint`} className="text-xs text-muted-foreground">
+            {dateHint(formatMonthLabel(today))}
+          </p>
           <FormFieldError id={`${dateId}-error`} message={errors.spentOn?.message} />
         </div>
       </div>

@@ -49,6 +49,13 @@ describe("ActualExpenseForm", () => {
     expect(date).toHaveAttribute("max", "2026-11-30");
   });
 
+  it("explica que só dias do mês atual são aceitos", () => {
+    render(<ActualExpenseForm mode="create" categories={CATEGORIES} />);
+    expect(screen.getByLabelText("Data")).toHaveAccessibleDescription(
+      "Somente dias de novembro de 2026.",
+    );
+  });
+
   it("mostra os erros por campo sem chamar a action", async () => {
     render(<ActualExpenseForm mode="create" categories={CATEGORIES} />);
     await userEvent.click(screen.getByRole("button", { name: "Adicionar gasto" }));
