@@ -12,44 +12,72 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createActualExpense, updateActualExpense } from "@/features/control/actions";
+import { useActualExpenseSheet } from "@/features/control/components/actual-expense-sheet-context";
 import type { ActualExpenseItem } from "@/features/control/queries";
 import { createActualExpenseSchema, type ActualExpenseInput } from "@/features/control/schemas";
 import { CategorySelect } from "@/features/planning/components/category-select";
 import type { CategoryOption } from "@/features/planning/queries";
 import { formatMonthLabel, getMonthRange, getToday } from "@/lib/calendar";
 import { dateHint } from "@/lib/control-labels";
+import { useIsNarrow } from "@/hooks/use-is-narrow";
 import { applyFieldErrors, runAction } from "@/lib/handle-action-result";
 import { centsToInputString } from "@/lib/money";
 
-type ActualExpenseFormProps = { categories: CategoryOption[] } & (
+type ActualExpenseFormProps = {
+  categories: CategoryOption[];
+  /** Chamado após salvar com sucesso (ex.: fechar o painel do celular) */
+  onSuccess?: () => void;
+  /** Chamado ao cancelar a edição (ex.: fechar o painel do celular) */
+  onCancel?: () => void;
+} & (
   | { mode: "create" }
-  | { mode: "edit"; actualExpense: ActualExpenseItem }
+  | {
+      mode: "edit";
+      actualExpense: ActualExpenseItem;
+      /** `false` = edição controlada de fora (painel), sem o botão de lápis */
+      showTrigger?: boolean;
+    }
 );
 
 export function ActualExpenseForm(props: ActualExpenseFormProps) {
   const [editing, setEditing] = useState(false);
+  const sheet = useActualExpenseSheet();
+  const narrow = useIsNarrow();
+  const controlled = props.mode === "edit" && props.showTrigger === false;
 
-  if (props.mode === "edit" && !editing) {
+  if (props.mode === "edit" && !editing && !controlled) {
+    const { actualExpense } = props;
     return (
       <Button
         variant="ghost"
         size="icon-sm"
-        aria-label={`Editar ${props.actualExpense.name}`}
-        onClick={() => setEditing(true)}
+        aria-label={`Editar ${actualExpense.name}`}
+        // No celular, a edição abre no painel do Controle (FR-015a); senão, na própria linha
+        onClick={() => (sheet && narrow ? sheet.openEdit(actualExpense) : setEditing(true))}
       >
         <Pencil />
       </Button>
     );
   }
 
-  return <ActualExpenseFormFields {...props} onDone={() => setEditing(false)} />;
+  return (
+    <ActualExpenseFormFields
+      {...props}
+      onDone={() => {
+        setEditing(false);
+        props.onCancel?.();
+      }}
+    />
+  );
 }
 
 function emptyValues(today: string): ActualExpenseInput {
   return { name: "", amount: "", categoryId: "", spentOn: today };
 }
 
-function ActualExpenseFormFields(props: ActualExpenseFormProps & { onDone: () => void }) {
+function ActualExpenseFormFields(
+  props: ActualExpenseFormProps & { onDone: () => void },
+) {
   const router = useRouter();
   const fieldId = useId();
   const [formMessage, setFormMessage] = useState<string | null>(null);
@@ -90,7 +118,14 @@ function ActualExpenseFormFields(props: ActualExpenseFormProps & { onDone: () =>
       {
         router,
         onValidationError: (fieldErrors) => applyFieldErrors(fieldErrors, setError),
-        onSuccess: () => (isEdit ? props.onDone() : reset(emptyValues(getToday(new Date())))),
+        onSuccess: () => {
+          if (isEdit) {
+            props.onDone();
+          } else {
+            reset(emptyValues(getToday(new Date())));
+          }
+          props.onSuccess?.();
+        },
       },
     );
     setFormMessage(outcome.message);

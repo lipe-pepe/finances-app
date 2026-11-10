@@ -139,4 +139,35 @@ describe("ActualExpenseForm", () => {
       spentOn: "2026-11-05",
     });
   });
+
+  it("avisa quem usa o formulário depois de salvar com sucesso", async () => {
+    createActualExpense.mockResolvedValue({ ok: true, data: { id: "a1" } });
+    const onSuccess = vi.fn();
+    render(<ActualExpenseForm mode="create" categories={CATEGORIES} onSuccess={onSuccess} />);
+    await userEvent.type(screen.getByLabelText("Nome do gasto"), "Mercado");
+    await userEvent.type(screen.getByLabelText("Valor (R$)"), "10");
+    await chooseCategory("Alimentação");
+    await userEvent.click(screen.getByRole("button", { name: "Adicionar gasto" }));
+    await waitFor(() => expect(onSuccess).toHaveBeenCalled());
+  });
+
+  it("mostra a edição direto, sem o botão de lápis, quando controlada de fora", () => {
+    render(
+      <ActualExpenseForm
+        mode="edit"
+        showTrigger={false}
+        categories={CATEGORIES}
+        actualExpense={{
+          id: "a1",
+          name: "Mercado",
+          amountCents: 23050,
+          categoryId: CATEGORIES[0].id,
+          categoryName: "Alimentação",
+          spentOn: "2026-11-05",
+        }}
+      />,
+    );
+    expect(screen.queryByRole("button", { name: "Editar Mercado" })).not.toBeInTheDocument();
+    expect(screen.getByLabelText("Nome do gasto")).toHaveValue("Mercado");
+  });
 });
