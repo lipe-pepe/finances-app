@@ -1,5 +1,5 @@
+import { PieChart } from "lucide-react";
 import { redirect } from "next/navigation";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { LoginForm } from "@/features/auth/components/login-form";
 import { getCurrentUserId } from "@/lib/auth";
 import { HOME_PATH } from "@/lib/auth-redirect";
@@ -11,16 +11,29 @@ export default async function LoginPage() {
   }
 
   return (
-    <main className="flex flex-1 items-center justify-center px-4 py-12">
-      <Card className="w-full max-w-sm">
-        <CardHeader>
-          <CardTitle className="text-xl">Finanças Pessoais</CardTitle>
-          <CardDescription>Entre com seu email e senha para acessar seu planejamento.</CardDescription>
-        </CardHeader>
-        <CardContent>
+    <main className="flex min-h-svh flex-1 items-center justify-center px-4 py-12">
+      <div className="flex w-full max-w-sm flex-col gap-7">
+        <div className="flex flex-col items-center gap-3.5 text-center">
+          <span
+            aria-hidden="true"
+            className="flex size-12 items-center justify-center rounded-2xl bg-primary text-primary-foreground"
+          >
+            <PieChart className="size-6" strokeWidth={2.2} />
+          </span>
+          <div className="flex flex-col gap-1">
+            <h1 className="text-2xl font-bold tracking-tight">Finanças Pessoais</h1>
+            <p className="text-muted-foreground">
+              Entre com seu email e senha para acessar seu planejamento.
+            </p>
+          </div>
+        </div>
+        <div className="rounded-xl border bg-card p-6">
           <LoginForm />
-        </CardContent>
-      </Card>
+        </div>
+        <p className="text-center text-sm text-muted-foreground">
+          O acesso é criado pelo administrador da plataforma.
+        </p>
+      </div>
     </main>
   );
 }

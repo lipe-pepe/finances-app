@@ -23,7 +23,7 @@ export function OverBudgetAlert({ section, revenueCents, totalCents }: OverBudge
   }
 
   return (
-    <Alert variant="destructive" className="border-destructive/50 bg-destructive/10">
+    <Alert variant="destructive" className="rounded-xl border-transparent bg-danger-soft px-4 py-3.5">
       <TriangleAlert />
       <AlertTitle>{OVER_BUDGET_TITLE}</AlertTitle>
       <AlertDescription>

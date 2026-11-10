@@ -34,4 +34,11 @@ describe("AppHeader", () => {
     expect(screen.getByRole("heading", { name: "Finanças Pessoais" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Sair" })).toBeInTheDocument();
   });
+
+  it("mostra o logo da marca e sublinha a página atual", () => {
+    const { container } = render(<AppHeader current="control" />);
+    expect(container.querySelector('[aria-hidden="true"].bg-primary')).not.toBeNull();
+    expect(screen.getByRole("link", { name: "Controle" })).toHaveClass("border-primary");
+    expect(screen.getByRole("link", { name: "Planejamento" })).toHaveClass("border-transparent");
+  });
 });

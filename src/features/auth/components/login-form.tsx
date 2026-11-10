@@ -63,11 +63,11 @@ export function LoginForm() {
         <FormFieldError id="password-error" message={errors.password?.message} />
       </div>
       {formMessage && (
-        <p role="alert" className="text-sm text-destructive">
+        <p role="alert" className="rounded-lg bg-danger-soft px-3 py-2.5 text-sm font-medium text-destructive">
           {formMessage}
         </p>
       )}
-      <Button type="submit" disabled={isSubmitting}>
+      <Button type="submit" disabled={isSubmitting} className="w-full">
         {isSubmitting ? "Entrando…" : "Entrar"}
       </Button>
     </form>

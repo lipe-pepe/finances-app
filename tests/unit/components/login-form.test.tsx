@@ -27,7 +27,9 @@ describe("LoginForm", () => {
     await userEvent.type(screen.getByLabelText("Email"), "ana@exemplo.com");
     await userEvent.type(screen.getByLabelText("Senha"), "errada");
     await userEvent.click(screen.getByRole("button", { name: "Entrar" }));
-    expect(await screen.findByText("Email ou senha inválidos.")).toBeInTheDocument();
+    const error = await screen.findByText("Email ou senha inválidos.");
+    expect(error).toHaveAttribute("role", "alert");
+    expect(error).toHaveClass("bg-danger-soft", "text-destructive");
     expect(signIn).toHaveBeenCalledWith({ email: "ana@exemplo.com", password: "errada" });
   });
 
@@ -41,5 +43,10 @@ describe("LoginForm", () => {
     expect(screen.getByRole("button", { name: "Entrando…" })).toBeDisabled();
     resolve({ ok: false, error: { code: "INVALID_CREDENTIALS" } });
     await waitFor(() => expect(screen.getByRole("button", { name: "Entrar" })).toBeEnabled());
+  });
+
+  it("usa botão de largura total com alvo de toque de 44 px", () => {
+    render(<LoginForm />);
+    expect(screen.getByRole("button", { name: "Entrar" })).toHaveClass("w-full", "h-11");
   });
 });
