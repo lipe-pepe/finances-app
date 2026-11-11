@@ -47,8 +47,8 @@ corpo do commit e no relatório.
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Adicionar os componentes do shadcn/ui com `npx shadcn@4.23.0 add avatar dropdown-menu -y`, gerando `src/components/ui/avatar.tsx` e `src/components/ui/dropdown-menu.tsx` (sem dependências novas: usam o pacote `radix-ui` já instalado); em cada arquivo, na linha seguinte ao `"use client"`, incluir o comentário "// Client Component: primitivo do Radix (shadcn/ui) que controla estado e eventos no navegador."; remover do código gerado qualquer valor visual escrito à mão, se houver; conferir que `npm run test:unit` (inclusive `tests/unit/design`) e `npx tsc --noEmit` continuam passando
-- [ ] T002 [P] Em `next.config.ts`, acrescentar `experimental: { serverActions: { bodySizeLimit: "3mb" } }`, com o comentário em português "Foto do perfil até 2 MB + sobra do multipart (specs/005-user-profile/research.md R4)"; mantendo a configuração `turbopack` existente
+- [X] T001 Adicionar os componentes do shadcn/ui com `npx shadcn@4.23.0 add avatar dropdown-menu -y`, gerando `src/components/ui/avatar.tsx` e `src/components/ui/dropdown-menu.tsx` (sem dependências novas: usam o pacote `radix-ui` já instalado); em cada arquivo, na linha seguinte ao `"use client"`, incluir o comentário "// Client Component: primitivo do Radix (shadcn/ui) que controla estado e eventos no navegador."; remover do código gerado qualquer valor visual escrito à mão, se houver; conferir que `npm run test:unit` (inclusive `tests/unit/design`) e `npx tsc --noEmit` continuam passando
+- [X] T002 [P] Em `next.config.ts`, acrescentar `experimental: { serverActions: { bodySizeLimit: "3mb" } }`, com o comentário em português "Foto do perfil até 2 MB + sobra do multipart (specs/005-user-profile/research.md R4)"; mantendo a configuração `turbopack` existente
 
 ---
 

@@ -11,6 +11,12 @@ const nextConfig: NextConfig = {
       },
     },
   },
+  experimental: {
+    serverActions: {
+      // Foto do perfil até 2 MB + sobra do multipart (specs/005-user-profile/research.md R4)
+      bodySizeLimit: "3mb",
+    },
+  },
 };
 
 export default nextConfig;
