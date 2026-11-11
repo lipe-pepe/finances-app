@@ -10,6 +10,10 @@ Plataforma de finanças pessoais com duas partes, acessadas pelos botões no top
   valor, categoria e data dentro do mês atual) e acompanha um dashboard do mês por categoria:
   planejado (soma dos gastos do Momento Presente), gasto, disponível, lista e gráfico do gasto
   acumulado com a linha de limite.
+- **Perfil** (`/profile`): no canto direito do cabeçalho, o avatar do usuário (foto ou
+  iniciais, com borda cinza) abre um menu com **Perfil** e **Sair**. Na página de perfil o
+  usuário vê e edita nome, sobrenome e foto (JPG, PNG ou WebP de até 2 MB); o email é exibido
+  só para leitura.
 
 O "hoje" e o "mês atual" usam o fuso `America/Sao_Paulo`, igual no navegador e no servidor.
 
@@ -62,7 +66,7 @@ Regras do projeto: [`.specify/memory/constitution.md`](.specify/memory/constitut
    > IPv6 ela falha com `P1001: Can't reach database server`; use o Session pooler.
 
 3. Aplique o schema (tabelas, constraints e RLS) e as categorias iniciais. Rode `db:deploy` de
-   novo sempre que atualizar o projeto, para aplicar migrations novas (ex.: `actual_expenses`):
+   novo sempre que atualizar o projeto, para aplicar migrations novas (ex.: `actual_expenses`, `profiles`):
 
    ```bash
    npm run db:deploy
@@ -92,6 +96,10 @@ Regras do projeto: [`.specify/memory/constitution.md`](.specify/memory/constitut
   dentro do arquivo `migration.sql` gerado (use `--create-only` para editar antes de aplicar).
 - O Prisma ignora o RLS; por isso toda consulta a dados de usuário filtra por `userId`. O RLS
   fica habilitado como defesa extra para acessos pela API do Supabase.
+- As fotos de perfil ficam no bucket **privado** `avatars` do Supabase Storage, criado com as
+  políticas de acesso (cada usuário só lê e grava a própria pasta) na migração `profiles`. A
+  aplicação acessa o Storage com a sessão do usuário e exibe as fotos por URL assinada de 1 hora.
+- O limite do corpo das Server Actions é de 3 MB (`next.config.ts`), para caber a foto de 2 MB.
 
 ## Testes
 
@@ -118,9 +126,9 @@ do Supabase CLI no ambiente local.
 
 ```text
 prisma/                 schema, migrations (Prisma Migrate) e seed das categorias
-src/app/                rotas: / (redireciona), /control, /planning e /login
+src/app/                rotas: / (redireciona), /control, /planning, /profile e /login
 src/features/<domínio>/ actions (Server Actions), schemas (Zod), consultas e componentes
-                        (incomes, allocation, expenses, goals, planning, control, auth)
+                        (incomes, allocation, expenses, goals, planning, control, profile, auth)
 src/lib/                dinheiro em centavos, datas (fuso da aplicação), regras de planejamento
                         e do Controle, rotas, auth, Prisma, Supabase
 src/proxy.ts            renovação da sessão e redirecionamentos de autenticação
