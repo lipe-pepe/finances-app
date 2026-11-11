@@ -1,7 +1,9 @@
 import { PieChart } from "lucide-react";
 import Link from "next/link";
 import { cn } from "cn";
-import { SignOutButton } from "@/features/auth/components/sign-out-button";
+import { AccountMenu } from "@/features/profile/components/account-menu";
+import { getProfile } from "@/features/profile/queries";
+import { requireUserId } from "@/lib/auth";
 import { CONTROL_PATH, PLANNING_PATH, type AppSection } from "@/lib/app-routes";
 import { SECTION_NAV_LABELS } from "@/lib/control-labels";
 
@@ -11,12 +13,18 @@ const SECTION_LINKS: { section: AppSection; href: string }[] = [
 ];
 
 type AppHeaderProps = {
-  /** Página atual, destacada na navegação (FR-002) */
-  current: AppSection;
+  /** Página atual, destacada na navegação (FR-002); ausente em páginas fora dela (ex.: perfil) */
+  current?: AppSection;
 };
 
-/** Cabeçalho da área logada: logo, menu Planejamento/Controle e o botão de sair (FR-005). */
-export function AppHeader({ current }: AppHeaderProps) {
+/**
+ * Cabeçalho da área logada: logo, menu Planejamento/Controle e, no canto direito, o avatar que
+ * abre o menu da conta com "Perfil" e "Sair" (feature 005, FR-001/006).
+ */
+export async function AppHeader({ current }: AppHeaderProps) {
+  const userId = await requireUserId();
+  const profile = await getProfile(userId);
+
   return (
     <header className="border-b">
       <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-3 tablet:px-6">
@@ -50,7 +58,7 @@ export function AppHeader({ current }: AppHeaderProps) {
               );
             })}
           </nav>
-          <SignOutButton />
+          <AccountMenu profile={profile} />
         </div>
       </div>
     </header>
