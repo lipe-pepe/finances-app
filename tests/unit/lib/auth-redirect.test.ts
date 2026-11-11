@@ -32,4 +32,9 @@ describe("resolveAuthRedirect", () => {
   it("protege qualquer outra rota da área logada", () => {
     expect(resolveAuthRedirect("/qualquer-rota", false)).toBe("/login");
   });
+
+  it("protege a página de perfil (feature 005, FR-009)", () => {
+    expect(resolveAuthRedirect("/profile", false)).toBe("/login");
+    expect(resolveAuthRedirect("/profile", true)).toBeNull();
+  });
 });

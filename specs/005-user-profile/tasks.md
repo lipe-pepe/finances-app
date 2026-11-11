@@ -109,13 +109,13 @@ corpo do commit e no relatório.
 
 ### Tests for User Story 2 ⚠️
 
-- [ ] T025 [P] [US2] Escrever testes unitários em `tests/unit/components/profile-editor.test.tsx` (modo leitura; mockar `@/features/profile/actions`): com nome e sobrenome, mostra `heading` com "Ana Souza", os rótulos "Nome", "Sobrenome" e "Email" com os valores e o botão "Editar perfil"; com `firstName: null`, mostra "Nome não informado" e "Complete seu perfil adicionando seu nome."; `lastName: null` → "Não informado" no sobrenome; o email aparece como texto
-- [ ] T026 [P] [US2] Acrescentar a `tests/unit/lib/auth-redirect.test.ts`: `resolveAuthRedirect("/profile", false)` → `"/login"` e `resolveAuthRedirect("/profile", true)` → `null`
+- [X] T025 [P] [US2] Escrever testes unitários em `tests/unit/components/profile-editor.test.tsx` (modo leitura; mockar `@/features/profile/actions`): com nome e sobrenome, mostra `heading` com "Ana Souza", os rótulos "Nome", "Sobrenome" e "Email" com os valores e o botão "Editar perfil"; com `firstName: null`, mostra "Nome não informado" e "Complete seu perfil adicionando seu nome."; `lastName: null` → "Não informado" no sobrenome; o email aparece como texto
+- [X] T026 [P] [US2] Acrescentar a `tests/unit/lib/auth-redirect.test.ts`: `resolveAuthRedirect("/profile", false)` → `"/login"` e `resolveAuthRedirect("/profile", true)` → `null`
 
 ### Implementation for User Story 2
 
-- [ ] T027 [US2] Criar `src/features/profile/components/profile-editor.tsx` (Client; justificar: "alterna entre leitura e edição, controla o formulário (React Hook Form) e a prévia da foto") com o estado `isEditing` e, por enquanto, só o modo leitura de contracts/ui.md: `UserAvatar size="lg"`, `<h2>` com `displayName` ou `NAME_NOT_SET` (`text-muted-foreground`), lista de definições (`dl`) com Nome/Sobrenome/Email (vazio → `VALUE_NOT_SET`), `COMPLETE_PROFILE_HINT` quando não há nome, botão "Editar perfil" (ícone `Pencil`, `min-h-11`); textos de `labels.ts`; até T025 passar
-- [ ] T028 [US2] Criar `src/app/profile/page.tsx` (Server Component, comentário em português): `requireUserId()`, `getProfile(userId)`, `<AppHeader />` sem `current` e `<main className="mx-auto w-full max-w-2xl px-4 py-8 tablet:px-6 tablet:py-10">` com `<h1>`/título visual `PROFILE_TITLE` e `<ProfileEditor profile={profile} />`; `export const metadata = { title: "Perfil · Finanças Pessoais" }`; conferir T026 (o proxy já protege `/profile`)
+- [X] T027 [US2] Criar `src/features/profile/components/profile-editor.tsx` (Client; justificar: "alterna entre leitura e edição, controla o formulário (React Hook Form) e a prévia da foto") com o estado `isEditing` e, por enquanto, só o modo leitura de contracts/ui.md: `UserAvatar size="lg"`, `<h2>` com `displayName` ou `NAME_NOT_SET` (`text-muted-foreground`), lista de definições (`dl`) com Nome/Sobrenome/Email (vazio → `VALUE_NOT_SET`), `COMPLETE_PROFILE_HINT` quando não há nome, botão "Editar perfil" (ícone `Pencil`, `min-h-11`); textos de `labels.ts`; até T025 passar
+- [X] T028 [US2] Criar `src/app/profile/page.tsx` (Server Component, comentário em português): `requireUserId()`, `getProfile(userId)`, `<AppHeader />` sem `current` e `<main className="mx-auto w-full max-w-2xl px-4 py-8 tablet:px-6 tablet:py-10">` com `<h1>`/título visual `PROFILE_TITLE` e `<ProfileEditor profile={profile} />`; `export const metadata = { title: "Perfil · Finanças Pessoais" }`; conferir T026 (o proxy já protege `/profile`)
 
 **Checkpoint**: User Stories 1 e 2 funcionais — avatar, menu, logout e página de perfil em modo leitura.
 
