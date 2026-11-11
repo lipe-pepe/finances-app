@@ -33,8 +33,9 @@
 
 - Validação concluída na 1ª iteração; nenhuma marcação [NEEDS CLARIFICATION] foi necessária.
 - Decisões tomadas por padrão (registradas em Assumptions): troca de email com confirmação por
-  link, foto JPG/PNG/WebP até 2 MB, cor padrão rosa, nome obrigatório e sobrenome opcional
-  (até 50 caracteres cada), troca de senha fora do escopo.
-- Ponto de atenção para o `/speckit-plan`: rosa, verde, laranja, azul e vermelho têm significado
-  fixo no Princípio VI da constituição; o Constitution Check deve confirmar que o uso decorativo
-  na borda do avatar é aceitável ou registrar a emenda.
+  link, foto JPG/PNG/WebP até 2 MB, nome obrigatório e sobrenome opcional (até 50 caracteres
+  cada), troca de senha fora do escopo.
+- Clarificação 2026-11-11: cor do usuário removida do escopo; borda do avatar é cinza neutra
+  fixa, o que elimina o conflito com as cores de significado fixo do Princípio VI.
+- Clarificação 2026-11-11: troca de email removida do escopo; o email é exibido apenas para
+  leitura e o servidor nunca o altera ao salvar o perfil.
