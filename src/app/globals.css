@@ -50,6 +50,7 @@
   --color-brand-ink: var(--brand-ink);
   --color-danger-soft: var(--danger-soft);
   --color-chart-limit: var(--chart-limit);
+  --color-avatar-ring: var(--avatar-ring);
 
   /* Partes do planejamento */
   --color-income: var(--income);
@@ -138,6 +139,8 @@
   --border: #e4e2dc;
   --input: #e4e2dc;
   --ring: #db2777;
+  /* Borda do avatar do usuário: cinza neutro, ≥ 3:1 contra fundo e card (feature 005) */
+  --avatar-ring: #858279;
   --radius: 0.75rem;
 
   --brand-soft: #fde8f1;
@@ -222,6 +225,7 @@
     --border: #2e2e34;
     --input: #2e2e34;
     --ring: #f472b6;
+    --avatar-ring: #7c7972;
 
     --brand-soft: #3b1a2c;
     --brand-ink: #f9a8d4;

@@ -2,6 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import { toDbDate } from "@/lib/calendar";
 import { centsToDecimalString } from "@/lib/money";
 import { prisma } from "@/lib/prisma";
+import { RedirectError, resetCookies } from "./mocks";
 
 // Helpers do banco de teste: usuários A e B no Supabase Auth local e limpeza das tabelas
 
@@ -46,7 +47,9 @@ export async function createTestUsers(): Promise<TestUsers> {
 
 /** Limpa os dados de usuário, mantendo as categorias do seed. */
 export async function resetDatabase(): Promise<void> {
+  await emptyAvatarsBucket();
   await prisma.$transaction([
+    prisma.profile.deleteMany(),
     prisma.actualExpense.deleteMany(),
     prisma.expense.deleteMany(),
     prisma.goal.deleteMany(),
@@ -79,6 +82,81 @@ export async function createActualExpenseRow(
     },
     select: { id: true },
   });
+}
+
+// ---------------------------------------------------------------------------------------------
+// Perfil (feature 005)
+// ---------------------------------------------------------------------------------------------
+
+const AVATARS_BUCKET = "avatars";
+
+/** Apaga todos os objetos do bucket de fotos (pastas dos usuários de teste), via cliente admin. */
+export async function emptyAvatarsBucket(): Promise<void> {
+  const storage = createAdminClient().storage.from(AVATARS_BUCKET);
+  const { data: folders } = await storage.list("", { limit: 1000 });
+  for (const folder of folders ?? []) {
+    const { data: files } = await storage.list(folder.name, { limit: 1000 });
+    const paths = (files ?? []).map((file) => `${folder.name}/${file.name}`);
+    if (paths.length > 0) {
+      await storage.remove(paths);
+    }
+  }
+}
+
+/** Lista os nomes dos objetos na pasta de um usuário (via cliente admin). */
+export async function listAvatarObjects(userId: string): Promise<string[]> {
+  const { data } = await createAdminClient().storage.from(AVATARS_BUCKET).list(userId);
+  return (data ?? []).map((file) => `${userId}/${file.name}`);
+}
+
+/** Envia um objeto direto para o bucket (preparação dos testes), via cliente admin. */
+export async function uploadAvatarObject(path: string, bytes: Uint8Array, type: string): Promise<void> {
+  const { error } = await createAdminClient()
+    .storage.from(AVATARS_BUCKET)
+    .upload(path, bytes, { contentType: type, upsert: true });
+  if (error) throw error;
+}
+
+/** Grava um perfil direto no banco (preparação dos testes). */
+export async function createProfileRow(
+  userId: string,
+  row: { firstName?: string | null; lastName?: string | null; avatarPath?: string | null },
+): Promise<void> {
+  await prisma.profile.create({
+    data: {
+      userId,
+      firstName: row.firstName ?? null,
+      lastName: row.lastName ?? null,
+      avatarPath: row.avatarPath ?? null,
+    },
+  });
+}
+
+/**
+ * Faz login de verdade (Supabase Auth local) e grava a sessão no cookie mock de next/headers.
+ * Necessário quando o código usa o Storage, cujas políticas dependem da sessão do usuário.
+ */
+export async function signInAs(email: string): Promise<void> {
+  resetCookies();
+  const { signIn } = await import("@/features/auth/actions");
+  await signIn({ email, password: TEST_PASSWORD }).catch((error: unknown) => {
+    if (!(error instanceof RedirectError)) throw error;
+  });
+}
+
+/** PNG mínimo válido (1 × 1 px). */
+export function pngBytes(): Uint8Array {
+  return Uint8Array.from(
+    Buffer.from(
+      "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=",
+      "base64",
+    ),
+  );
+}
+
+/** JPEG mínimo (assinatura FF D8 FF + marcador de fim). */
+export function jpegBytes(): Uint8Array {
+  return Uint8Array.from([0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10, 0x4a, 0x46, 0x49, 0x46, 0x00, 0xff, 0xd9]);
 }
 
 export { prisma };

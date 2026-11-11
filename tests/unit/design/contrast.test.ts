@@ -75,6 +75,8 @@ const GRAPHIC_PAIRS: [string, string][] = [
   ["present", "card"],
   ["future", "card"],
   ["chart-limit", "card"],
+  ["avatar-ring", "background"],
+  ["avatar-ring", "card"],
   ["destructive", "background"],
   ...CATEGORY_KEYS.map((key): [string, string] => [`category-${key}`, `category-${key}-soft`]),
 ];
