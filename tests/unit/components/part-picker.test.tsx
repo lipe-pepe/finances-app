@@ -5,14 +5,13 @@ import { describe, expect, it } from "vitest";
 import { PartPicker } from "@/features/planning/components/part-picker";
 import type { PresentPart } from "@/lib/present-parts";
 
-let latest: PresentPart | undefined;
-
 function Harness({ error }: { error?: string }) {
   const { register, control } = useForm<{ part: PresentPart }>({ defaultValues: { part: "essentials" } });
-  latest = useWatch({ control, name: "part" });
+  const part = useWatch({ control, name: "part" });
   return (
     <form>
       <PartPicker registration={register("part")} error={error} />
+      <output data-testid="value">{part}</output>
     </form>
   );
 }
@@ -34,10 +33,10 @@ describe("PartPicker", () => {
     const user = userEvent.setup();
     render(<Harness />);
     await user.click(screen.getByRole("radio", { name: "Educação" }));
-    expect(latest).toBe("education");
+    expect(screen.getByTestId("value")).toHaveTextContent("education");
     await user.keyboard("{ArrowRight}");
     expect(screen.getByRole("radio", { name: "Livre" })).toBeChecked();
-    expect(latest).toBe("free");
+    expect(screen.getByTestId("value")).toHaveTextContent("free");
   });
 
   it("mostra o erro e tem alvo de toque de 44 px", () => {
