@@ -23,9 +23,7 @@ function PartsProbe() {
 function renderSlider(initial = 70, revenueCents = 600000) {
   return render(
     <AllocationProvider initialEssentialPercentage={initial}>
-      <AllocationSlider />
-      <PlannedAmount section="expenses" revenueCents={revenueCents} />
-      <PlannedAmount section="goals" revenueCents={revenueCents} />
+      <AllocationSlider revenueCents={revenueCents} />
     </AllocationProvider>,
   );
 }
@@ -42,12 +40,21 @@ describe("AllocationSlider + PlannedAmount", () => {
     push.mockReset();
   });
 
-  it("exibe as porcentagens e os valores planejados", () => {
+  it("exibe as porcentagens e os valores abaixo dos rótulos (feature 007, FR-002)", () => {
     renderSlider(70, 600000);
     expect(screen.getByText("Momento Presente 70%")).toBeInTheDocument();
     expect(screen.getByText("Momento Futuro 30%")).toBeInTheDocument();
-    expect(screen.getByTestId("planned-expenses")).toHaveTextContent("R$ 4.200,00");
-    expect(screen.getByTestId("planned-goals")).toHaveTextContent("R$ 1.800,00");
+    expect(screen.getByTestId("slider-value-expenses")).toHaveTextContent("R$ 4.200,00");
+    expect(screen.getByTestId("slider-value-goals")).toHaveTextContent("R$ 1.800,00");
+  });
+
+  it("pinta o próprio slider nas duas cores, sem barra separada (feature 007, FR-001)", () => {
+    const { container } = renderSlider(70);
+    expect(container.querySelector('[data-slot="slider"]')).toHaveClass(
+      "[&_[data-slot=slider-range]]:bg-present",
+      "[&_[data-slot=slider-track]]:bg-future",
+    );
+    expect(container.querySelector('[aria-hidden="true"].h-3')).toBeNull();
   });
 
   it("marca os rótulos com a cor de cada momento", () => {
@@ -63,21 +70,13 @@ describe("AllocationSlider + PlannedAmount", () => {
     ).toBeInTheDocument();
   });
 
-  it("com showSectionLabel, mostra o nome do momento junto ao valor planejado", () => {
+  it("PlannedAmount mostra o planejado da seção (cabeçalhos das abas)", () => {
     render(
       <AllocationProvider initialEssentialPercentage={70}>
-        <PlannedAmount section="expenses" revenueCents={600000} showSectionLabel />
-        <PlannedAmount section="goals" revenueCents={600000} showSectionLabel />
         <PlannedAmount section="expenses" revenueCents={600000} />
       </AllocationProvider>,
     );
-    const [expenses, goals, plain] = [
-      ...screen.getAllByTestId("planned-expenses"),
-      ...screen.getAllByTestId("planned-goals"),
-    ].sort((a, b) => (a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1));
-    expect(expenses).toHaveTextContent("Momento Presente: R$ 4.200,00 (70% da receita)");
-    expect(goals).toHaveTextContent("Momento Futuro: R$ 1.800,00 (30% da receita)");
-    expect(plain).toHaveTextContent("Planejado (70% da receita): R$ 4.200,00");
+    expect(screen.getByTestId("planned-expenses")).toHaveTextContent("Planejado (70% da receita): R$ 4.200,00");
   });
 
   it("atualiza em tempo real e salva uma vez ao soltar (teclado = mover + soltar)", async () => {
@@ -88,7 +87,8 @@ describe("AllocationSlider + PlannedAmount", () => {
       fireEvent.keyDown(slider, { key: "ArrowRight" });
     });
     expect(screen.getByText("Momento Presente 71%")).toBeInTheDocument();
-    expect(screen.getByTestId("planned-expenses")).toHaveTextContent("R$ 4.260,00");
+    expect(screen.getByTestId("slider-value-expenses")).toHaveTextContent("R$ 4.260,00");
+    expect(screen.getByTestId("slider-value-goals")).toHaveTextContent("R$ 1.740,00");
     expect(saveAllocation).toHaveBeenCalledTimes(1);
     expect(saveAllocation).toHaveBeenCalledWith({ essentialPercentage: 71 });
     expect(await screen.findByText("Salvo")).toBeInTheDocument();
@@ -145,7 +145,7 @@ describe("AllocationSlider + PlannedAmount", () => {
     });
     render(
       <AllocationProvider initialEssentialPercentage={70} initialEducationPercentage={5} initialFreePercentage={5}>
-        <AllocationSlider />
+        <AllocationSlider revenueCents={600000} />
         <PartsProbe />
       </AllocationProvider>,
     );
@@ -165,7 +165,7 @@ describe("AllocationSlider + PlannedAmount", () => {
     });
     render(
       <AllocationProvider initialEssentialPercentage={70} initialEducationPercentage={5} initialFreePercentage={5}>
-        <AllocationSlider />
+        <AllocationSlider revenueCents={600000} />
         <PartsProbe />
       </AllocationProvider>,
     );

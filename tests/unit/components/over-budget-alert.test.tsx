@@ -16,7 +16,7 @@ function renderAlert(
 ) {
   return render(
     <AllocationProvider initialEssentialPercentage={essentialPercentage}>
-      <AllocationSlider />
+      <AllocationSlider revenueCents={600000} />
       <OverBudgetAlert {...props} />
     </AllocationProvider>,
   );

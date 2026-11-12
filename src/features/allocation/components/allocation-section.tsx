@@ -1,7 +1,9 @@
 import { AllocationSlider } from "@/features/allocation/components/allocation-slider";
-import { PlannedAmount } from "@/features/allocation/components/planned-amount";
 
-/** Divisão da receita entre o Momento Presente e o Momento Futuro (primeiro bloco da Receita). */
+/**
+ * Divisão da receita entre o Momento Presente e o Momento Futuro (primeiro bloco da Receita). Os
+ * valores ficam abaixo dos rótulos do próprio slider (feature 007).
+ */
 export function AllocationSection({ revenueCents }: { revenueCents: number }) {
   return (
     <section aria-labelledby="allocation-title" className="flex flex-col gap-4">
@@ -14,15 +16,7 @@ export function AllocationSection({ revenueCents }: { revenueCents: number }) {
           Futuro. A divisão é salva automaticamente.
         </p>
       </div>
-      <AllocationSlider />
-      <div className="grid gap-3 sm:grid-cols-2">
-        <div className="rounded-xl border bg-card px-4 py-3">
-          <PlannedAmount section="expenses" revenueCents={revenueCents} showSectionLabel />
-        </div>
-        <div className="rounded-xl border bg-card px-4 py-3">
-          <PlannedAmount section="goals" revenueCents={revenueCents} showSectionLabel />
-        </div>
-      </div>
+      <AllocationSlider revenueCents={revenueCents} />
     </section>
   );
 }
