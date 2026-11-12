@@ -6,10 +6,17 @@ Plataforma de finanças pessoais com duas partes, acessadas pelos botões no top
   entre **Momento Presente** (gastos planejados) e **Momento Futuro** (metas) com um slider e
   acompanha alertas quando o planejamento é excedido. Três abas: Receita, Momento Presente e
   Momento Futuro (`?tab=present|future`).
+- **Partes do Momento Presente**: na aba Momento Presente, um slider com duas divisões reparte o
+  Momento Presente em **Gastos Essenciais**, **Educação** e **Livre** (porcentagens inteiras da
+  Receita que somam o Momento Presente). Cada gasto planejado e realizado pertence a uma parte, e
+  cada parte mostra o planejado contra o seu valor, com alerta quando passa dele. Mudar o Momento
+  Presente na aba Receita reajusta as partes na mesma proporção.
 - **Controle** (`/control`, página inicial): o usuário registra os gastos que de fato fez (nome,
-  valor, categoria e data dentro do mês atual) e acompanha um dashboard do mês por categoria:
-  planejado (soma dos gastos do Momento Presente), gasto, disponível, lista e gráfico do gasto
-  acumulado com a linha de limite.
+  valor, categoria, parte e data dentro do mês atual) e acompanha um dashboard do mês. A barra de
+  uso tem um trecho por parte; ativar uma parte (na barra ou na legenda) filtra todo o dashboard.
+  O resumo mostra o **Limite** (valor da parte ativa ou de todo o Momento Presente), o gasto, o
+  disponível e o uso; o gráfico mostra o gasto acumulado de cada parte com a sua linha de limite.
+  A seleção de categoria filtra os gastos, nunca os limites.
 - **Perfil** (`/profile`): no canto direito do cabeçalho, o avatar do usuário (foto ou
   iniciais, com borda cinza) abre um menu com **Perfil** e **Sair**. Na página de perfil o
   usuário vê e edita nome, sobrenome e foto (JPG, PNG ou WebP de até 2 MB); o email é exibido
@@ -66,7 +73,7 @@ Regras do projeto: [`.specify/memory/constitution.md`](.specify/memory/constitut
    > IPv6 ela falha com `P1001: Can't reach database server`; use o Session pooler.
 
 3. Aplique o schema (tabelas, constraints e RLS) e as categorias iniciais. Rode `db:deploy` de
-   novo sempre que atualizar o projeto, para aplicar migrations novas (ex.: `actual_expenses`, `profiles`):
+   novo sempre que atualizar o projeto, para aplicar migrations novas (ex.: `actual_expenses`, `profiles`, `present_parts`):
 
    ```bash
    npm run db:deploy
