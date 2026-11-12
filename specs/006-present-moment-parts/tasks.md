@@ -49,7 +49,7 @@ o Supabase local (Docker); sem ele, registrar isso no corpo do commit e no relat
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Adicionar o tooltip do shadcn/ui com `npx shadcn@4.23.0 add tooltip -y`, gerando `src/components/ui/tooltip.tsx` (usa o `radix-ui` já instalado); na linha seguinte ao `"use client"`, acrescentar "// Client Component: primitivo do Radix UI (shadcn/ui) que depende de estado, foco e eventos do navegador."; conferir que `npm run test:unit` e `npx tsc --noEmit` continuam passando
+- [X] T001 Adicionar o tooltip do shadcn/ui com `npx shadcn@4.23.0 add tooltip -y`, gerando `src/components/ui/tooltip.tsx` (usa o `radix-ui` já instalado); na linha seguinte ao `"use client"`, acrescentar "// Client Component: primitivo do Radix UI (shadcn/ui) que depende de estado, foco e eventos do navegador."; conferir que `npm run test:unit` e `npx tsc --noEmit` continuam passando
 
 ---
 
