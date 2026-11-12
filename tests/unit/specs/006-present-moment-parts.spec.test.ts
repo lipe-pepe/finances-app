@@ -18,7 +18,7 @@ import { presentPartSchema } from "@/lib/validation";
 
 const css = readFileSync(resolve(__dirname, "../../../src/app/globals.css"), "utf8");
 const lightBlock = css.slice(css.indexOf("\n:root {"));
-const darkBlock = css.slice(css.indexOf("@media (prefers-color-scheme: dark)"));
+const darkBlock = css.slice(css.indexOf("\n@media (prefers-color-scheme: dark) {"));
 
 function token(block: string, name: string): string {
   const match = new RegExp(`--${name}:\\s*(#[0-9a-f]{3,6})`, "i").exec(block);

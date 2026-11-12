@@ -32,7 +32,7 @@ Não há itens "NEEDS CLARIFICATION" no Technical Context.
 
   | Token | Claro | Escuro |
   |---|---|---|
-  | `--part-essentials` (laranja) | `#ea580c` | `var(--present)` = `#fb923c` |
+  | `--part-essentials` (laranja) | `#ea580c` | `#fb923c` (mesmo valor do `--present` escuro, escrito em hex porque os testes de contraste leem só hex) |
   | `--part-education` (ciano) | `#0891b2` | `#22d3ee` |
   | `--part-free` (roxo) | `#9333ea` | `#c084fc` |
 

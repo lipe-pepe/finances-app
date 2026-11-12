@@ -33,7 +33,7 @@ function blockAt(source: string, start: number): string {
 }
 
 const light = readTokens(blockAt(css, css.indexOf("\n:root {")));
-const dark = { ...light, ...readTokens(blockAt(css, css.indexOf("@media (prefers-color-scheme: dark)"))) };
+const dark = { ...light, ...readTokens(blockAt(css, css.indexOf("\n@media (prefers-color-scheme: dark) {"))) };
 
 // Pares de contracts/design-tokens.md
 const TEXT_PAIRS: [string, string][] = [

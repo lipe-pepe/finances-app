@@ -160,10 +160,12 @@
   --present-foreground: #1c1b19;
   --present-soft: #ffedd5;
   --present-ink: #c2410c;
-  /* Partes do Momento Presente (feature 006): tons de laranja, escuro → claro */
-  --part-essentials: #7c2d12;
-  --part-education: #c2410c;
-  --part-free: #ea580c;
+  /* Partes do Momento Presente (feature 007): Gastos Essenciais no laranja do Momento Presente
+     (#ea580c, tom vizinho do --present, que fica 0,003 abaixo de 3:1 contra o fundo),
+     Educação em ciano e Livre em roxo */
+  --part-essentials: #ea580c;
+  --part-education: #0891b2;
+  --part-free: #9333ea;
   --future: #1d4ed8;
   --future-foreground: #ffffff;
   --future-soft: #dbeafe;
@@ -247,9 +249,10 @@
     --present-foreground: #2a1205;
     --present-soft: #3a2412;
     --present-ink: #fdba74;
-    --part-essentials: #c2560f;
-    --part-education: #f97316;
-    --part-free: #fdba74;
+    /* Mesmo valor do --present no tema escuro (os testes de contraste leem valores hex) */
+    --part-essentials: #fb923c;
+    --part-education: #22d3ee;
+    --part-free: #c084fc;
     --future: #60a5fa;
     --future-foreground: #0b1b33;
     --future-soft: #172544;

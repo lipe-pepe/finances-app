@@ -29,6 +29,6 @@ recarregar a página, volta para `"essentials"`.
 
 | Token | Claro | Escuro |
 |---|---|---|
-| `--part-essentials` | `#ea580c` | `var(--present)` |
+| `--part-essentials` | `#ea580c` | `#fb923c` (mesmo valor do `--present` escuro) |
 | `--part-education` | `#0891b2` | `#22d3ee` |
 | `--part-free` | `#9333ea` | `#c084fc` |

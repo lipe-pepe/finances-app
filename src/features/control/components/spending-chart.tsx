@@ -19,7 +19,7 @@ import {
   type PresentPart,
 } from "@/lib/present-parts";
 
-/** Cor de cada parte (token do tema; feature 006, FR-019). */
+/** Cor de cada parte (token do tema; laranja, ciano e roxo desde a feature 007). */
 const PART_STROKES: Record<PresentPart, string> = {
   essentials: "var(--part-essentials)",
   education: "var(--part-education)",

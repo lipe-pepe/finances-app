@@ -11,7 +11,7 @@ import { findHardcodedStyles } from "../design/scan-hardcoded";
 // Teste unitário rastreável à spec specs/004-visual-redesign/spec.md (Princípio II).
 
 const css = readFileSync(resolve(__dirname, "../../../src/app/globals.css"), "utf8");
-const darkBlock = css.slice(css.indexOf("@media (prefers-color-scheme: dark)"));
+const darkBlock = css.slice(css.indexOf("\n@media (prefers-color-scheme: dark) {"));
 
 function token(block: string, name: string): string {
   const match = new RegExp(`--${name}:\\s*(#[0-9a-f]{3,6})`, "i").exec(block);
