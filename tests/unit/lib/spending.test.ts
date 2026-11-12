@@ -4,7 +4,6 @@ import {
   buildCumulativeSeries,
   filterActualExpenses,
   getAvailableCents,
-  getPlannedCents,
   getUsageBarPercentage,
   getUsedPercentage,
   isOverLimit,
@@ -15,17 +14,9 @@ function item(id: string, categoryId: string, amountCents: number, spentOn: stri
   return { id, name: id, amountCents, categoryId, categoryName: categoryId, spentOn };
 }
 
-const PLANNED = { moradia: 150000, alimentacao: 80000 };
-
 describe("spending", () => {
   it("usa 'all' para todas as categorias", () => {
     expect(ALL_CATEGORIES).toBe("all");
-  });
-
-  it("calcula o planejado da seleção", () => {
-    expect(getPlannedCents(PLANNED, "all")).toBe(230000);
-    expect(getPlannedCents(PLANNED, "moradia")).toBe(150000);
-    expect(getPlannedCents(PLANNED, "sem-planejado")).toBe(0);
   });
 
   it("filtra os gastos da seleção mantendo a ordem", () => {
@@ -34,8 +25,27 @@ describe("spending", () => {
       item("b", "alimentacao", 2, "2026-11-08"),
       item("c", "moradia", 3, "2026-11-01"),
     ];
-    expect(filterActualExpenses(items, "all")).toEqual(items);
-    expect(filterActualExpenses(items, "moradia").map((i) => i.id)).toEqual(["a", "c"]);
+    expect(filterActualExpenses(items, { category: "all", part: null })).toEqual(items);
+    expect(filterActualExpenses(items, { category: "moradia", part: null }).map((i) => i.id)).toEqual([
+      "a",
+      "c",
+    ]);
+  });
+
+  it("filtra por parte e por categoria juntas (feature 006, FR-028)", () => {
+    const items = [
+      { ...item("a", "moradia", 1, "2026-11-09"), part: "essentials" as const },
+      { ...item("b", "alimentacao", 2, "2026-11-08"), part: "education" as const },
+      { ...item("c", "moradia", 3, "2026-11-01"), part: "education" as const },
+    ];
+    expect(filterActualExpenses(items, { category: "all", part: "education" }).map((i) => i.id)).toEqual([
+      "b",
+      "c",
+    ]);
+    expect(filterActualExpenses(items, { category: "moradia", part: "education" }).map((i) => i.id)).toEqual([
+      "c",
+    ]);
+    expect(filterActualExpenses(items, { category: "moradia", part: "free" })).toEqual([]);
   });
 
   it("soma os gastos e calcula o disponível", () => {

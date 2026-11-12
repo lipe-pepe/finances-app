@@ -14,7 +14,8 @@ export const DATE_OUT_OF_MONTH_MESSAGE = "A data deve estar dentro do mês atual
 export const CHART_LIMIT_LABEL = "Limite";
 
 export const SUMMARY_LABELS = {
-  planned: "Planejado",
+  /** Valor da parte ativa ou de todo o Momento Presente (feature 006, FR-029) */
+  limit: "Limite",
   spent: "Gasto",
   available: "Disponível",
   used: "Usado",
@@ -38,15 +39,4 @@ export function dateHint(monthLabel: string): string {
 /** Mensagem do disponível negativo; recebe o excesso (positivo) em centavos. */
 export function overLimitMessage(excessCents: number): string {
   return `Acima do limite em ${formatBrl(excessCents)}`;
-}
-
-/** Alternativa textual ao gráfico, para leitores de tela (FR-019). */
-export function chartSummary(input: {
-  spentCents: number;
-  plannedCents: number;
-  monthLabel: string;
-}): string {
-  return `Gasto acumulado de ${formatBrl(input.spentCents)} de um limite de ${formatBrl(
-    input.plannedCents,
-  )} em ${input.monthLabel}`;
 }

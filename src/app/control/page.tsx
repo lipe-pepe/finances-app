@@ -27,8 +27,10 @@ export default async function ControlPage() {
             <ControlDashboard
               today={data.today}
               categories={data.categories}
-              plannedCentsByCategory={data.plannedCentsByCategory}
               actualExpenses={data.actualExpenses}
+              partPercentages={data.partPercentages}
+              presentLimitCents={data.presentLimitCents}
+              partLimitCents={data.partLimitCents}
             />
           </div>
           <aside

@@ -6,10 +6,8 @@ import { overLimitMessage } from "@/lib/control-labels";
 import { parseBrlToCents } from "@/lib/money";
 import { buildPlanningTabUrl } from "@/lib/planning-tab";
 import {
-  ALL_CATEGORIES,
   buildCumulativeSeries,
   getAvailableCents,
-  getPlannedCents,
   isOverLimit,
 } from "@/lib/spending";
 
@@ -65,14 +63,9 @@ describe("Spec 003 — US2: registrar um gasto realizado", () => {
   });
 });
 
+// O "planejado" da FR-015 (soma dos gastos planejados) foi substituído pelo "limite" da feature 006
+// (FR-029); ver tests/unit/specs/006-present-moment-parts.spec.test.ts.
 describe("Spec 003 — US3: planejado × gasto por categoria", () => {
-  const planned = { moradia: cents("1.500,00"), alimentacao: cents("800,00") };
-
-  it("cenários 2 e 2a / FR-015: planejado por categoria e de Todos (metas não entram)", () => {
-    expect(getPlannedCents(planned, "moradia")).toBe(cents("1.500,00"));
-    expect(getPlannedCents(planned, ALL_CATEGORIES)).toBe(cents("2.300,00"));
-  });
-
   it("cenário 4 / FR-017: disponível = planejado − gastos", () => {
     const spent = cents("400,00") + cents("350,00");
     expect(getAvailableCents(cents("1.500,00"), spent)).toBe(cents("750,00"));

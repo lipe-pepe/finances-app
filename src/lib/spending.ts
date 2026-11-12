@@ -1,5 +1,6 @@
 import { getDayOfMonth, getDaysInMonth } from "@/lib/calendar";
 import { sumCents } from "@/lib/planning";
+import type { PresentPart } from "@/lib/present-parts";
 
 // Regras do dashboard do Controle (funções puras, valores em centavos)
 
@@ -18,33 +19,28 @@ export type SeriesPoint = {
   spentCents: number | null;
 };
 
-/** Planejado da seleção: soma dos gastos planejados da categoria, ou de todas (FR-015). */
-export function getPlannedCents(
-  plannedCentsByCategory: Record<string, number>,
-  selection: CategorySelection,
-): number {
-  if (selection === ALL_CATEGORIES) {
-    return sumCents(Object.values(plannedCentsByCategory));
-  }
-  return plannedCentsByCategory[selection] ?? 0;
-}
+/** Filtros do dashboard: categoria ("all" = todas) e parte ativa (null = todo o Momento Presente). */
+export type SpendingFilter = { category: CategorySelection; part: PresentPart | null };
 
-/** Gastos da seleção, na mesma ordem recebida (FR-016). */
-export function filterActualExpenses<T extends SpendingEntry>(
+/** Gastos da seleção, na mesma ordem recebida (FR-016; feature 006, FR-028). */
+export function filterActualExpenses<T extends SpendingEntry & { part?: PresentPart }>(
   items: T[],
-  selection: CategorySelection,
+  { category, part }: SpendingFilter,
 ): T[] {
-  if (selection === ALL_CATEGORIES) return items;
-  return items.filter((item) => item.categoryId === selection);
+  return items.filter(
+    (item) =>
+      (category === ALL_CATEGORIES || item.categoryId === category) &&
+      (part === null || item.part === part),
+  );
 }
 
 export function sumActualCents(items: SpendingEntry[]): number {
   return sumCents(items.map((item) => item.amountCents));
 }
 
-/** Disponível = planejado − gasto; pode ser negativo (FR-017). */
-export function getAvailableCents(plannedCents: number, spentCents: number): number {
-  return plannedCents - spentCents;
+/** Disponível = limite − gasto; pode ser negativo (FR-017; limite da feature 006, FR-029). */
+export function getAvailableCents(limitCents: number, spentCents: number): number {
+  return limitCents - spentCents;
 }
 
 export function isOverLimit(availableCents: number): boolean {

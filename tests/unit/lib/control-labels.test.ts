@@ -6,7 +6,6 @@ import {
   EMPTY_ACTUAL_EXPENSES,
   SECTION_NAV_LABELS,
   SUMMARY_LABELS,
-  chartSummary,
   EDIT_SHEET_TITLE,
   REGISTER_BUTTON_LABEL,
   dateHint,
@@ -21,7 +20,7 @@ describe("control-labels", () => {
     expect(EMPTY_ACTUAL_EXPENSES).toBe("Nenhum gasto registrado");
     expect(DATE_OUT_OF_MONTH_MESSAGE).toBe("A data deve estar dentro do mês atual.");
     expect(SUMMARY_LABELS).toEqual({
-      planned: "Planejado",
+      limit: "Limite",
       spent: "Gasto",
       available: "Disponível",
       used: "Usado",
@@ -31,9 +30,6 @@ describe("control-labels", () => {
 
   it("monta as mensagens com valores em reais", () => {
     expect(overLimitMessage(10000)).toBe("Acima do limite em R$ 100,00");
-    expect(
-      chartSummary({ spentCents: 23050, plannedCents: 230000, monthLabel: "Novembro de 2026" }),
-    ).toBe("Gasto acumulado de R$ 230,50 de um limite de R$ 2.300,00 em Novembro de 2026");
   });
 
   it("define os textos novos do Controle", () => {
