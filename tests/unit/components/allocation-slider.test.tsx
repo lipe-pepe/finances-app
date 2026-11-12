@@ -12,6 +12,13 @@ vi.mock("next/navigation", () => ({ useRouter: () => ({ push, refresh: vi.fn() }
 import { AllocationProvider } from "@/features/allocation/components/allocation-provider";
 import { AllocationSlider } from "@/features/allocation/components/allocation-slider";
 import { PlannedAmount } from "@/features/allocation/components/planned-amount";
+import { useAllocation } from "@/features/allocation/components/allocation-provider";
+
+/** Mostra as partes do provider para conferir o reajuste (feature 006). */
+function PartsProbe() {
+  const { parts } = useAllocation();
+  return <output data-testid="parts">{`${parts.essentials}/${parts.education}/${parts.free}`}</output>;
+}
 
 function renderSlider(initial = 70, revenueCents = 600000) {
   return render(
@@ -129,5 +136,43 @@ describe("AllocationSlider + PlannedAmount", () => {
       fireEvent.keyDown(screen.getByRole("slider"), { key: "ArrowLeft" });
     });
     expect(push).toHaveBeenCalledWith("/login");
+  });
+
+  it("reajusta as partes do Momento Presente ao mover o slider (feature 006, FR-008)", async () => {
+    saveAllocation.mockResolvedValue({
+      ok: true,
+      data: { essentialPercentage: 69, parts: { essentials: 59, education: 5, free: 5 } },
+    });
+    render(
+      <AllocationProvider initialEssentialPercentage={70} initialEducationPercentage={5} initialFreePercentage={5}>
+        <AllocationSlider />
+        <PartsProbe />
+      </AllocationProvider>,
+    );
+    expect(screen.getByTestId("parts")).toHaveTextContent("60/5/5");
+    await act(async () => {
+      fireEvent.keyDown(screen.getByRole("slider"), { key: "ArrowLeft" });
+    });
+    expect(saveAllocation).toHaveBeenCalledWith({ essentialPercentage: 69 });
+    expect(await screen.findByText("Salvo")).toBeInTheDocument();
+    expect(screen.getByTestId("parts")).toHaveTextContent("59/5/5");
+  });
+
+  it("aplica as partes devolvidas pelo servidor", async () => {
+    saveAllocation.mockResolvedValue({
+      ok: true,
+      data: { essentialPercentage: 69, parts: { essentials: 60, education: 4, free: 5 } },
+    });
+    render(
+      <AllocationProvider initialEssentialPercentage={70} initialEducationPercentage={5} initialFreePercentage={5}>
+        <AllocationSlider />
+        <PartsProbe />
+      </AllocationProvider>,
+    );
+    await act(async () => {
+      fireEvent.keyDown(screen.getByRole("slider"), { key: "ArrowLeft" });
+    });
+    await screen.findByText("Salvo");
+    expect(screen.getByTestId("parts")).toHaveTextContent("60/4/5");
   });
 });

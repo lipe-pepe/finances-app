@@ -1,4 +1,5 @@
 import { PlannedAmount } from "@/features/allocation/components/planned-amount";
+import { PresentSplitSlider } from "@/features/allocation/components/present-split-slider";
 import { ExpenseForm } from "@/features/expenses/components/expense-form";
 import { ExpenseList } from "@/features/expenses/components/expense-list";
 import { OverBudgetAlert } from "@/features/planning/components/over-budget-alert";
@@ -13,7 +14,10 @@ type ExpenseSectionProps = {
   revenueCents: number;
 };
 
-/** Seção do Momento Presente: planejado, alerta, formulário em linha, lista e soma dos gastos. */
+/**
+ * Seção do Momento Presente: planejado, divisão em partes (feature 006), alerta, formulário em
+ * linha, lista e soma dos gastos.
+ */
 export function ExpenseSection({
   expenses,
   categories,
@@ -27,6 +31,9 @@ export function ExpenseSection({
           {SECTION_LABELS.expenses}
         </h2>
         <PlannedAmount section="expenses" revenueCents={revenueCents} />
+      </div>
+      <div className="rounded-2xl border bg-card p-4">
+        <PresentSplitSlider revenueCents={revenueCents} />
       </div>
       <OverBudgetAlert section="expenses" revenueCents={revenueCents} totalCents={expensesTotalCents} />
       <div className="rounded-2xl border bg-card p-4">

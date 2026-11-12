@@ -16,6 +16,8 @@ describe("getPlanningData", () => {
   it("usa 50% quando o usuário nunca ajustou a divisão e retorna listas vazias", async () => {
     const data = await getPlanningData(users.userA);
     expect(data.essentialPercentage).toBe(50);
+    expect(data.educationPercentage).toBe(0);
+    expect(data.freePercentage).toBe(0);
     expect(data.incomes).toEqual([]);
     expect(data.revenueCents).toBe(0);
     expect(data.expensesTotalCents).toBe(0);
@@ -45,12 +47,16 @@ describe("getPlanningData", () => {
         { userId: users.userB, name: "Meta de B", amount: "1.00" },
       ],
     });
-    await prisma.allocation.create({ data: { userId: users.userA, essentialPercentage: 70 } });
+    await prisma.allocation.create({
+      data: { userId: users.userA, essentialPercentage: 70, educationPercentage: 5, freePercentage: 3 },
+    });
     await prisma.allocation.create({ data: { userId: users.userB, essentialPercentage: 20 } });
 
     const data = await getPlanningData(users.userA);
 
     expect(data.essentialPercentage).toBe(70);
+    expect(data.educationPercentage).toBe(5);
+    expect(data.freePercentage).toBe(3);
     expect(data.incomes.map((income) => income.name)).toEqual(["Salário", "Freelance"]);
     expect(data.revenueCents).toBe(625050);
     expect(data.expenses.map((expense) => expense.name)).toEqual(["Aluguel", "Mercado"]);

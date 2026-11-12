@@ -13,8 +13,15 @@ function Slider({
   max = 100,
   // O nome acessível vai para o thumb, que é o elemento com role="slider"
   "aria-label": ariaLabel,
+  thumbLabels,
+  thumbValueTexts,
   ...props
-}: React.ComponentProps<typeof SliderPrimitive.Root>) {
+}: React.ComponentProps<typeof SliderPrimitive.Root> & {
+  /** Nome acessível de cada thumb (sliders com mais de um thumb) */
+  thumbLabels?: string[]
+  /** Valor anunciado de cada thumb (aria-valuetext) */
+  thumbValueTexts?: string[]
+}) {
   const _values = React.useMemo(
     () =>
       Array.isArray(value)
@@ -51,7 +58,8 @@ function Slider({
         <SliderPrimitive.Thumb
           data-slot="slider-thumb"
           key={index}
-          aria-label={ariaLabel}
+          aria-label={thumbLabels?.[index] ?? ariaLabel}
+          aria-valuetext={thumbValueTexts?.[index]}
           className="relative block size-5 shrink-0 rounded-full border-2 border-section bg-background ring-section/40 transition-[color,box-shadow] select-none after:absolute after:-inset-3 hover:ring-3 focus-visible:ring-3 focus-visible:outline-hidden active:ring-3 disabled:pointer-events-none disabled:opacity-50"
         />
       ))}

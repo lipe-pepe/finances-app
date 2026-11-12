@@ -26,7 +26,11 @@ export default async function PlanningPage({ searchParams }: PlanningPageProps) 
   return (
     <>
       <AppHeader current="planning" />
-      <AllocationProvider initialEssentialPercentage={data.essentialPercentage}>
+      <AllocationProvider
+        initialEssentialPercentage={data.essentialPercentage}
+        initialEducationPercentage={data.educationPercentage}
+        initialFreePercentage={data.freePercentage}
+      >
         <main className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-8 tablet:px-6 tablet:py-10">
           <div className="flex flex-col gap-1">
             <h2 className="text-4xl font-bold tracking-tight">Planejamento</h2>

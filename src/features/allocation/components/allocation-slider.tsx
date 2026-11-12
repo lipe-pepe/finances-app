@@ -15,17 +15,24 @@ import { SECTION_LABELS } from "@/lib/planning-labels";
 
 export function AllocationSlider() {
   const router = useRouter();
-  const { essentialPercentage, setEssentialPercentage, saveStatus, setSaveStatus } = useAllocation();
+  const { essentialPercentage, setEssentialPercentage, saveStatus, setSaveStatus, setParts } =
+    useAllocation();
   // Identifica o salvamento mais recente: respostas de salvamentos antigos são ignoradas
   const latestRequestId = useRef(0);
 
   async function save(value: number) {
     const requestId = ++latestRequestId.current;
     setSaveStatus("saving");
+    let savedParts: Parameters<typeof setParts>[0] | null = null;
     const outcome = await runAction(() => saveAllocation({ essentialPercentage: value }), {
       router,
+      onSuccess: (data) => {
+        savedParts = data.parts;
+      },
     });
     if (requestId !== latestRequestId.current) return;
+    // Alinha as partes com o reajuste gravado pelo servidor (feature 006, FR-008)
+    if (savedParts) setParts(savedParts);
     setSaveStatus(outcome.ok ? "saved" : "error");
   }
 

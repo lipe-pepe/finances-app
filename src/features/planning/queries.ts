@@ -29,6 +29,9 @@ export type PlanningData = {
   goals: GoalItem[];
   categories: CategoryOption[];
   essentialPercentage: number;
+  /** Partes do Momento Presente (feature 006); Gastos Essenciais é derivado */
+  educationPercentage: number;
+  freePercentage: number;
   revenueCents: number;
   expensesTotalCents: number;
   goalsTotalCents: number;
@@ -82,6 +85,8 @@ export async function getPlanningData(userId: string): Promise<PlanningData> {
     goals,
     categories,
     essentialPercentage: allocation?.essentialPercentage ?? DEFAULT_ESSENTIAL_PERCENTAGE,
+    educationPercentage: allocation?.educationPercentage ?? 0,
+    freePercentage: allocation?.freePercentage ?? 0,
     revenueCents: sumCents(incomes.map((income) => income.amountCents)),
     expensesTotalCents: sumCents(expenses.map((expense) => expense.amountCents)),
     goalsTotalCents: sumCents(goals.map((goal) => goal.amountCents)),
