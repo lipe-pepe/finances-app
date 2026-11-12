@@ -32,6 +32,8 @@
 ## Notes
 
 - Validação concluída na 1ª iteração; nenhuma marcação [NEEDS CLARIFICATION] foi necessária.
-- Decisões tomadas por padrão (em Assumptions): o formulário de edição mantém o campo "Parte"; a
-  parte selecionada não é guardada (volta para Gastos Essenciais ao recarregar); o seletor indica
-  em texto as partes excedidas; ciano e roxo não exigem emenda à constituição.
+- Clarificação 2026-11-11: os formulários de adicionar e de editar do Planejamento ficam sem o
+  campo "Parte" (a parte é fixa desde a criação); o seletor mostra "— excedida" nas partes
+  excedidas (FR-013).
+- Decisões tomadas por padrão (em Assumptions): a
+  parte selecionada não é guardada (volta para Gastos Essenciais ao recarregar); ciano e roxo não exigem emenda à constituição.

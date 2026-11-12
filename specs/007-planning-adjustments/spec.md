@@ -20,6 +20,17 @@ o gasto planejado na parte selecionada, e o campo de parte sai do formulário de
 **Depends on**: `specs/004-visual-redesign` (visual e cores) e `specs/006-present-moment-parts`
 (partes, slider das partes, barra e gráfico por parte), cujo comportamento esta feature ajusta.
 
+## Clarifications
+
+### Session 2026-11-11
+
+- Q: Ao editar um gasto na aba Momento Presente, o formulário de edição continua com o campo
+  "Parte"? → A: Não; a edição também perde o campo, e o gasto fica sempre na parte em que foi
+  criado.
+- Q: Como a aba avisa que uma parte não selecionada passou do valor? → A: O seletor mostra
+  "— excedida" ao lado do nome de cada parte excedida, nas opções e no valor exibido com o seletor
+  fechado.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Slider da Receita em uma peça só (Priority: P1)
@@ -105,9 +116,9 @@ em Educação sem escolher a parte no formulário.
    mensagem de vazio que cita a parte (ex.: "Nenhum gasto em Educação.").
 5. **Given** a parte selecionada excedida (planejado > valor da parte), **When** a aba é exibida,
    **Then** o alerta dessa parte aparece; alertas de partes não selecionadas não aparecem, mas o
-   seletor indica, em texto, quais partes estão excedidas.
-6. **Given** um gasto existente na lista, **When** o usuário o edita, **Then** ainda pode trocar a
-   parte dele; ao salvar numa parte diferente, o gasto sai da lista da parte selecionada.
+   seletor mostra "— excedida" ao lado do nome de cada parte excedida (ex.: "Livre — excedida").
+6. **Given** um gasto existente na lista, **When** o usuário o edita, **Then** o formulário de
+   edição não tem o campo "Parte" e, ao salvar, o gasto continua na mesma parte.
 7. **Given** o alerta do Momento Presente como um todo (soma de todos os gastos maior que o valor do
    Momento Presente), **When** ele se aplica, **Then** continua aparecendo, independentemente da
    parte selecionada.
@@ -167,9 +178,12 @@ em Educação sem escolher a parte no formulário.
 - **FR-010**: Trocar a parte selecionada MUST atualizar os dados exibidos sem recarregar a página.
 - **FR-011**: O formulário de adicionar gasto do Momento Presente MUST NOT ter o campo "Parte"; o
   gasto MUST ser criado na parte selecionada no seletor no momento de salvar.
-- **FR-012**: O formulário de editar gasto MUST continuar permitindo trocar a parte do gasto.
-- **FR-013**: O seletor MUST indicar em texto, ao lado do nome de cada opção, as partes cujo
-  planejado passa do valor (ex.: "Educação — excedida").
+- **FR-012**: O formulário de editar gasto do Momento Presente MUST NOT ter o campo "Parte"; ao
+  salvar a edição, a parte do gasto MUST permanecer a mesma (o gasto fica sempre na parte em que foi
+  criado).
+- **FR-013**: O seletor MUST indicar em texto "— excedida" ao lado do nome de cada parte cujo
+  planejado passa do valor (ex.: "Educação — excedida"), tanto nas opções da lista quanto no valor
+  exibido com o seletor fechado; nenhum outro aviso de partes não selecionadas é exibido.
 - **FR-014**: A divisão das partes (slider das três partes) e o alerta do Momento Presente inteiro
   MUST continuar visíveis independentemente da parte selecionada.
 - **FR-015**: A lista vazia da parte selecionada MUST mostrar uma mensagem que cita a parte.
@@ -177,7 +191,8 @@ em Educação sem escolher a parte no formulário.
 **Geral**
 
 - **FR-016**: Regras de cálculo, dados, validações e o Controle (exceto as cores) MUST permanecer
-  como na feature 006; o formulário do Controle continua com o campo "Parte".
+  como na feature 006; os formulários de registrar e editar do Controle continuam com o campo
+  "Parte".
 - **FR-017**: As telas alteradas MUST funcionar nos temas claro e escuro com contraste AA e a partir
   de 360 px, com alvos de toque de no mínimo 44 × 44 px.
 
@@ -204,8 +219,9 @@ em Educação sem escolher a parte no formulário.
 - **Valores no slider da Receita**: o texto "Planejado (X% da receita)" e os cartões somem; os
   valores passam a ficar só abaixo dos rótulos do slider. Os outros lugares que mostram o valor do
   Momento Presente (cabeçalho da aba Momento Presente, cartões das abas) continuam como estão.
-- **Edição mantém a parte**: o pedido remove a parte só do formulário de **adição**; para não perder
-  a possibilidade de mover um gasto de parte, o formulário de edição continua com o campo.
+- **Parte fixa no Planejamento**: no Planejamento, a parte de um gasto é definida na criação (pela
+  parte selecionada) e não muda depois; para mudar de parte, o usuário apaga e cria o gasto de novo.
+  No Controle, o formulário de registrar e editar continua com o campo "Parte" (FR-016).
 - **Parte selecionada**: fica só na tela (não vai para o endereço nem é guardada); ao recarregar,
   volta para Gastos Essenciais.
 - **Controle**: só as cores mudam; a barra, a legenda, o gráfico e o formulário do Controle mantêm o
