@@ -131,10 +131,10 @@ Nenhuma tarefa de setup: não há dependência nova nem migração.
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T024 [P] Escrever `tests/unit/specs/007-planning-adjustments.spec.test.ts` rastreável à spec (cenários citando FR/US): tokens das partes com os valores de data-model.md e contraste ≥ 3:1 nos dois temas (FR-005, FR-007, SC-002); `partOptionLabel` com "— excedida" (FR-013); `partEmptyMessage` (FR-015); `expenseUpdateSchema` descarta `part` (FR-012)
-- [ ] T025 [P] Atualizar `README.md`: o slider da Receita em duas cores com os valores sob os rótulos; as cores das partes (laranja, ciano e roxo); a aba Momento Presente com seletor de parte e a parte fixa desde a criação
-- [ ] T026 Auditoria final: `grep -rn "PartBudgetList\|SplitBar\|showSectionLabel" src tests` vazio; todo `"use client"` com justificativa; `npm run test:unit`, `npx tsc --noEmit`, `npm run lint` e `npm run build` sem erros
-- [ ] T027 Rodar `npm run test:integration` se houver Supabase local; caso contrário, registrar no relatório e no commit que o teste de T012 não foi executado
+- [X] T024 [P] Escrever `tests/unit/specs/007-planning-adjustments.spec.test.ts` rastreável à spec (cenários citando FR/US): tokens das partes com os valores de data-model.md e contraste ≥ 3:1 nos dois temas (FR-005, FR-007, SC-002); `partOptionLabel` com "— excedida" (FR-013); `partEmptyMessage` (FR-015); `expenseUpdateSchema` descarta `part` (FR-012)
+- [X] T025 [P] Atualizar `README.md`: o slider da Receita em duas cores com os valores sob os rótulos; as cores das partes (laranja, ciano e roxo); a aba Momento Presente com seletor de parte e a parte fixa desde a criação
+- [X] T026 Auditoria final: `grep -rn "PartBudgetList\|SplitBar\|showSectionLabel" src tests` vazio; todo `"use client"` com justificativa; `npm run test:unit`, `npx tsc --noEmit`, `npm run lint` e `npm run build` sem erros
+- [X] T027 Rodar `npm run test:integration` se houver Supabase local; caso contrário, registrar no relatório e no commit que o teste de T012 não foi executado — executado em 2026-11-11: sem Docker/Supabase local, o teste de integração de T012 foi escrito e carrega, mas não rodou (registrado nos commits)
 - [ ] T028 (Usuário) Validar à mão os passos 1–10 de `specs/007-planning-adjustments/quickstart.md`
 
 ---

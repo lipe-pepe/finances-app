@@ -3,14 +3,17 @@
 Plataforma de finanças pessoais com duas partes, acessadas pelos botões no topo:
 
 - **Planejamento** (`/planning`): o usuário cadastra seus ganhos (receita total), divide a receita
-  entre **Momento Presente** (gastos planejados) e **Momento Futuro** (metas) com um slider e
-  acompanha alertas quando o planejamento é excedido. Três abas: Receita, Momento Presente e
+  entre **Momento Presente** (gastos planejados) e **Momento Futuro** (metas) com um slider em
+  duas cores (laranja e azul), com o valor de cada lado abaixo do rótulo, e acompanha alertas
+  quando o planejamento é excedido. Três abas: Receita, Momento Presente e
   Momento Futuro (`?tab=present|future`).
 - **Partes do Momento Presente**: na aba Momento Presente, um slider com duas divisões reparte o
   Momento Presente em **Gastos Essenciais**, **Educação** e **Livre** (porcentagens inteiras da
-  Receita que somam o Momento Presente). Cada gasto planejado e realizado pertence a uma parte, e
-  cada parte mostra o planejado contra o seu valor, com alerta quando passa dele. Mudar o Momento
-  Presente na aba Receita reajusta as partes na mesma proporção.
+  Receita que somam o Momento Presente), nas cores laranja, ciano e roxo. Um seletor mostra uma
+  parte por vez (padrão Gastos Essenciais): o planejado contra o valor da parte, o alerta, a lista e
+  o total; as partes excedidas aparecem como "— excedida" no seletor. O gasto planejado é criado
+  na parte selecionada e não muda de parte depois. Cada gasto realizado (Controle) também tem uma
+  parte. Mudar o Momento Presente na aba Receita reajusta as partes na mesma proporção.
 - **Controle** (`/control`, página inicial): o usuário registra os gastos que de fato fez (nome,
   valor, categoria, parte e data dentro do mês atual) e acompanha um dashboard do mês. A barra de
   uso tem um trecho por parte; ativar uma parte (na barra ou na legenda) filtra todo o dashboard.
