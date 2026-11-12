@@ -59,3 +59,22 @@ export function partChartSummary(input: {
 export function partToggleLabel(part: PresentPart, percentage: number, spentCents: number): string {
   return `${PART_LABELS[part]}, ${percentage}% da Receita, gasto ${formatBrl(spentCents)}`;
 }
+
+// Aba Momento Presente uma parte por vez (feature 007)
+
+export const PART_SELECT_LABEL = "Parte";
+
+/** Opção do seletor de parte; indica em texto a parte excedida (FR-013). */
+export function partOptionLabel(part: PresentPart, exceeded: boolean): string {
+  return exceeded ? `${PART_LABELS[part]} — excedida` : PART_LABELS[part];
+}
+
+/** Lista vazia da parte selecionada (FR-015). */
+export function partEmptyMessage(part: PresentPart): string {
+  return `Nenhum gasto em ${PART_LABELS[part]}.`;
+}
+
+/** Rótulo do total da parte selecionada. */
+export function partTotalLabel(part: PresentPart): string {
+  return `Total de ${PART_LABELS[part]}`;
+}

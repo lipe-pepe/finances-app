@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
   PART_FIELD_LABEL,
+  PART_SELECT_LABEL,
+  partEmptyMessage,
+  partOptionLabel,
+  partTotalLabel,
   PART_LABELS,
   PRESENT_ZERO_HINT,
   partChartSummary,
@@ -44,5 +48,13 @@ describe("part-labels", () => {
       "Livre: gasto acumulado de R$ 600,00 de um limite de R$ 500,00. Acima do limite.",
     );
     expect(partToggleLabel("education", 5, 10000)).toBe("Educação, 5% da Receita, gasto R$ 100,00");
+  });
+
+  it("monta os textos do seletor de parte, da lista vazia e do total (feature 007)", () => {
+    expect(PART_SELECT_LABEL).toBe("Parte");
+    expect(partOptionLabel("education", false)).toBe("Educação");
+    expect(partOptionLabel("free", true)).toBe("Livre — excedida");
+    expect(partEmptyMessage("education")).toBe("Nenhum gasto em Educação.");
+    expect(partTotalLabel("essentials")).toBe("Total de Gastos Essenciais");
   });
 });

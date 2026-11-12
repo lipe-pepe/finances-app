@@ -51,8 +51,8 @@ Nenhuma tarefa de setup: não há dependência nova nem migração.
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T001 [P] Acrescentar testes em `tests/unit/lib/part-labels.test.ts` para os textos novos de research R7: `PART_SELECT_LABEL === "Parte"`; `partOptionLabel("education", false)` → `"Educação"`; `partOptionLabel("free", true)` → `"Livre — excedida"`; `partEmptyMessage("education")` → `"Nenhum gasto em Educação."`; `partTotalLabel("essentials")` → `"Total de Gastos Essenciais"`
-- [ ] T002 Implementar em `src/lib/part-labels.ts` `PART_SELECT_LABEL`, `partOptionLabel`, `partEmptyMessage` e `partTotalLabel` até T001 passar
+- [X] T001 [P] Acrescentar testes em `tests/unit/lib/part-labels.test.ts` para os textos novos de research R7: `PART_SELECT_LABEL === "Parte"`; `partOptionLabel("education", false)` → `"Educação"`; `partOptionLabel("free", true)` → `"Livre — excedida"`; `partEmptyMessage("education")` → `"Nenhum gasto em Educação."`; `partTotalLabel("essentials")` → `"Total de Gastos Essenciais"`
+- [X] T002 Implementar em `src/lib/part-labels.ts` `PART_SELECT_LABEL`, `partOptionLabel`, `partEmptyMessage` e `partTotalLabel` até T001 passar
 
 **Checkpoint**: Foundation ready - user story implementation can now begin
 
