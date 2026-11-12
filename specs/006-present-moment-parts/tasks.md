@@ -113,22 +113,22 @@ o Supabase local (Docker); sem ele, registrar isso no corpo do commit e no relat
 
 ### Tests for User Story 2 ⚠️
 
-- [ ] T027 [P] [US2] Atualizar `tests/unit/schemas/expenses.schemas.test.ts`: `part` obrigatório ("Selecione a parte.") e aceito para os três valores
-- [ ] T028 [P] [US2] Atualizar `tests/integration/expenses.actions.test.ts`: `createExpense({ ..., part: "education" })` grava `part: "education"`; `updateExpense` troca a parte; `part: "x"` → `VALIDATION` em `part`; os testes atuais passam a enviar `part`
-- [ ] T029 [P] [US2] Atualizar `tests/integration/planning.queries.test.ts`: `ExpenseItem.part` vem preenchido; `expensesTotalCentsByPart` soma por parte; gasto criado sem `part` (direto no Prisma) vem como `"essentials"` (FR-021)
-- [ ] T030 [P] [US2] Atualizar `tests/unit/components/expense-form.test.tsx`: o campo "Parte" aparece com "Gastos Essenciais" marcado ao criar; escolher "Educação" envia `part: "education"` a `createExpense`; ao editar, vem marcada a parte do gasto
-- [ ] T031 [P] [US2] Atualizar `tests/unit/components/planning-lists.test.tsx`: cada gasto da lista do Momento Presente mostra o nome da parte (ex.: "Educação")
-- [ ] T032 [P] [US2] Escrever testes em `tests/unit/components/part-budget-list.test.tsx` para `PartBudgetList` (dentro do `AllocationProvider` com 70 / 5 / 5 e receita 1_000_000): três linhas na ordem das partes; Educação com `expensesTotalCentsByPart.education = 40000` → "Planejado R$ 400,00 de R$ 500,00" e nenhum alerta; com 60000 → alerta "Educação excede o valor da parte em R$ 100,00"; com valor exatamente igual, sem alerta (`isOverBudget` é estrito)
+- [X] T027 [P] [US2] Atualizar `tests/unit/schemas/expenses.schemas.test.ts`: `part` obrigatório ("Selecione a parte.") e aceito para os três valores
+- [X] T028 [P] [US2] Atualizar `tests/integration/expenses.actions.test.ts`: `createExpense({ ..., part: "education" })` grava `part: "education"`; `updateExpense` troca a parte; `part: "x"` → `VALIDATION` em `part`; os testes atuais passam a enviar `part`
+- [X] T029 [P] [US2] Atualizar `tests/integration/planning.queries.test.ts`: `ExpenseItem.part` vem preenchido; `expensesTotalCentsByPart` soma por parte; gasto criado sem `part` (direto no Prisma) vem como `"essentials"` (FR-021)
+- [X] T030 [P] [US2] Atualizar `tests/unit/components/expense-form.test.tsx`: o campo "Parte" aparece com "Gastos Essenciais" marcado ao criar; escolher "Educação" envia `part: "education"` a `createExpense`; ao editar, vem marcada a parte do gasto
+- [X] T031 [P] [US2] Atualizar `tests/unit/components/planning-lists.test.tsx`: cada gasto da lista do Momento Presente mostra o nome da parte (ex.: "Educação")
+- [X] T032 [P] [US2] Escrever testes em `tests/unit/components/part-budget-list.test.tsx` para `PartBudgetList` (dentro do `AllocationProvider` com 70 / 5 / 5 e receita 1_000_000): três linhas na ordem das partes; Educação com `expensesTotalCentsByPart.education = 40000` → "Planejado R$ 400,00 de R$ 500,00" e nenhum alerta; com 60000 → alerta "Educação excede o valor da parte em R$ 100,00"; com valor exatamente igual, sem alerta (`isOverBudget` é estrito)
 
 ### Implementation for User Story 2
 
-- [ ] T033 [US2] Em `src/features/expenses/schemas.ts`, acrescentar `part: presentPartSchema` a `expenseSchema`; até T027 passar
-- [ ] T034 [US2] Em `src/features/expenses/actions.ts`, gravar `part` em `create` e `update` (o dado validado já inclui `part`); até T028 passar (com o Supabase local)
-- [ ] T035 [US2] Em `src/features/planning/queries.ts`, incluir `part: row.part` em `ExpenseItem` e calcular `expensesTotalCentsByPart = sumByPart(expenses)`; até T029 passar
-- [ ] T036 [US2] Em `src/features/expenses/components/expense-form.tsx`, acrescentar `part` aos valores padrão (`"essentials"` ao criar; `expense.part` ao editar) e renderizar `<PartPicker registration={register("part")} error={errors.part?.message} />` depois da categoria; até T030 passar
-- [ ] T037 [US2] Em `src/features/expenses/components/expense-list.tsx`, mostrar um selo da parte (ponto `bg-part-*` + `PART_LABELS[expense.part]`) ao lado da categoria; até T031 passar
-- [ ] T038 [US2] Criar `src/features/expenses/components/part-budget-list.tsx` (Client, justificar: "valores e alertas acompanham as porcentagens das partes em tempo real, durante o arraste") conforme contracts/ui.md: para cada parte, nome, `partPlannedLabel(planned, limit)` e `UsageBar` fina (a `UsageBar` ganha o tom `part-essentials | part-education | part-free` em `src/components/usage-bar.tsx`), e um `Alert` destrutivo com `partExcessMessage` quando `isOverBudget(planned, limit)`; limite = `getPartCents(revenueCents, parts)[part]`; até T032 passar
-- [ ] T039 [US2] Em `src/features/expenses/components/expense-section.tsx` e `src/app/planning/page.tsx`, passar `expensesTotalCentsByPart` e renderizar a `PartBudgetList` logo abaixo do `PresentSplitSlider` e antes do `OverBudgetAlert` atual (que continua igual)
+- [X] T033 [US2] Em `src/features/expenses/schemas.ts`, acrescentar `part: presentPartSchema` a `expenseSchema`; até T027 passar
+- [X] T034 [US2] Em `src/features/expenses/actions.ts`, gravar `part` em `create` e `update` (o dado validado já inclui `part`); até T028 passar (com o Supabase local)
+- [X] T035 [US2] Em `src/features/planning/queries.ts`, incluir `part: row.part` em `ExpenseItem` e calcular `expensesTotalCentsByPart = sumByPart(expenses)`; até T029 passar
+- [X] T036 [US2] Em `src/features/expenses/components/expense-form.tsx`, acrescentar `part` aos valores padrão (`"essentials"` ao criar; `expense.part` ao editar) e renderizar `<PartPicker registration={register("part")} error={errors.part?.message} />` depois da categoria; até T030 passar
+- [X] T037 [US2] Em `src/features/expenses/components/expense-list.tsx`, mostrar um selo da parte (ponto `bg-part-*` + `PART_LABELS[expense.part]`) ao lado da categoria; até T031 passar
+- [X] T038 [US2] Criar `src/features/expenses/components/part-budget-list.tsx` (Client, justificar: "valores e alertas acompanham as porcentagens das partes em tempo real, durante o arraste") conforme contracts/ui.md: para cada parte, nome, `partPlannedLabel(planned, limit)` e `UsageBar` fina (a `UsageBar` ganha o tom `part-essentials | part-education | part-free` em `src/components/usage-bar.tsx`), e um `Alert` destrutivo com `partExcessMessage` quando `isOverBudget(planned, limit)`; limite = `getPartCents(revenueCents, parts)[part]`; até T032 passar
+- [X] T039 [US2] Em `src/features/expenses/components/expense-section.tsx` e `src/app/planning/page.tsx`, passar `expensesTotalCentsByPart` e renderizar a `PartBudgetList` logo abaixo do `PresentSplitSlider` e antes do `OverBudgetAlert` atual (que continua igual)
 
 **Checkpoint**: User Stories 1 e 2 funcionais — divisão, gastos planejados por parte e alertas por parte.
 

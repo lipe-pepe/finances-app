@@ -53,6 +53,7 @@ export default async function PlanningPage({ searchParams }: PlanningPageProps) 
                 expenses={data.expenses}
                 categories={data.categories}
                 expensesTotalCents={data.expensesTotalCents}
+                expensesTotalCentsByPart={data.expensesTotalCentsByPart}
                 revenueCents={data.revenueCents}
               />
             }

@@ -36,7 +36,7 @@ describe("getPlanningData", () => {
     await prisma.expense.createMany({
       data: [
         { userId: users.userA, name: "Aluguel", amount: "1500.00", categoryId: category.id },
-        { userId: users.userA, name: "Mercado", amount: "450.75", categoryId: category.id },
+        { userId: users.userA, name: "Mercado", amount: "450.75", categoryId: category.id, part: "education" },
         { userId: users.userB, name: "Gasto de B", amount: "10.00", categoryId: category.id },
       ],
     });
@@ -60,6 +60,9 @@ describe("getPlanningData", () => {
     expect(data.incomes.map((income) => income.name)).toEqual(["Salário", "Freelance"]);
     expect(data.revenueCents).toBe(625050);
     expect(data.expenses.map((expense) => expense.name)).toEqual(["Aluguel", "Mercado"]);
+    // Feature 006: gasto sem parte informada fica em Gastos Essenciais (FR-021)
+    expect(data.expenses.map((expense) => expense.part)).toEqual(["essentials", "education"]);
+    expect(data.expensesTotalCentsByPart).toEqual({ essentials: 150000, education: 45075, free: 0 });
     expect(data.expenses[0].categoryName).toBe(category.name);
     expect(data.expensesTotalCents).toBe(195075);
     expect(data.goals.map((goal) => goal.name)).toEqual(["Viagem", "Curso"]);

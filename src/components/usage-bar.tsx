@@ -1,6 +1,15 @@
 import { cn } from "cn";
 
-export type UsageBarTone = "brand" | "section" | "income" | "present" | "future" | "danger";
+export type UsageBarTone =
+  | "brand"
+  | "section"
+  | "income"
+  | "present"
+  | "future"
+  | "danger"
+  | "part-essentials"
+  | "part-education"
+  | "part-free";
 
 const TONE_CLASSES: Record<UsageBarTone, string> = {
   brand: "bg-primary",
@@ -9,6 +18,9 @@ const TONE_CLASSES: Record<UsageBarTone, string> = {
   present: "bg-present",
   future: "bg-future",
   danger: "bg-destructive",
+  "part-essentials": "bg-part-essentials",
+  "part-education": "bg-part-education",
+  "part-free": "bg-part-free",
 };
 
 type UsageBarProps = {

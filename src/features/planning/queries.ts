@@ -2,6 +2,7 @@ import "server-only";
 import { prisma } from "@/lib/prisma";
 import { decimalToCents } from "@/lib/money";
 import { DEFAULT_ESSENTIAL_PERCENTAGE, sumCents } from "@/lib/planning";
+import { sumByPart, type PartCents, type PresentPart } from "@/lib/present-parts";
 
 // Dados da tela de planejamento já convertidos para tipos serializáveis (centavos em number),
 // prontos para Server e Client Components.
@@ -14,6 +15,8 @@ export type ExpenseItem = {
   amountCents: number;
   categoryId: string;
   categoryName: string;
+  /** Parte do Momento Presente (feature 006) */
+  part: PresentPart;
 };
 export type GoalItem = {
   id: string;
@@ -34,6 +37,8 @@ export type PlanningData = {
   freePercentage: number;
   revenueCents: number;
   expensesTotalCents: number;
+  /** Soma dos gastos planejados por parte (feature 006, FR-013) */
+  expensesTotalCentsByPart: PartCents;
   goalsTotalCents: number;
 };
 
@@ -66,6 +71,7 @@ export async function getPlanningData(userId: string): Promise<PlanningData> {
     amountCents: decimalToCents(row.amount),
     categoryId: row.categoryId,
     categoryName: row.category.name,
+    part: row.part,
   }));
   const goals = goalRows.map((row) => ({
     id: row.id,
@@ -89,6 +95,7 @@ export async function getPlanningData(userId: string): Promise<PlanningData> {
     freePercentage: allocation?.freePercentage ?? 0,
     revenueCents: sumCents(incomes.map((income) => income.amountCents)),
     expensesTotalCents: sumCents(expenses.map((expense) => expense.amountCents)),
+    expensesTotalCentsByPart: sumByPart(expenses),
     goalsTotalCents: sumCents(goals.map((goal) => goal.amountCents)),
   };
 }

@@ -1,4 +1,4 @@
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
 vi.mock("@/features/expenses/actions", () => ({
@@ -30,11 +30,37 @@ describe("listas do planejamento", () => {
       <ExpenseList
         categories={[HOUSING]}
         expenses={[
-          { id: "e1", name: "Aluguel", amountCents: 120000, categoryId: HOUSING.id, categoryName: "Moradia" },
+          {
+            id: "e1",
+            name: "Aluguel",
+            amountCents: 120000,
+            categoryId: HOUSING.id,
+            categoryName: "Moradia",
+            part: "essentials",
+          },
         ]}
       />,
     );
     expect(container.querySelector(".bg-category-housing-soft")).not.toBeNull();
+  });
+
+  it("mostra a parte de cada gasto (feature 006, FR-012)", () => {
+    render(
+      <ExpenseList
+        categories={[HOUSING]}
+        expenses={[
+          {
+            id: "e2",
+            name: "Curso",
+            amountCents: 40000,
+            categoryId: HOUSING.id,
+            categoryName: "Moradia",
+            part: "education",
+          },
+        ]}
+      />,
+    );
+    expect(screen.getByText("Educação")).toBeInTheDocument();
   });
 
   it("usa o ícone de meta sem categoria", () => {

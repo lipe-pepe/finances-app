@@ -25,7 +25,7 @@ describe("Server Actions de gastos essenciais", () => {
   });
 
   it("cria um gasto com categoria", async () => {
-    const result = await createExpense({ name: "Aluguel", amount: "1.500,00", categoryId });
+    const result = await createExpense({ name: "Aluguel", amount: "1.500,00", categoryId, part: "essentials" });
     expect(result.ok).toBe(true);
     const rows = await prisma.expense.findMany();
     expect(rows).toEqual([
@@ -41,6 +41,7 @@ describe("Server Actions de gastos essenciais", () => {
       name: "Aluguel",
       amount: "10",
       categoryId: MISSING_CATEGORY_ID,
+      part: "essentials",
     });
     expect(result).toEqual({
       ok: false,
@@ -50,17 +51,17 @@ describe("Server Actions de gastos essenciais", () => {
   });
 
   it("retorna VALIDATION sem categoria", async () => {
-    const result = await createExpense({ name: "Aluguel", amount: "10", categoryId: "" });
+    const result = await createExpense({ name: "Aluguel", amount: "10", categoryId: "", part: "essentials" });
     expect(result).toMatchObject({ ok: false, error: { code: "VALIDATION" } });
   });
 
   it("retorna UNAUTHENTICATED sem sessão", async () => {
     mockAuthenticatedUser(null);
-    await expect(createExpense({ name: "Aluguel", amount: "10", categoryId })).resolves.toEqual({
+    await expect(createExpense({ name: "Aluguel", amount: "10", categoryId, part: "essentials" })).resolves.toEqual({
       ok: false,
       error: { code: "UNAUTHENTICATED" },
     });
-    await expect(updateExpense(MISSING_CATEGORY_ID, { name: "X", amount: "1", categoryId })).resolves.toEqual({
+    await expect(updateExpense(MISSING_CATEGORY_ID, { name: "X", amount: "1", categoryId, part: "essentials" })).resolves.toEqual({
       ok: false,
       error: { code: "UNAUTHENTICATED" },
     });
@@ -79,6 +80,7 @@ describe("Server Actions de gastos essenciais", () => {
       name: "Mercado",
       amount: "450,75",
       categoryId: other.id,
+      part: "essentials",
     });
     expect(result).toEqual({ ok: true, data: { id: expense.id } });
     const row = await prisma.expense.findUniqueOrThrow({ where: { id: expense.id } });
@@ -99,7 +101,7 @@ describe("Server Actions de gastos essenciais", () => {
       data: { userId: users.userB, name: "Gasto de B", amount: "10.00", categoryId },
     });
     await expect(
-      updateExpense(expenseOfB.id, { name: "Invadido", amount: "1", categoryId }),
+      updateExpense(expenseOfB.id, { name: "Invadido", amount: "1", categoryId, part: "essentials" }),
     ).resolves.toEqual({ ok: false, error: { code: "NOT_FOUND" } });
     await expect(deleteExpense(expenseOfB.id)).resolves.toEqual({
       ok: false,
@@ -107,5 +109,26 @@ describe("Server Actions de gastos essenciais", () => {
     });
     const row = await prisma.expense.findUniqueOrThrow({ where: { id: expenseOfB.id } });
     expect(row.name).toBe("Gasto de B");
+  });
+
+  it("grava e troca a parte do gasto (feature 006, FR-011)", async () => {
+    const created = await createExpense({ name: "Curso", amount: "400", categoryId, part: "education" });
+    expect(created.ok).toBe(true);
+    const id = created.ok ? created.data.id : "";
+    await expect(prisma.expense.findUnique({ where: { id } })).resolves.toMatchObject({ part: "education" });
+
+    await updateExpense(id, { name: "Curso", amount: "400", categoryId, part: "free" });
+    await expect(prisma.expense.findUnique({ where: { id } })).resolves.toMatchObject({ part: "free" });
+  });
+
+  it("retorna VALIDATION em part para parte inválida (FR-022)", async () => {
+    const result = await createExpense({
+      name: "Curso",
+      amount: "400",
+      categoryId,
+      part: "outra" as "free",
+    });
+    expect(result).toMatchObject({ ok: false, error: { code: "VALIDATION", fieldErrors: { part: ["Selecione a parte."] } } });
+    expect(await prisma.expense.count()).toBe(0);
   });
 });

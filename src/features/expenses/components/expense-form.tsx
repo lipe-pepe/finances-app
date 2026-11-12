@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label";
 import { createExpense, updateExpense } from "@/features/expenses/actions";
 import { expenseSchema, type ExpenseInput } from "@/features/expenses/schemas";
 import { CategorySelect } from "@/features/planning/components/category-select";
+import { PartPicker } from "@/features/planning/components/part-picker";
 import type { CategoryOption, ExpenseItem } from "@/features/planning/queries";
 import { applyFieldErrors, runAction } from "@/lib/handle-action-result";
 import { centsToInputString } from "@/lib/money";
@@ -42,7 +43,7 @@ export function ExpenseForm(props: ExpenseFormProps) {
   return <ExpenseFormFields {...props} onDone={() => setEditing(false)} />;
 }
 
-const EMPTY_VALUES: ExpenseInput = { name: "", amount: "", categoryId: "" };
+const EMPTY_VALUES: ExpenseInput = { name: "", amount: "", categoryId: "", part: "essentials" };
 
 function ExpenseFormFields(props: ExpenseFormProps & { onDone: () => void }) {
   const router = useRouter();
@@ -65,6 +66,7 @@ function ExpenseFormFields(props: ExpenseFormProps & { onDone: () => void }) {
           name: props.expense.name,
           amount: centsToInputString(props.expense.amountCents),
           categoryId: props.expense.categoryId,
+          part: props.expense.part,
         }
       : EMPTY_VALUES,
   });
@@ -133,6 +135,7 @@ function ExpenseFormFields(props: ExpenseFormProps & { onDone: () => void }) {
           <FormFieldError id={`${categoryId}-error`} message={errors.categoryId?.message} />
         </div>
       </div>
+      <PartPicker registration={register("part")} error={errors.part?.message} />
       {!hasCategories && (
         <p className="text-sm text-muted-foreground">Nenhuma categoria disponível.</p>
       )}

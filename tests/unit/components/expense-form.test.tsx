@@ -56,6 +56,7 @@ describe("ExpenseForm", () => {
       name: "Aluguel",
       amount: "1.500,00",
       categoryId: CATEGORIES[0].id,
+      part: "essentials",
     });
   });
 
@@ -77,6 +78,7 @@ describe("ExpenseForm", () => {
           amountCents: 150000,
           categoryId: CATEGORIES[0].id,
           categoryName: "Moradia",
+          part: "education",
         }}
       />,
     );
@@ -88,6 +90,7 @@ describe("ExpenseForm", () => {
       name: "Aluguel",
       amount: "1500,00",
       categoryId: CATEGORIES[1].id,
+      part: "education",
     });
   });
 
@@ -112,5 +115,36 @@ describe("ExpenseForm", () => {
   it("usa no botão de envio a cor da parte ativa do Planejamento", () => {
     render(<ExpenseForm mode="create" categories={CATEGORIES} />);
     expect(screen.getByRole("button", { name: "Adicionar gasto" })).toHaveClass("bg-section");
+  });
+
+  it("tem o campo Parte com Gastos Essenciais marcado e envia a parte escolhida (FR-011)", async () => {
+    createExpense.mockResolvedValue({ ok: true, data: { id: "1" } });
+    render(<ExpenseForm mode="create" categories={CATEGORIES} />);
+    expect(screen.getByRole("group", { name: "Parte" })).toBeInTheDocument();
+    expect(screen.getByRole("radio", { name: "Gastos Essenciais" })).toBeChecked();
+    await fill("Curso", "400");
+    await chooseCategory("Moradia");
+    await userEvent.click(screen.getByRole("radio", { name: "Educação" }));
+    await userEvent.click(screen.getByRole("button", { name: "Adicionar gasto" }));
+    expect(createExpense).toHaveBeenCalledWith(expect.objectContaining({ part: "education" }));
+  });
+
+  it("na edição vem marcada a parte do gasto", async () => {
+    render(
+      <ExpenseForm
+        mode="edit"
+        categories={CATEGORIES}
+        expense={{
+          id: "e2",
+          name: "Livro",
+          amountCents: 5000,
+          categoryId: CATEGORIES[0].id,
+          categoryName: "Moradia",
+          part: "free",
+        }}
+      />,
+    );
+    await userEvent.click(screen.getByRole("button", { name: "Editar Livro" }));
+    expect(screen.getByRole("radio", { name: "Livre" })).toBeChecked();
   });
 });

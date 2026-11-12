@@ -23,6 +23,7 @@ export async function createExpense(input: ExpenseInput): Promise<ActionResult<{
         name: parsed.data.name,
         amount: centsToDecimalString(parsed.data.amount),
         categoryId: parsed.data.categoryId,
+        part: parsed.data.part,
       },
       select: { id: true },
     });
@@ -52,6 +53,7 @@ export async function updateExpense(
         name: parsed.data.name,
         amount: centsToDecimalString(parsed.data.amount),
         categoryId: parsed.data.categoryId,
+        part: parsed.data.part,
       },
     });
     if (count === 0) return fail({ code: "NOT_FOUND" });

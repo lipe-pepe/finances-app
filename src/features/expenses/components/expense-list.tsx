@@ -2,6 +2,7 @@ import { CategoryIcon } from "@/components/category-icon";
 import { deleteExpense } from "@/features/expenses/actions";
 import { ExpenseForm } from "@/features/expenses/components/expense-form";
 import { DeleteConfirmDialog } from "@/features/planning/components/delete-confirm-dialog";
+import { PartBadge } from "@/features/planning/components/part-badge";
 import type { CategoryOption, ExpenseItem } from "@/features/planning/queries";
 import { formatBrl } from "@/lib/money";
 
@@ -23,7 +24,11 @@ export function ExpenseList({ expenses, categories }: ExpenseListProps) {
           <CategoryIcon categoryName={expense.categoryName} />
           <div className="flex min-w-0 flex-1 basis-40 flex-col">
             <span className="truncate font-semibold">{expense.name}</span>
-            <span className="text-sm text-muted-foreground">{expense.categoryName}</span>
+            <span className="flex flex-wrap items-center gap-x-2 text-sm text-muted-foreground">
+              <span>{expense.categoryName}</span>
+              <span aria-hidden="true">·</span>
+              <PartBadge part={expense.part} />
+            </span>
           </div>
           <span className="font-semibold tabular-nums">{formatBrl(expense.amountCents)}</span>
           <div className="flex flex-wrap items-center justify-end gap-1 has-[form]:w-full">
