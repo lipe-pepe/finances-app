@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { describe, expect, it } from "vitest";
 import { PartPicker } from "@/features/planning/components/part-picker";
 import type { PresentPart } from "@/lib/present-parts";
@@ -8,8 +8,8 @@ import type { PresentPart } from "@/lib/present-parts";
 let latest: PresentPart | undefined;
 
 function Harness({ error }: { error?: string }) {
-  const { register, watch } = useForm<{ part: PresentPart }>({ defaultValues: { part: "essentials" } });
-  latest = watch("part");
+  const { register, control } = useForm<{ part: PresentPart }>({ defaultValues: { part: "essentials" } });
+  latest = useWatch({ control, name: "part" });
   return (
     <form>
       <PartPicker registration={register("part")} error={error} />
