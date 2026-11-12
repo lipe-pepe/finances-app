@@ -10,3 +10,11 @@ export const expenseSchema = z.object({
 });
 
 export type ExpenseInput = z.input<typeof expenseSchema>;
+
+/**
+ * Edição de gasto do Momento Presente (feature 007, FR-012): a parte é fixa desde a criação, então
+ * não faz parte da edição; um `part` enviado é descartado pelo Zod.
+ */
+export const expenseUpdateSchema = expenseSchema.omit({ part: true });
+
+export type ExpenseUpdateInput = z.input<typeof expenseUpdateSchema>;

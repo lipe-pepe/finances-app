@@ -7,7 +7,12 @@ import { MISSING_CATEGORY_MESSAGE, categoryExists } from "@/lib/category";
 import { centsToDecimalString } from "@/lib/money";
 import { prisma } from "@/lib/prisma";
 import { authenticatedAction, isValidId } from "@/lib/server-action";
-import { expenseSchema, type ExpenseInput } from "@/features/expenses/schemas";
+import {
+  expenseSchema,
+  expenseUpdateSchema,
+  type ExpenseInput,
+  type ExpenseUpdateInput,
+} from "@/features/expenses/schemas";
 
 export async function createExpense(input: ExpenseInput): Promise<ActionResult<{ id: string }>> {
   return authenticatedAction(async (userId) => {
@@ -34,13 +39,14 @@ export async function createExpense(input: ExpenseInput): Promise<ActionResult<{
   });
 }
 
+/** Edita nome, valor e categoria; a parte do gasto nunca muda (feature 007, FR-012). */
 export async function updateExpense(
   id: string,
-  input: ExpenseInput,
+  input: ExpenseUpdateInput,
 ): Promise<ActionResult<{ id: string }>> {
   return authenticatedAction(async (userId) => {
     if (!isValidId(id)) return fail({ code: "NOT_FOUND" });
-    const parsed = expenseSchema.safeParse(input);
+    const parsed = expenseUpdateSchema.safeParse(input);
     if (!parsed.success) return validationError(parsed.error);
     if (!(await categoryExists(parsed.data.categoryId))) {
       return fieldError("categoryId", MISSING_CATEGORY_MESSAGE);
@@ -53,7 +59,6 @@ export async function updateExpense(
         name: parsed.data.name,
         amount: centsToDecimalString(parsed.data.amount),
         categoryId: parsed.data.categoryId,
-        part: parsed.data.part,
       },
     });
     if (count === 0) return fail({ code: "NOT_FOUND" });

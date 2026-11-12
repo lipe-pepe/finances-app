@@ -12,15 +12,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createExpense, updateExpense } from "@/features/expenses/actions";
-import { expenseSchema, type ExpenseInput } from "@/features/expenses/schemas";
+import { expenseUpdateSchema, type ExpenseUpdateInput } from "@/features/expenses/schemas";
+import type { PresentPart } from "@/lib/present-parts";
 import { CategorySelect } from "@/features/planning/components/category-select";
-import { PartPicker } from "@/features/planning/components/part-picker";
 import type { CategoryOption, ExpenseItem } from "@/features/planning/queries";
 import { applyFieldErrors, runAction } from "@/lib/handle-action-result";
 import { centsToInputString } from "@/lib/money";
 
 type ExpenseFormProps = { categories: CategoryOption[] } & (
-  | { mode: "create" }
+  /** Criar: o gasto entra na parte selecionada na aba (feature 007, FR-011) */
+  | { mode: "create"; part: PresentPart }
+  /** Editar: a parte não muda (feature 007, FR-012) */
   | { mode: "edit"; expense: ExpenseItem }
 );
 
@@ -43,7 +45,7 @@ export function ExpenseForm(props: ExpenseFormProps) {
   return <ExpenseFormFields {...props} onDone={() => setEditing(false)} />;
 }
 
-const EMPTY_VALUES: ExpenseInput = { name: "", amount: "", categoryId: "", part: "essentials" };
+const EMPTY_VALUES: ExpenseUpdateInput = { name: "", amount: "", categoryId: "" };
 
 function ExpenseFormFields(props: ExpenseFormProps & { onDone: () => void }) {
   const router = useRouter();
@@ -59,14 +61,13 @@ function ExpenseFormFields(props: ExpenseFormProps & { onDone: () => void }) {
     reset,
     setError,
     formState: { errors, isSubmitting },
-  } = useForm<ExpenseInput>({
-    resolver: zodResolver(expenseSchema, undefined, { raw: true }),
+  } = useForm<ExpenseUpdateInput>({
+    resolver: zodResolver(expenseUpdateSchema, undefined, { raw: true }),
     defaultValues: isEdit
       ? {
           name: props.expense.name,
           amount: centsToInputString(props.expense.amountCents),
           categoryId: props.expense.categoryId,
-          part: props.expense.part,
         }
       : EMPTY_VALUES,
   });
@@ -74,7 +75,11 @@ function ExpenseFormFields(props: ExpenseFormProps & { onDone: () => void }) {
   const onSubmit = handleSubmit(async (values) => {
     setFormMessage(null);
     const outcome = await runAction(
-      () => (isEdit ? updateExpense(props.expense.id, values) : createExpense(values)),
+      () =>
+        isEdit
+          ? updateExpense(props.expense.id, values)
+          : // A parte é lida na hora de salvar: trocar de parte não apaga o que foi digitado
+            createExpense({ ...values, part: props.part }),
       {
         router,
         onValidationError: (fieldErrors) => applyFieldErrors(fieldErrors, setError),
@@ -135,7 +140,6 @@ function ExpenseFormFields(props: ExpenseFormProps & { onDone: () => void }) {
           <FormFieldError id={`${categoryId}-error`} message={errors.categoryId?.message} />
         </div>
       </div>
-      <PartPicker registration={register("part")} error={errors.part?.message} />
       {!hasCategories && (
         <p className="text-sm text-muted-foreground">Nenhuma categoria disponível.</p>
       )}

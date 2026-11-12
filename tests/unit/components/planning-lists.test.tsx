@@ -63,6 +63,15 @@ describe("listas do planejamento", () => {
     expect(screen.getByText("Educação")).toBeInTheDocument();
   });
 
+  it("usa a mensagem de vazio recebida, ou a padrão (feature 007, FR-015)", () => {
+    const { rerender } = render(
+      <ExpenseList categories={[HOUSING]} expenses={[]} emptyMessage="Nenhum gasto em Educação." />,
+    );
+    expect(screen.getByText("Nenhum gasto em Educação.")).toBeInTheDocument();
+    rerender(<ExpenseList categories={[HOUSING]} expenses={[]} />);
+    expect(screen.getByText("Nenhum gasto cadastrado.")).toBeInTheDocument();
+  });
+
   it("usa o ícone de meta sem categoria", () => {
     const { container } = render(
       <GoalList

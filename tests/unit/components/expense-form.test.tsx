@@ -39,7 +39,7 @@ describe("ExpenseForm", () => {
   });
 
   it("exige a seleção de categoria", async () => {
-    render(<ExpenseForm mode="create" categories={CATEGORIES} />);
+    render(<ExpenseForm mode="create" part="essentials" categories={CATEGORIES} />);
     await fill("Aluguel", "1500");
     await userEvent.click(screen.getByRole("button", { name: "Adicionar gasto" }));
     expect(await screen.findByText("Selecione uma categoria.")).toBeInTheDocument();
@@ -48,7 +48,7 @@ describe("ExpenseForm", () => {
 
   it("cria um gasto com a categoria escolhida", async () => {
     createExpense.mockResolvedValue({ ok: true, data: { id: "1" } });
-    render(<ExpenseForm mode="create" categories={CATEGORIES} />);
+    render(<ExpenseForm mode="create" part="essentials" categories={CATEGORIES} />);
     await fill("Aluguel", "1.500,00");
     await chooseCategory("Moradia");
     await userEvent.click(screen.getByRole("button", { name: "Adicionar gasto" }));
@@ -61,7 +61,7 @@ describe("ExpenseForm", () => {
   });
 
   it("sem categorias cadastradas, avisa e desabilita o envio", () => {
-    render(<ExpenseForm mode="create" categories={[]} />);
+    render(<ExpenseForm mode="create" part="essentials" categories={[]} />);
     expect(screen.getByText("Nenhuma categoria disponível.")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Adicionar gasto" })).toBeDisabled();
   });
@@ -90,13 +90,12 @@ describe("ExpenseForm", () => {
       name: "Aluguel",
       amount: "1500,00",
       categoryId: CATEGORIES[1].id,
-      part: "education",
     });
   });
 
   it("mostra aviso de falha quando a action lança exceção", async () => {
     createExpense.mockRejectedValue(new TypeError("Failed to fetch"));
-    render(<ExpenseForm mode="create" categories={CATEGORIES} />);
+    render(<ExpenseForm mode="create" part="essentials" categories={CATEGORIES} />);
     await fill("Aluguel", "10");
     await chooseCategory("Moradia");
     await userEvent.click(screen.getByRole("button", { name: "Adicionar gasto" }));
@@ -105,7 +104,7 @@ describe("ExpenseForm", () => {
 
   it("redireciona para /login quando a sessão expirou", async () => {
     createExpense.mockResolvedValue({ ok: false, error: { code: "UNAUTHENTICATED" } });
-    render(<ExpenseForm mode="create" categories={CATEGORIES} />);
+    render(<ExpenseForm mode="create" part="essentials" categories={CATEGORIES} />);
     await fill("Aluguel", "10");
     await chooseCategory("Moradia");
     await userEvent.click(screen.getByRole("button", { name: "Adicionar gasto" }));
@@ -113,23 +112,28 @@ describe("ExpenseForm", () => {
   });
 
   it("usa no botão de envio a cor da parte ativa do Planejamento", () => {
-    render(<ExpenseForm mode="create" categories={CATEGORIES} />);
+    render(<ExpenseForm mode="create" part="essentials" categories={CATEGORIES} />);
     expect(screen.getByRole("button", { name: "Adicionar gasto" })).toHaveClass("bg-section");
   });
 
-  it("tem o campo Parte com Gastos Essenciais marcado e envia a parte escolhida (FR-011)", async () => {
+  it("não tem o campo Parte e cria o gasto na parte recebida (feature 007, FR-011)", async () => {
     createExpense.mockResolvedValue({ ok: true, data: { id: "1" } });
-    render(<ExpenseForm mode="create" categories={CATEGORIES} />);
-    expect(screen.getByRole("group", { name: "Parte" })).toBeInTheDocument();
-    expect(screen.getByRole("radio", { name: "Gastos Essenciais" })).toBeChecked();
+    render(<ExpenseForm mode="create" part="education" categories={CATEGORIES} />);
+    expect(screen.queryByRole("group", { name: "Parte" })).not.toBeInTheDocument();
+    expect(screen.queryAllByRole("radio")).toHaveLength(0);
     await fill("Curso", "400");
     await chooseCategory("Moradia");
-    await userEvent.click(screen.getByRole("radio", { name: "Educação" }));
     await userEvent.click(screen.getByRole("button", { name: "Adicionar gasto" }));
-    expect(createExpense).toHaveBeenCalledWith(expect.objectContaining({ part: "education" }));
+    expect(createExpense).toHaveBeenCalledWith({
+      name: "Curso",
+      amount: "400",
+      categoryId: CATEGORIES[0].id,
+      part: "education",
+    });
   });
 
-  it("na edição vem marcada a parte do gasto", async () => {
+  it("a edição não tem o campo Parte e não envia a parte (FR-012)", async () => {
+    updateExpense.mockResolvedValue({ ok: true, data: { id: "e2" } });
     render(
       <ExpenseForm
         mode="edit"
@@ -145,6 +149,12 @@ describe("ExpenseForm", () => {
       />,
     );
     await userEvent.click(screen.getByRole("button", { name: "Editar Livro" }));
-    expect(screen.getByRole("radio", { name: "Livre" })).toBeChecked();
+    expect(screen.queryAllByRole("radio")).toHaveLength(0);
+    await userEvent.click(screen.getByRole("button", { name: "Salvar" }));
+    expect(updateExpense).toHaveBeenCalledWith("e2", {
+      name: "Livro",
+      amount: "50,00",
+      categoryId: CATEGORIES[0].id,
+    });
   });
 });

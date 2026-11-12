@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { expenseSchema } from "@/features/expenses/schemas";
+import { expenseSchema, expenseUpdateSchema } from "@/features/expenses/schemas";
 
 const CATEGORY_ID = "0b6f9b8e-3f7e-4c9a-9d55-6f1d2c3b4a59";
 
@@ -35,5 +35,11 @@ describe("expenseSchema", () => {
     expect(
       expenseSchema.safeParse({ name: "", amount: "0", categoryId: CATEGORY_ID }).success,
     ).toBe(false);
+  });
+
+  it("expenseUpdateSchema não aceita mudar a parte (feature 007, FR-012)", () => {
+    const parsed = expenseUpdateSchema.parse({ name: "Curso", amount: "10", categoryId: CATEGORY_ID, part: "free" });
+    expect(parsed).not.toHaveProperty("part");
+    expect(expenseUpdateSchema.safeParse({ name: "Curso", amount: "10", categoryId: CATEGORY_ID }).success).toBe(true);
   });
 });

@@ -9,12 +9,18 @@ import { formatBrl } from "@/lib/money";
 type ExpenseListProps = {
   expenses: ExpenseItem[];
   categories: CategoryOption[];
+  /** Mensagem da lista vazia (ex.: da parte selecionada; feature 007, FR-015) */
+  emptyMessage?: string;
 };
 
 /** Lista de gastos do Momento Presente (renderizada no servidor), com editar e apagar por item. */
-export function ExpenseList({ expenses, categories }: ExpenseListProps) {
+export function ExpenseList({
+  expenses,
+  categories,
+  emptyMessage = "Nenhum gasto cadastrado.",
+}: ExpenseListProps) {
   if (expenses.length === 0) {
-    return <p className="text-sm text-muted-foreground">Nenhum gasto cadastrado.</p>;
+    return <p className="text-sm text-muted-foreground">{emptyMessage}</p>;
   }
 
   return (
