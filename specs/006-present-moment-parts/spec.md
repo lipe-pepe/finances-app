@@ -28,6 +28,13 @@ dashboard e gráfico) e `specs/004-visual-redesign` (visual, cores e responsivid
 - Q: O limite de cada parte no gráfico do Controle é o valor da parte (Receita × porcentagem) ou a
   soma dos gastos planejados da parte? → A: O valor da parte; com categoria selecionada, as curvas
   mostram o gasto da categoria contra o valor inteiro da parte.
+- Q: No dashboard do Controle, os blocos de resumo devem mostrar os números de cada parte? → A: A
+  barra de uso acima do resumo passa a ter um trecho por parte (cor própria, preenchido conforme o
+  gasto da parte), com tooltip de nome e porcentagem; clicar num trecho ativa a parte e o dashboard
+  inteiro mostra só ela; sem parte ativa, mostra todo o Momento Presente.
+- Q: Que cores as três partes devem ter na barra, no slider e no gráfico? → A: Três tons de
+  laranja (o matiz do Momento Presente): escuro para Gastos Essenciais, médio para Educação e
+  claro para Livre, sempre acompanhados do nome da parte.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -137,8 +144,9 @@ acumuladas e os três limites no gráfico, além da alternativa em texto.
 
 **Acceptance Scenarios**:
 
-1. **Given** gastos do mês nas três partes, **When** o dashboard é exibido, **Then** o gráfico
-   mostra três curvas de gasto acumulado por dia, até hoje, e três linhas de limite, uma por parte.
+1. **Given** gastos do mês nas três partes e nenhuma parte ativa na barra de uso (US5), **When** o
+   dashboard é exibido, **Then** o gráfico mostra três curvas de gasto acumulado por dia, até hoje,
+   e três linhas de limite, uma por parte.
 2. **Given** o gráfico, **When** é exibido, **Then** cada parte tem cor própria e é identificada
    também por legenda com nome (não só pela cor), e a linha de limite de cada parte é distinguível
    da curva (ex.: tracejada).
@@ -151,6 +159,53 @@ acumuladas e os três limites no gráfico, além da alternativa em texto.
    inteiros das partes (ex.: Educação R$ 500,00).
 6. **Given** um leitor de tela, **When** o gráfico é lido, **Then** uma alternativa em texto
    informa, para cada parte, o gasto acumulado e o limite do mês.
+
+---
+
+### User Story 5 - Barra de uso por parte que filtra o dashboard (Priority: P2)
+
+No Controle, a barra de uso acima do resumo passa a ser dividida por parte: ela representa o limite
+de todo o Momento Presente e vai sendo preenchida com o gasto de cada parte, cada uma na sua cor.
+Ao passar o mouse (ou focar) num trecho, um tooltip mostra o nome da parte e a sua porcentagem. Ao
+clicar num trecho, aquela parte fica ativa e todo o dashboard (resumo, gráfico e lista) passa a
+mostrar só os dados dela; clicar de novo desativa. Sem parte ativa, o dashboard mostra a soma das
+três partes, ou seja, todo o Momento Presente.
+
+**Why this priority**: é a forma de o usuário ver, de relance, quanto cada parte já consumiu e de
+focar numa parte; depende das partes nos gastos realizados (US3).
+
+**Independent Test**: com Receita de R$ 10.000,00 e partes 60/5/5, registrar R$ 1.200,00 em
+Essenciais, R$ 100,00 em Educação e R$ 50,00 em Livre; conferir a barra com três trechos coloridos
+proporcionais aos gastos sobre o limite de R$ 7.000,00; ativar Educação e conferir Disponível
+R$ 400,00, gráfico só com Educação e lista só com o gasto de Educação; desativar e conferir de volta
+o total do Momento Presente.
+
+**Acceptance Scenarios**:
+
+1. **Given** nenhuma parte ativa, **When** o dashboard é exibido, **Then** a barra representa o
+   limite do Momento Presente (soma dos valores das três partes) e mostra, lado a lado, um trecho
+   por parte com largura proporcional ao gasto da parte em relação a esse limite, cada um na cor
+   da parte.
+2. **Given** a barra, **When** o usuário passa o mouse ou foca um trecho, **Then** aparece um
+   tooltip com o nome da parte e a sua porcentagem (ex.: "Educação · 5% da Receita").
+3. **Given** nenhuma parte ativa, **When** o usuário clica no trecho de Educação, **Then** Educação
+   fica ativa (destacada, com os outros trechos atenuados) e o resumo mostra Disponível, Gasto,
+   Limite e Usado só de Educação, o gráfico mostra só a curva e o limite de Educação e a lista
+   mostra só os gastos de Educação.
+4. **Given** Educação ativa, **When** o usuário clica de novo em Educação, **Then** nenhuma parte
+   fica ativa e o dashboard volta a mostrar todo o Momento Presente; **When** ele clica em Livre,
+   **Then** Livre passa a ser a parte ativa no lugar de Educação.
+5. **Given** uma parte sem gasto no mês (trecho de largura zero), **When** o usuário quer ativá-la,
+   **Then** consegue pela legenda da barra, que lista as três partes com nome e porcentagem e
+   funciona como os trechos (clicar ativa/desativa).
+6. **Given** uma categoria selecionada, **When** uma parte está ativa, **Then** os dados mostram o
+   gasto da parte naquela categoria, comparado ao valor inteiro da parte.
+7. **Given** gastos que passam do limite (da parte ativa ou do Momento Presente), **When** a barra é
+   exibida, **Then** ela fica totalmente preenchida e o resumo mostra o alerta de acima do limite em
+   texto, como hoje.
+8. **Given** o teclado ou um leitor de tela, **When** o usuário navega pela barra, **Then** cada
+   parte é um botão alternável com nome acessível (nome, porcentagem e gasto) e estado
+   ativo/inativo anunciado.
 
 ---
 
@@ -227,16 +282,45 @@ acumuladas e os três limites no gráfico, além da alternativa em texto.
 
 **Gráfico do Controle**
 
-- **FR-017**: O gráfico do Controle MUST mostrar, num mesmo quadro, três curvas de gasto acumulado
+- **FR-017**: Sem parte ativa (FR-028), o gráfico do Controle MUST mostrar, num mesmo quadro, três curvas de gasto acumulado
   por dia do mês atual (até hoje), uma por parte, considerando a seleção de categoria.
 - **FR-018**: Cada parte MUST ter no gráfico a sua linha de limite igual ao **valor da parte**
   (Receita × porcentagem da parte, US1). O limite não muda com a seleção de categoria: com uma
   categoria selecionada, as curvas mostram só o gasto daquela categoria, comparado ao valor
   inteiro de cada parte.
-- **FR-019**: Cada parte MUST ter cor própria no gráfico e MUST ser identificada também por legenda
-  com o nome da parte; a linha de limite MUST ser visualmente distinguível da curva de gasto.
+- **FR-019**: Cada parte MUST ter cor própria, igual no slider, na barra de uso e no gráfico: tons
+  de laranja do Momento Presente, escuro para Gastos Essenciais, médio para Educação e claro para
+  Livre. As cores MUST ser distinguíveis entre si e ter contraste mínimo de 3:1 contra o fundo nos
+  dois temas, e cada parte MUST ser identificada também pelo nome (legenda, tooltip ou rótulo).
+  A linha de limite MUST ser visualmente distinguível da curva de gasto (ex.: tracejada).
 - **FR-020**: A alternativa acessível do gráfico MUST informar, para cada parte, o gasto acumulado
   do mês e o limite, indicando em texto as partes acima do limite.
+
+**Barra de uso por parte e filtro por parte (Controle)**
+
+- **FR-024**: A barra de uso acima do resumo do Controle MUST representar o limite do Momento
+  Presente (soma dos valores das três partes) e MUST ser preenchida por um trecho por parte, na
+  ordem Gastos Essenciais, Educação, Livre, cada um com a cor da parte e largura proporcional ao
+  gasto da parte (na seleção de categoria) em relação a esse limite; acima do limite, a barra fica
+  100% preenchida, mantendo a proporção entre os trechos.
+- **FR-025**: Cada trecho MUST exibir, ao passar o mouse ou receber foco, um tooltip com o nome da
+  parte e a sua porcentagem da Receita.
+- **FR-026**: Cada trecho MUST ser clicável e alternar a parte ativa: clicar numa parte inativa a
+  ativa (e desativa a anterior); clicar na parte ativa a desativa. No máximo uma parte fica ativa.
+- **FR-027**: A barra MUST ter uma legenda com as três partes (nome e porcentagem) que funciona como
+  os trechos, para que partes sem gasto também possam ser ativadas e para garantir alvos de toque
+  de no mínimo 44 × 44 px.
+- **FR-028**: Com uma parte ativa, o resumo (Disponível, Gasto, Limite e Usado), o gráfico (só a
+  curva e o limite da parte) e a lista de gastos do mês MUST mostrar somente os dados da parte,
+  combinados com a seleção de categoria. Sem parte ativa, MUST mostrar a soma das três partes.
+- **FR-029**: No resumo do Controle, o valor de referência MUST passar a ser o **limite**: o valor
+  da parte ativa ou, sem parte ativa, o valor de todo o Momento Presente (Receita × porcentagem do
+  Momento Presente). Disponível = limite − gasto. Isto substitui, no Controle, o "planejado" da
+  feature 003 (soma dos gastos planejados).
+- **FR-030**: A parte ativa MUST ser indicada visualmente além da cor (ex.: contorno e trechos
+  inativos atenuados) e anunciada como estado de botão alternável para tecnologias assistivas.
+- **FR-031**: Ao trocar a página ou recarregar, nenhuma parte fica ativa (o padrão é todo o Momento
+  Presente).
 
 **Geral**
 
@@ -277,6 +361,8 @@ acumuladas e os três limites no gráfico, além da alternativa em texto.
   nomes) e o gráfico passa em verificação de contraste nos dois temas.
 - **SC-007**: A aba Momento Presente, os formulários de gasto e o dashboard do Controle funcionam
   sem rolagem horizontal em 360, 768 e 1280 px.
+- **SC-008**: Com uma parte ativa, 100% dos números do resumo, do gráfico e da lista correspondem
+  só àquela parte; sem parte ativa, correspondem à soma das três.
 
 ## Assumptions
 
@@ -293,10 +379,13 @@ acumuladas e os três limites no gráfico, além da alternativa em texto.
 - **Onde fica a divisão Presente/Futuro**: continua no slider da aba Receita; esta feature não muda
   aquele slider, apenas reage às mudanças dele (FR-008).
 - **Momento Futuro**: não é dividido nesta feature.
-- **Cores das partes**: as três partes ficam dentro do Momento Presente (laranja na constituição).
-  As cores de cada parte no gráfico e no slider serão tons/variações compatíveis com o Princípio VI
-  (definidas no plano), sempre acompanhadas do nome da parte.
-- **Resumo do Controle**: os blocos atuais do dashboard (planejado, gasto, disponível) continuam
-  como hoje para a seleção de categoria; esta feature acrescenta as partes ao gráfico e à lista, e
-  não altera as regras desses blocos.
+- **Cores das partes**: três tons de laranja, o matiz do Momento Presente (Princípio VI), sem
+  emenda à constituição: escuro para Gastos Essenciais, médio para Educação e claro para Livre. Os
+  valores exatos são definidos no plano, nos dois temas.
+- **Resumo do Controle**: o resumo continua com Disponível, Gasto e Usado, mas o "Planejado" passa
+  a se chamar "Limite" e vale o valor da parte ativa ou do Momento Presente inteiro (FR-029). A
+  soma dos gastos planejados continua visível no Planejamento, por parte (FR-013).
+- **Tooltip**: "a sua porcentagem" foi lida como a porcentagem da Receita destinada à parte (a do
+  slider da US1). Em telas de toque, o tooltip aparece ao focar o trecho, e a legenda mostra
+  sempre nome e porcentagem.
 - **Partes fixas**: o usuário não cria, renomeia nem apaga partes.

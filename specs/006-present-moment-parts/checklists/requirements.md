@@ -36,3 +36,6 @@
 - Interpretações registradas em Assumptions: porcentagens das partes são da Receita; o trecho
   "até o total dos Gastos Essenciais" foi lido como "até o total do Momento Presente"; slider único
   com duas divisões; gastos existentes vão para Gastos Essenciais.
+- Clarificações 2026-11-11 (/speckit-clarify): barra de uso do Controle segmentada por parte, com
+  tooltip e filtro por parte ativa (US5, FR-024–FR-031; "Planejado" vira "Limite" no Controle);
+  cores das partes em três tons de laranja (FR-019), sem emenda à constituição.
