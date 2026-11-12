@@ -170,7 +170,7 @@ Todas as incógnitas do Technical Context estão resolvidas; não restam itens "
   |---|---|---|
   | `--part-essentials` (escuro) | `#7c2d12` | `#c2560f` |
   | `--part-education` (médio) | `#c2410c` | `#f97316` |
-  | `--part-free` (claro) | `#ee6a10` | `#fdba74` |
+  | `--part-free` (claro) | `#ea580c` | `#fdba74` |
 
   Expostos como `--color-part-essentials` etc. no `@theme inline`. No tema claro, um laranja
   "claro" de fato não passa de 3:1, por isso o mais claro é o próprio `--present`. Para separar os

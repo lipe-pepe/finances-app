@@ -77,6 +77,12 @@ const GRAPHIC_PAIRS: [string, string][] = [
   ["chart-limit", "card"],
   ["avatar-ring", "background"],
   ["avatar-ring", "card"],
+  ["part-essentials", "background"],
+  ["part-essentials", "card"],
+  ["part-education", "background"],
+  ["part-education", "card"],
+  ["part-free", "background"],
+  ["part-free", "card"],
   ["destructive", "background"],
   ...CATEGORY_KEYS.map((key): [string, string] => [`category-${key}`, `category-${key}-soft`]),
 ];

@@ -51,6 +51,9 @@
   --color-danger-soft: var(--danger-soft);
   --color-chart-limit: var(--chart-limit);
   --color-avatar-ring: var(--avatar-ring);
+  --color-part-essentials: var(--part-essentials);
+  --color-part-education: var(--part-education);
+  --color-part-free: var(--part-free);
 
   /* Partes do planejamento */
   --color-income: var(--income);
@@ -157,6 +160,10 @@
   --present-foreground: #1c1b19;
   --present-soft: #ffedd5;
   --present-ink: #c2410c;
+  /* Partes do Momento Presente (feature 006): tons de laranja, escuro → claro */
+  --part-essentials: #7c2d12;
+  --part-education: #c2410c;
+  --part-free: #ea580c;
   --future: #1d4ed8;
   --future-foreground: #ffffff;
   --future-soft: #dbeafe;
@@ -240,6 +247,9 @@
     --present-foreground: #2a1205;
     --present-soft: #3a2412;
     --present-ink: #fdba74;
+    --part-essentials: #c2560f;
+    --part-education: #f97316;
+    --part-free: #fdba74;
     --future: #60a5fa;
     --future-foreground: #0b1b33;
     --future-soft: #172544;

@@ -2,6 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import { toDbDate } from "@/lib/calendar";
 import { centsToDecimalString } from "@/lib/money";
 import { prisma } from "@/lib/prisma";
+import type { PresentPart } from "@/lib/present-parts";
 import { RedirectError, resetCookies } from "./mocks";
 
 // Helpers do banco de teste: usuários A e B no Supabase Auth local e limpeza das tabelas
@@ -70,7 +71,13 @@ export async function getAnyCategory(name = "Moradia"): Promise<{ id: string; na
 /** Grava um gasto realizado direto no banco (preparação dos testes do Controle). */
 export async function createActualExpenseRow(
   userId: string,
-  row: { name: string; amountCents: number; categoryId: string; spentOn: string },
+  row: {
+    name: string;
+    amountCents: number;
+    categoryId: string;
+    spentOn: string;
+    part?: PresentPart;
+  },
 ): Promise<{ id: string }> {
   return prisma.actualExpense.create({
     data: {
@@ -79,9 +86,40 @@ export async function createActualExpenseRow(
       amount: centsToDecimalString(row.amountCents),
       categoryId: row.categoryId,
       spentOn: toDbDate(row.spentOn),
+      part: row.part ?? "essentials",
     },
     select: { id: true },
   });
+}
+
+/** Grava um gasto planejado direto no banco (feature 006: `part` opcional, padrão essentials). */
+export async function createExpenseRow(
+  userId: string,
+  row: { name: string; amountCents: number; categoryId: string; part?: PresentPart },
+): Promise<{ id: string }> {
+  return prisma.expense.create({
+    data: {
+      userId,
+      name: row.name,
+      amount: centsToDecimalString(row.amountCents),
+      categoryId: row.categoryId,
+      ...(row.part ? { part: row.part } : {}),
+    },
+    select: { id: true },
+  });
+}
+
+/** Grava a divisão da receita e das partes do Momento Presente (feature 006). */
+export async function setAllocation(
+  userId: string,
+  row: { essentialPercentage: number; educationPercentage?: number; freePercentage?: number },
+): Promise<void> {
+  const data = {
+    essentialPercentage: row.essentialPercentage,
+    educationPercentage: row.educationPercentage ?? 0,
+    freePercentage: row.freePercentage ?? 0,
+  };
+  await prisma.allocation.upsert({ where: { userId }, create: { userId, ...data }, update: data });
 }
 
 // ---------------------------------------------------------------------------------------------

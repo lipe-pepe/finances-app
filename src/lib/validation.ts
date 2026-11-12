@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { MAX_AMOUNT_CENTS, parseBrlToCents } from "@/lib/money";
+import { PRESENT_PARTS } from "@/lib/present-parts";
 
 // Schemas base compartilhados entre formulários (cliente) e Server Actions (servidor)
 
@@ -48,3 +49,6 @@ export const categoryIdSchema = z
 
 /** Identificador (uuid) obrigatório. */
 export const idSchema = z.uuid("Identificador inválido.");
+
+/** Parte do Momento Presente do gasto: uma das três partes fixas (feature 006, FR-022). */
+export const presentPartSchema = z.enum(PRESENT_PARTS, { error: "Selecione a parte." });
