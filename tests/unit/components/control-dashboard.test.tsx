@@ -21,8 +21,8 @@ const CATEGORIES = [
 ];
 const PLANNED = { [HOUSING]: 150000, [FOOD]: 80000 };
 const EXPENSES = [
-  { id: "a1", name: "Mercado", amountCents: 23050, categoryId: FOOD, categoryName: "Alimentação", spentOn: "2026-11-08" },
-  { id: "a2", name: "Conta de luz", amountCents: 40000, categoryId: HOUSING, categoryName: "Moradia", spentOn: "2026-11-02" },
+  { id: "a1", name: "Mercado", amountCents: 23050, categoryId: FOOD, categoryName: "Alimentação", spentOn: "2026-11-08", part: "essentials" as const },
+  { id: "a2", name: "Conta de luz", amountCents: 40000, categoryId: HOUSING, categoryName: "Moradia", spentOn: "2026-11-02", part: "essentials" as const },
 ];
 
 function summaryValue(label: string) {
@@ -87,7 +87,7 @@ describe("ControlDashboard", () => {
         plannedCentsByCategory={PLANNED}
         actualExpenses={[
           ...EXPENSES,
-          { id: "a3", name: "Aluguel", amountCents: 120000, categoryId: HOUSING, categoryName: "Moradia", spentOn: "2026-11-09" },
+          { id: "a3", name: "Aluguel", amountCents: 120000, categoryId: HOUSING, categoryName: "Moradia", spentOn: "2026-11-09", part: "essentials" as const },
         ]}
       />,
     );

@@ -15,6 +15,7 @@ import { getToday, toDbDate } from "@/lib/calendar";
 import { MISSING_CATEGORY_MESSAGE, categoryExists } from "@/lib/category";
 import { centsToDecimalString } from "@/lib/money";
 import { prisma } from "@/lib/prisma";
+import type { PresentPart } from "@/lib/present-parts";
 import { authenticatedAction, isValidId } from "@/lib/server-action";
 
 // Gastos realizados (Controle). Nenhuma destas actions lê ou altera os gastos planejados (FR-010).
@@ -24,6 +25,8 @@ type ActualExpenseData = {
   amount: string;
   categoryId: string;
   spentOn: Date;
+  /** Parte do Momento Presente (feature 006) */
+  part: PresentPart;
 };
 
 type ParsedInput =
@@ -44,6 +47,7 @@ async function parseInput(input: ActualExpenseInput): Promise<ParsedInput> {
       amount: centsToDecimalString(parsed.data.amount),
       categoryId: parsed.data.categoryId,
       spentOn: toDbDate(parsed.data.spentOn),
+      part: parsed.data.part,
     },
   };
 }

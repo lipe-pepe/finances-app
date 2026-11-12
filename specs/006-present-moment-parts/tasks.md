@@ -142,16 +142,16 @@ o Supabase local (Docker); sem ele, registrar isso no corpo do commit e no relat
 
 ### Tests for User Story 3 ⚠️
 
-- [ ] T040 [P] [US3] Atualizar `tests/unit/schemas/control.schemas.test.ts`: `part` obrigatório ("Selecione a parte.") e aceito para os três valores
-- [ ] T041 [P] [US3] Atualizar `tests/integration/control.actions.test.ts`: create e update gravam e trocam `part`; `part` inválido → `VALIDATION`; os testes atuais passam a enviar `part`
-- [ ] T042 [P] [US3] Atualizar `tests/unit/components/actual-expense-form.test.tsx` (card e painel): campo "Parte" com "Gastos Essenciais" marcado; escolher "Educação" envia `part: "education"`; na edição, vem marcada a parte do gasto
-- [ ] T043 [P] [US3] Atualizar `tests/unit/components/actual-expense-list.test.tsx`: cada item mostra o nome da parte, também quando `showCategory` é `false`
+- [X] T040 [P] [US3] Atualizar `tests/unit/schemas/control.schemas.test.ts`: `part` obrigatório ("Selecione a parte.") e aceito para os três valores
+- [X] T041 [P] [US3] Atualizar `tests/integration/control.actions.test.ts`: create e update gravam e trocam `part`; `part` inválido → `VALIDATION`; os testes atuais passam a enviar `part`
+- [X] T042 [P] [US3] Atualizar `tests/unit/components/actual-expense-form.test.tsx` (card e painel): campo "Parte" com "Gastos Essenciais" marcado; escolher "Educação" envia `part: "education"`; na edição, vem marcada a parte do gasto
+- [X] T043 [P] [US3] Atualizar `tests/unit/components/actual-expense-list.test.tsx`: cada item mostra o nome da parte, também quando `showCategory` é `false`
 
 ### Implementation for User Story 3
 
-- [ ] T044 [US3] Em `src/features/control/schemas.ts`, acrescentar `part: presentPartSchema` em `createActualExpenseSchema`; em `src/features/control/actions.ts`, gravar `part` em create e update; em `src/features/control/queries.ts`, incluir `part: row.part` em `ActualExpenseItem`; até T040 e T041 passarem
-- [ ] T045 [US3] Em `src/features/control/components/actual-expense-form.tsx`, acrescentar `part` aos valores padrão (`"essentials"` ao registrar e no `reset` após salvar; `actualExpense.part` ao editar) e renderizar `PartPicker` depois da categoria; até T042 passar
-- [ ] T046 [US3] Em `src/features/control/components/actual-expense-list.tsx`, mostrar o selo da parte (ponto `bg-part-*` + `PART_LABELS[item.part]`) em todos os itens, independente de `showCategory`; até T043 passar
+- [X] T044 [US3] Em `src/features/control/schemas.ts`, acrescentar `part: presentPartSchema` em `createActualExpenseSchema`; em `src/features/control/actions.ts`, gravar `part` em create e update; em `src/features/control/queries.ts`, incluir `part: row.part` em `ActualExpenseItem`; até T040 e T041 passarem
+- [X] T045 [US3] Em `src/features/control/components/actual-expense-form.tsx`, acrescentar `part` aos valores padrão (`"essentials"` ao registrar e no `reset` após salvar; `actualExpense.part` ao editar) e renderizar `PartPicker` depois da categoria; até T042 passar
+- [X] T046 [US3] Em `src/features/control/components/actual-expense-list.tsx`, mostrar o selo da parte (ponto `bg-part-*` + `PART_LABELS[item.part]`) em todos os itens, independente de `showCategory`; até T043 passar
 
 **Checkpoint**: User Story 3 funcional — gastos realizados com parte, no formulário e na lista.
 

@@ -30,6 +30,7 @@ const ITEM = {
   categoryId: CATEGORIES[0].id,
   categoryName: "Alimentação",
   spentOn: "2026-11-05",
+  part: "essentials" as const,
 };
 
 function renderSheet() {

@@ -46,6 +46,7 @@ describe("getControlData", () => {
       categoryId: food.id,
       categoryName: "Alimentação",
       spentOn: "2026-11-02",
+      part: "essentials" as const,
     });
   });
 

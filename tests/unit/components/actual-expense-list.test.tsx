@@ -19,6 +19,7 @@ const ITEMS = [
     categoryId: CATEGORIES[0].id,
     categoryName: "Alimentação",
     spentOn: "2026-11-05",
+    part: "essentials" as const,
   },
 ];
 
@@ -54,5 +55,15 @@ describe("ActualExpenseList", () => {
       <ActualExpenseList actualExpenses={ITEMS} categories={CATEGORIES} showCategory={false} />,
     );
     expect(container.querySelector(".bg-category-food-soft")).not.toBeNull();
+  });
+
+  it("mostra a parte de cada gasto, mesmo sem a categoria (feature 006, FR-016)", () => {
+    const items = [{ ...ITEMS[0], part: "education" as const }];
+    const { rerender } = render(
+      <ActualExpenseList actualExpenses={items} categories={CATEGORIES} showCategory />,
+    );
+    expect(screen.getByText("Educação")).toBeInTheDocument();
+    rerender(<ActualExpenseList actualExpenses={items} categories={CATEGORIES} showCategory={false} />);
+    expect(screen.getByText("Educação")).toBeInTheDocument();
   });
 });

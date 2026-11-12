@@ -10,7 +10,13 @@ function errorsFor(input: Record<string, unknown>, today = TODAY) {
   return result.error.flatten().fieldErrors as Record<string, string[] | undefined>;
 }
 
-const VALID = { name: " Mercado ", amount: "230,50", categoryId: CATEGORY_ID, spentOn: TODAY };
+const VALID = {
+  name: " Mercado ",
+  amount: "230,50",
+  categoryId: CATEGORY_ID,
+  spentOn: TODAY,
+  part: "essentials",
+};
 
 describe("createActualExpenseSchema", () => {
   it("aceita um gasto válido e converte o valor para centavos", () => {
@@ -19,6 +25,7 @@ describe("createActualExpenseSchema", () => {
       amount: 23050,
       categoryId: CATEGORY_ID,
       spentOn: TODAY,
+      part: "essentials",
     });
   });
 
@@ -27,7 +34,7 @@ describe("createActualExpenseSchema", () => {
   });
 
   it("exige a data", () => {
-    expect(errorsFor({ ...VALID, spentOn: "" }).spentOn).toEqual(["Informe a data."]);
+    expect(errorsFor({ ...VALID, spentOn: "", part: "essentials" }).spentOn).toEqual(["Informe a data."]);
   });
 
   it.each(["2026-02-30", "09/11/2026"])("recusa a data inválida %s", (spentOn) => {
@@ -49,7 +56,17 @@ describe("createActualExpenseSchema", () => {
 
   it("considera o mês do dia informado como atual", () => {
     const schema = createActualExpenseSchema("2026-12-05");
-    expect(schema.safeParse({ ...VALID, spentOn: "2026-12-01" }).success).toBe(true);
-    expect(schema.safeParse({ ...VALID, spentOn: "2026-11-30" }).success).toBe(false);
+    expect(schema.safeParse({ ...VALID, spentOn: "2026-12-01", part: "essentials" }).success).toBe(true);
+    expect(schema.safeParse({ ...VALID, spentOn: "2026-11-30", part: "essentials" }).success).toBe(false);
+  });
+
+  it.each(["essentials", "education", "free"])("aceita a parte %s (feature 006)", (part) => {
+    expect(createActualExpenseSchema(TODAY).safeParse({ ...VALID, part }).success).toBe(true);
+  });
+
+  it("exige a parte (FR-015)", () => {
+    const { part: _part, ...withoutPart } = VALID;
+    void _part;
+    expect(errorsFor(withoutPart).part).toEqual(["Selecione a parte."]);
   });
 });

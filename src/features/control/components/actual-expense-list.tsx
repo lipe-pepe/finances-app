@@ -3,6 +3,7 @@ import { deleteActualExpense } from "@/features/control/actions";
 import { ActualExpenseForm } from "@/features/control/components/actual-expense-form";
 import type { ActualExpenseItem } from "@/features/control/queries";
 import { DeleteConfirmDialog } from "@/features/planning/components/delete-confirm-dialog";
+import { PartBadge } from "@/features/planning/components/part-badge";
 import type { CategoryOption } from "@/features/planning/queries";
 import { formatDateBr } from "@/lib/calendar";
 import { EMPTY_ACTUAL_EXPENSES } from "@/lib/control-labels";
@@ -32,14 +33,17 @@ export function ActualExpenseList({
           <CategoryIcon categoryName={item.categoryName} />
           <div className="flex min-w-0 flex-1 basis-40 flex-col">
             <span className="truncate font-semibold">{item.name}</span>
-            <span className="text-sm text-muted-foreground">
+            <span className="flex flex-wrap items-center gap-x-2 text-sm text-muted-foreground">
               <time dateTime={item.spentOn}>{formatDateBr(item.spentOn)}</time>
               {showCategory && (
                 <>
-                  {" · "}
+                  <span aria-hidden="true">·</span>
                   <span>{item.categoryName}</span>
                 </>
               )}
+              {/* A parte aparece sempre, mesmo com uma categoria selecionada (FR-016) */}
+              <span aria-hidden="true">·</span>
+              <PartBadge part={item.part} />
             </span>
           </div>
           <span className="font-semibold tabular-nums">{formatBrl(item.amountCents)}</span>

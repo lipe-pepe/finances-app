@@ -46,7 +46,7 @@ describe("Spec 003 — US2: registrar um gasto realizado", () => {
   const base = { name: "Mercado", amount: "230,50", categoryId: CATEGORY_ID };
 
   it("cenário 2 / FR-006–FR-009: gasto com a data de hoje é aceito", () => {
-    expect(schema.parse({ ...base, spentOn: "2026-11-09" }).amount).toBe(cents("230,50"));
+    expect(schema.parse({ ...base, spentOn: "2026-11-09", part: "essentials" as const }).amount).toBe(cents("230,50"));
   });
 
   it("FR-009: o dia de hoje segue o fuso de Brasília", () => {
@@ -61,7 +61,7 @@ describe("Spec 003 — US2: registrar um gasto realizado", () => {
   });
 
   it("cenário 3 / FR-007: valor zero é recusado", () => {
-    expect(schema.safeParse({ ...base, amount: "0", spentOn: "2026-11-09" }).success).toBe(false);
+    expect(schema.safeParse({ ...base, amount: "0", spentOn: "2026-11-09", part: "essentials" as const }).success).toBe(false);
   });
 });
 

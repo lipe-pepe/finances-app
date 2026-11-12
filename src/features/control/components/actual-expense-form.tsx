@@ -16,6 +16,7 @@ import { useActualExpenseSheet } from "@/features/control/components/actual-expe
 import type { ActualExpenseItem } from "@/features/control/queries";
 import { createActualExpenseSchema, type ActualExpenseInput } from "@/features/control/schemas";
 import { CategorySelect } from "@/features/planning/components/category-select";
+import { PartPicker } from "@/features/planning/components/part-picker";
 import type { CategoryOption } from "@/features/planning/queries";
 import { formatMonthLabel, getMonthRange, getToday } from "@/lib/calendar";
 import { dateHint } from "@/lib/control-labels";
@@ -72,7 +73,7 @@ export function ActualExpenseForm(props: ActualExpenseFormProps) {
 }
 
 function emptyValues(today: string): ActualExpenseInput {
-  return { name: "", amount: "", categoryId: "", spentOn: today };
+  return { name: "", amount: "", categoryId: "", spentOn: today, part: "essentials" };
 }
 
 function ActualExpenseFormFields(
@@ -104,6 +105,7 @@ function ActualExpenseFormFields(
           amount: centsToInputString(props.actualExpense.amountCents),
           categoryId: props.actualExpense.categoryId,
           spentOn: props.actualExpense.spentOn,
+          part: props.actualExpense.part,
         }
       : emptyValues(today),
   });
@@ -182,6 +184,7 @@ function ActualExpenseFormFields(
           />
           <FormFieldError id={`${categoryId}-error`} message={errors.categoryId?.message} />
         </div>
+        <PartPicker registration={register("part")} error={errors.part?.message} />
         <div className="flex flex-col gap-1.5">
           <Label htmlFor={dateId}>Data</Label>
           <Input

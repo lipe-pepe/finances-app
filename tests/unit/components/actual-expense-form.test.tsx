@@ -90,6 +90,7 @@ describe("ActualExpenseForm", () => {
       amount: "230,50",
       categoryId: CATEGORIES[0].id,
       spentOn: "2026-11-05",
+      part: "essentials",
     });
     await waitFor(() => expect(screen.getByLabelText("Nome do gasto")).toHaveValue(""));
     expect(screen.getByLabelText("Data")).toHaveValue("2026-11-09");
@@ -124,6 +125,7 @@ describe("ActualExpenseForm", () => {
           categoryId: CATEGORIES[0].id,
           categoryName: "Alimentação",
           spentOn: "2026-11-05",
+          part: "essentials",
         }}
       />,
     );
@@ -137,6 +139,7 @@ describe("ActualExpenseForm", () => {
       amount: "230,50",
       categoryId: CATEGORIES[1].id,
       spentOn: "2026-11-05",
+      part: "essentials",
     });
   });
 
@@ -164,10 +167,25 @@ describe("ActualExpenseForm", () => {
           categoryId: CATEGORIES[0].id,
           categoryName: "Alimentação",
           spentOn: "2026-11-05",
+          part: "essentials",
         }}
       />,
     );
     expect(screen.queryByRole("button", { name: "Editar Mercado" })).not.toBeInTheDocument();
     expect(screen.getByLabelText("Nome do gasto")).toHaveValue("Mercado");
+  });
+
+  it("tem o campo Parte com Gastos Essenciais marcado e envia a parte escolhida (FR-015)", async () => {
+    createActualExpense.mockResolvedValue({ ok: true, data: { id: "a2" } });
+    render(<ActualExpenseForm mode="create" categories={CATEGORIES} />);
+    expect(screen.getByRole("radio", { name: "Gastos Essenciais" })).toBeChecked();
+    await userEvent.type(screen.getByLabelText("Nome do gasto"), "Livro");
+    await userEvent.type(screen.getByLabelText("Valor (R$)"), "80");
+    await chooseCategory("Alimentação");
+    fireEvent.change(screen.getByLabelText("Data"), { target: { value: "2026-11-05" } });
+    await userEvent.click(screen.getByRole("radio", { name: "Educação" }));
+    await userEvent.click(screen.getByRole("button", { name: "Adicionar gasto" }));
+    expect(createActualExpense).toHaveBeenCalledWith(expect.objectContaining({ part: "education" }));
+    await waitFor(() => expect(screen.getByRole("radio", { name: "Gastos Essenciais" })).toBeChecked());
   });
 });

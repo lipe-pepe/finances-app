@@ -3,6 +3,7 @@ import type { CategoryOption } from "@/features/planning/queries";
 import { fromDbDate, getMonthRange, toDbDate } from "@/lib/calendar";
 import { decimalToCents } from "@/lib/money";
 import { prisma } from "@/lib/prisma";
+import type { PresentPart } from "@/lib/present-parts";
 
 // Dados da página Controle já convertidos para tipos serializáveis (centavos em number e datas
 // "YYYY-MM-DD"), prontos para Server e Client Components.
@@ -15,6 +16,8 @@ export type ActualExpenseItem = {
   categoryName: string;
   /** Dia do gasto, "YYYY-MM-DD" */
   spentOn: string;
+  /** Parte do Momento Presente (feature 006) */
+  part: PresentPart;
 };
 
 export type ControlData = {
@@ -65,6 +68,7 @@ export async function getControlData(userId: string, today: string): Promise<Con
       categoryId: row.categoryId,
       categoryName: row.category.name,
       spentOn: fromDbDate(row.spentOn),
+      part: row.part,
     })),
   };
 }

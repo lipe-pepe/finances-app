@@ -50,6 +50,7 @@ describe("Server Actions do Controle (gastos realizados)", () => {
       amount: "230,50",
       categoryId,
       spentOn: "2026-11-09",
+      part: "essentials" as const,
     });
     expect(result).toMatchObject({ ok: true });
     const rows = await prisma.actualExpense.findMany();
@@ -66,6 +67,7 @@ describe("Server Actions do Controle (gastos realizados)", () => {
       amount: "10",
       categoryId,
       spentOn: "2026-10-31",
+      part: "essentials" as const,
     });
     expect(result).toEqual({ ok: false, error: OUT_OF_MONTH });
     expect(await prisma.actualExpense.count()).toBe(0);
@@ -77,6 +79,7 @@ describe("Server Actions do Controle (gastos realizados)", () => {
       amount: "10",
       categoryId: MISSING_ID,
       spentOn: "2026-11-09",
+      part: "essentials" as const,
     });
     expect(result).toEqual({
       ok: false,
@@ -86,7 +89,7 @@ describe("Server Actions do Controle (gastos realizados)", () => {
 
   it("retorna UNAUTHENTICATED sem sessão", async () => {
     mockAuthenticatedUser(null);
-    const input = { name: "X", amount: "1", categoryId, spentOn: "2026-11-09" };
+    const input = { name: "X", amount: "1", categoryId, spentOn: "2026-11-09", part: "essentials" as const };
     await expect(createActualExpense(input)).resolves.toEqual({
       ok: false,
       error: { code: "UNAUTHENTICATED" },
@@ -108,12 +111,14 @@ describe("Server Actions do Controle (gastos realizados)", () => {
       amountCents: 23050,
       categoryId,
       spentOn: "2026-11-02",
+      part: "essentials" as const,
     });
     const result = await updateActualExpense(id, {
       name: "Feira",
       amount: "45,10",
       categoryId: other.id,
       spentOn: "2026-11-08",
+      part: "essentials" as const,
     });
     expect(result).toEqual({ ok: true, data: { id } });
     const row = await prisma.actualExpense.findUniqueOrThrow({ where: { id } });
@@ -129,9 +134,10 @@ describe("Server Actions do Controle (gastos realizados)", () => {
       amountCents: 1000,
       categoryId,
       spentOn: "2026-11-02",
+      part: "essentials" as const,
     });
     await expect(
-      updateActualExpense(id, { name: "Mercado", amount: "10", categoryId, spentOn: "2026-12-01" }),
+      updateActualExpense(id, { name: "Mercado", amount: "10", categoryId, spentOn: "2026-12-01", part: "essentials" as const }),
     ).resolves.toEqual({ ok: false, error: OUT_OF_MONTH });
     const row = await prisma.actualExpense.findUniqueOrThrow({ where: { id } });
     expect(fromDbDate(row.spentOn)).toBe("2026-11-02");
@@ -143,6 +149,7 @@ describe("Server Actions do Controle (gastos realizados)", () => {
       amountCents: 1000,
       categoryId,
       spentOn: "2026-11-02",
+      part: "essentials" as const,
     });
     await expect(deleteActualExpense(id)).resolves.toEqual({ ok: true, data: undefined });
     expect(await prisma.actualExpense.count()).toBe(0);
@@ -155,8 +162,9 @@ describe("Server Actions do Controle (gastos realizados)", () => {
       amountCents: 1000,
       categoryId,
       spentOn: "2026-11-02",
+      part: "essentials" as const,
     });
-    const input = { name: "Invadido", amount: "1", categoryId, spentOn: "2026-11-09" };
+    const input = { name: "Invadido", amount: "1", categoryId, spentOn: "2026-11-09", part: "essentials" as const };
     const notFound = { ok: false, error: { code: "NOT_FOUND" } };
     await expect(updateActualExpense(id, input)).resolves.toEqual(notFound);
     await expect(deleteActualExpense(id)).resolves.toEqual(notFound);
@@ -175,6 +183,7 @@ describe("Server Actions do Controle (gastos realizados)", () => {
       amount: "1.500,00",
       categoryId,
       spentOn: "2026-11-05",
+      part: "essentials" as const,
     });
     if (!created.ok) throw new Error("falha ao criar");
     await updateActualExpense(created.data.id, {
@@ -182,6 +191,7 @@ describe("Server Actions do Controle (gastos realizados)", () => {
       amount: "1.400,00",
       categoryId,
       spentOn: "2026-11-05",
+      part: "essentials" as const,
     });
     await deleteActualExpense(created.data.id);
 
@@ -189,5 +199,31 @@ describe("Server Actions do Controle (gastos realizados)", () => {
     expect(planned).toHaveLength(1);
     expect(planned[0]).toMatchObject({ name: "Aluguel" });
     expect(planned[0].amount.toString()).toBe("1500");
+  });
+
+  it("grava e troca a parte do gasto realizado (feature 006, FR-015)", async () => {
+    const created = await createActualExpense({
+      name: "Livro",
+      amount: "80",
+      categoryId,
+      spentOn: "2026-11-09",
+      part: "education",
+    });
+    const id = created.ok ? created.data.id : "";
+    await expect(prisma.actualExpense.findUnique({ where: { id } })).resolves.toMatchObject({ part: "education" });
+    await updateActualExpense(id, { name: "Livro", amount: "80", categoryId, spentOn: "2026-11-09", part: "free" });
+    await expect(prisma.actualExpense.findUnique({ where: { id } })).resolves.toMatchObject({ part: "free" });
+  });
+
+  it("recusa parte inválida (FR-022)", async () => {
+    const result = await createActualExpense({
+      name: "Livro",
+      amount: "80",
+      categoryId,
+      spentOn: "2026-11-09",
+      part: "outra" as "free",
+    });
+    expect(result).toMatchObject({ ok: false, error: { code: "VALIDATION", fieldErrors: { part: ["Selecione a parte."] } } });
+    expect(await prisma.actualExpense.count()).toBe(0);
   });
 });
